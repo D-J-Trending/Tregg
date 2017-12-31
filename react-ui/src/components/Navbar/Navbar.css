@@ -1,9 +1,18 @@
+.navbar {
+	margin-bottom: 0px;
+}
+
 .level {
 	background: gray;
 	border-bottom: 5px solid black;
 	padding: 10px;
 	link-style: none;
 }
+
 .logo_page {
 	height: 90px;
+}
+
+.level:not(:last-child) {
+	margin-bottom: 0px;
 }

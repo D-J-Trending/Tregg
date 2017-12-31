@@ -5,7 +5,7 @@ import logo from "./logo.png";
 
 // Depending on the current path, this component sets the "active" classNameNameName on the appropriate navigation link item
 const Navbar = () =>
-  <nav className="level">
+  <nav className="navbar level">
     <p className="level-item has-text-centered">
       <p className={window.location.pathname === "/" ? "active" : ""}>
         <Link to="/"><a href="#" className="navLinks button is-link">Home</a></Link>
