@@ -28,6 +28,10 @@ Checkins (fb)
 
 * Sort restaurants by % change of increase
 
+	* Filter out restaurants without enough data
+	* Filter out results with nan and infinity
+	* Build switch for filter 7, 14, 21, 30 days
+
 
 return restaurants closest based on geolocation
     sort by most trending
