@@ -56,6 +56,7 @@ class findRestaurant extends Component {
 			},
 			searchedRestaurant: {},
 			showsidenav: true,
+			onSearchClick: true,
 			showline: true,
 			showbar: true,
 			address: "",
@@ -411,10 +412,16 @@ class findRestaurant extends Component {
 			})
 		}
 	};
+	
+
 
 	onClick = () => {
     this.setState({ showsidenav: !this.state.showsidenav });
    };
+
+	onSearchClick = () => {
+		 this.setState({ searchIcon: !this.state.searchIcon});
+	};
 
 	showline = () => {
 			this.setState({ showline: !this.state.showline });
@@ -511,8 +518,13 @@ class findRestaurant extends Component {
 				<button onClick={this.showline}>showline</button> 
 				<button onClick={this.showbar}>showbar</button> 
 				<button onClick={this.findPercentChange}>findDiffall</button> 
-
-
+				
+				<a onClick={this.onSearchClick}>
+					<div className="inPut-with-icon">
+						<i className="fa fa-search"></i>
+					</div>
+				</a>
+				
 		      	<div className="data-section columns">
 
 		      		{ this.state.showsidenav ? 
@@ -533,19 +545,7 @@ class findRestaurant extends Component {
 		      				<div className="column is-12">
 		      					<h1> Find A Restaurant </h1>
 										<form>
-											<PlacesAutocomplete
-													inputProps={inputProps}
-													value={this.state.restaurantName}
-													onChange={this.handleInputChange}
-													name="restaurantName"
-													placeholder="restaurant"
-											/>
-											<button type="submit"
-													disabled={!(this.state.restaurantName)}
-													onClick={this.searchRestaurant}
-											>
-												Search Restaurant
-											</button>	
+											
 										
 											<div id='search-restaurant'>
 													{this.state.searchedRestaurant.length ? (
