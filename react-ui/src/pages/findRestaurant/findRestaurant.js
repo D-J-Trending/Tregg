@@ -5,6 +5,7 @@ import Chart from "../../components/Chart";
 import Sidenav from "../../components/Sidenav";
 import API from "../../utils/API.js";
 import { Details } from "../../components/Details"
+import { Stats } from "../../components/Stats"
 import FilterData from "../../components/FilterData"
 import "./findRestaurant.css";
 import numjs from 'numjs';
@@ -540,27 +541,12 @@ class findRestaurant extends Component {
 			<div className="wrapper">	
 			{/*Main section*/}
 				<button onClick={this.findClosestRestaurants}>BLAHHHH</button>
-				<button onClick={this.onClick}>showsidenav true</button> 
 				<button onClick={this.showline}>showline</button> 
 				<button onClick={this.showbar}>showbar</button> 
 				<button onClick={this.findPercentChange}>finddiffall</button> 
 
 
-		      	<div className="data-section columns">
-
-		      		{ this.state.showsidenav ? 
-		      			<div className="side-nav column is-2">
-			      			<CSSTransitionGroup
-								transitionName="example"
-								transitionAppear={true}
-								transitionAppearTimeout={500}
-								transitionEnter={false}
-								transitionLeave={true}>
-				      			<Sidenav/>
-				      		</CSSTransitionGroup>
-			      		</div>  		
-		      		: null }
-		      		
+		      	<div className="data-section columns">		      		
 		      		<div className="column auto">
 		      			<div className='columns'>
 		      				<div className="column is-12">
@@ -663,41 +649,12 @@ class findRestaurant extends Component {
 												/>
 												) : (
 												null
-											)}
-											{this.state.filteredRestaurants.length ? (
-												<h4> Something </h4>
-												// <FilterData />
-											) : (
-												<h4> Nothing </h4>
-											)}
+											)}								
 										</div>
 									</div>
 								</div>	
 			    		</div>
 			    	</div>
-
-		      	{/*<div id='restaurants'>
-			      	{this.state.restaurantInfo.length ? (
-			        	<Searched>
-			          	{this.state.restaurantInfo.map(restaurant => (
-				            <Searcheditems key={restaurant._id} showDetails={(ev) => this.showDetails(ev)}
-				            	value={restaurant._id}
-				            >              
-											<p> Name of Restaurant: {restaurant.name} </p>
-											<p> Address: {restaurant.location.address}, {restaurant.location.city}, {restaurant.location.state} </p>
-											<p> Data Summary: 
-												<ul>
-													<li>Yelp Rating: {restaurant.rating[0].rating} </li>
-													<li>Yelp URL: <a href={restaurant.yelpURL} target='blank'>{restaurant.name}</a></li>
-												</ul>
-											</p>
-				            </Searcheditems>
-				          	))}
-			       		</Searched>
-						) : (
-						<h3>No Results to Display</h3>
-						)}
-			    </div>*/}
 				</div>
 			
 		</div>

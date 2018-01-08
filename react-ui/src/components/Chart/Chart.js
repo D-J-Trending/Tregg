@@ -40,7 +40,7 @@ class Chart extends Component {
 					</div>
 	      		: null }
 
-				{ this.props.showbar ? 
+				{/* this.props.showbar ? 
 				<div className="bar">
 					<Bar
 						data={this.props.chartData}
@@ -57,7 +57,7 @@ class Chart extends Component {
 						}}
 					/>
 				</div>
-				: null }
+				: null */}
 			</div>	
 		)	
 	}
