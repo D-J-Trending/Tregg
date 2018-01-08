@@ -6,7 +6,7 @@ import Sidenav from "../../components/Sidenav";
 import Dropdown from "../../components/Dropdown";
 import API from "../../utils/API.js";
 import { Details } from "../../components/Details"
-import { Stats } from "../../components/Stats"
+import { Stats, Statsection } from "../../components/Stats"
 import FilterData from "../../components/FilterData"
 import "./findRestaurant.css";
 import numjs from 'numjs';
@@ -60,7 +60,8 @@ class findRestaurant extends Component {
 			showline: true,
 			showbar: true,
 			address: "",
-			dropdown: ''
+			dropdown: '',
+			hidesearch: true
 		};
 		this.onChange = (address) => this.setState({ address })
 	}
@@ -488,6 +489,10 @@ class findRestaurant extends Component {
 			this.setState({ showbar: !this.state.showbar });
 	};
 
+	hidesearch = () => {
+			this.setState({ hidesearch: !this.state.hidesearch });
+	};
+
 	dropdown = () => {
 		if(this.state.dropdown === "dropdown is-active") {
 			this.setState({
@@ -558,12 +563,15 @@ class findRestaurant extends Component {
 				<button onClick={this.findClosestRestaurants}>BLAHHHH</button>
 				<button onClick={this.showline}>showline</button> 
 				<button onClick={this.showbar}>showbar</button> 
-				<button onClick={this.findPercentChange}>finddiffall</button> 
+				<button onClick={this.findPercentChange}>finddiffall</button>
+				<button onClick={this.hidesearch}>hidesearcharea</button>  
 
 
 		      	<div className="data-section columns">		      		
 		      		<div className="column auto">
-		      			<div className='columns'>
+
+		      		{this.state.hidesearch ? (
+		      			<div className='columns search-area'>
 		      				<div className="column is-12">
 		      					<h1> Find A Restaurant </h1>
 										<form onSubmit={this.handleFormSubmit}>
@@ -641,7 +649,9 @@ class findRestaurant extends Component {
 						    		</form>
 		      				</div>
 		      			</div>
-		      		
+		      		) : (
+										null
+									)}
 								{this.state.details ? (
 		      				<div>
 										<div className='columns'>
@@ -653,25 +663,27 @@ class findRestaurant extends Component {
 				      				</div>		      				
 				      			</div>
 				      			<div className='columns'>		      				
-					      			<div className="column is-8">			 
+					      			<div className='column is-7'>			 
 							      		<Chart className='charts' chartData={this.state.chartData} chartName="Restaurant Checkins by Date"
 							      		 showline={this.state.showline} showbar={this.state.showbar}legendPosition="top"/>
 							      	</div>
-							      	<div className="column is-4">
-							      		<div className="data-navigation">
-							      			<Dropdown onClick={this.dropdown} className={this.state.dropdown}/>
-							      			<p className='percentage'>Weekly Percentage Change</p>							
-														<Stats 														
-															checkins={this.state.restaurantDetails.checkins}
-															checkinsAvg={this.state.checkinsAvg}
-															ratingCountAvg={this.state.ratingsAvg}
-															reviewsAvg={this.state.reviewsAvg}
-															totals={this.state.totalAvg}
-															handleInputChange={this.handleInputChange}
-															loadFilter={this.loadFilter}
-															getTotals={() => this.getTotals()}
-														/>																
-												</div>
+							      	<div className='column is-5 data-navigation'>							      	
+						      			<div className='columns'>
+						      				<Dropdown onClick={this.dropdown} className={this.state.dropdown}/>
+						      			</div>
+						      			<Statsection/>
+						      			{/*<div className='columns'>
+													<Stats												
+														checkins={this.state.restaurantDetails.checkins}
+														checkinsAvg={this.state.checkinsAvg}
+														ratingCountAvg={this.state.ratingsAvg}
+														reviewsAvg={this.state.reviewsAvg}
+														totals={this.state.totalAvg}
+														handleInputChange={this.handleInputChange}
+														loadFilter={this.loadFilter}
+														getTotals={() => this.getTotals()}
+													/>		
+												</div>*/}												
 											</div>
 										</div>
 									</div>
