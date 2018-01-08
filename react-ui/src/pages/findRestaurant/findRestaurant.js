@@ -3,6 +3,7 @@ import { Input, Form, Searchbtn } from "../../components/Form";
 import { Searched, Searcheditems, FbSearchedItems } from "../../components/Searched";
 import Chart from "../../components/Chart";
 import Sidenav from "../../components/Sidenav";
+import Dropdown from "../../components/Dropdown";
 import API from "../../utils/API.js";
 import { Details } from "../../components/Details"
 import { Stats } from "../../components/Stats"
@@ -59,6 +60,7 @@ class findRestaurant extends Component {
 			showline: true,
 			showbar: true,
 			address: "",
+			dropdown: ''
 		};
 		this.onChange = (address) => this.setState({ address })
 	}
@@ -486,6 +488,19 @@ class findRestaurant extends Component {
 			this.setState({ showbar: !this.state.showbar });
 	};
 
+	dropdown = () => {
+		if(this.state.dropdown === "dropdown is-active") {
+			this.setState({
+				dropdown: "dropdown"
+			})
+		}
+		else {
+			this.setState({
+				dropdown: "dropdown is-active"
+			})
+		}
+	};
+
 	getYelpAddToDb = (ev) => {
 		console.log('getYelpAddToDb')
 		const id = ev.currentTarget.getAttribute('value')
@@ -644,7 +659,7 @@ class findRestaurant extends Component {
 							      	</div>
 							      	<div className="column is-4">
 							      		<div className="data-navigation">
-							      			{/*<Dropdown onClick={this.dropdown} className={this.state.dropdown}/>*/}
+							      			<Dropdown onClick={this.dropdown} className={this.state.dropdown}/>
 							      			<p className='percentage'>Weekly Percentage Change</p>							
 														<Stats 														
 															checkins={this.state.restaurantDetails.checkins}
