@@ -1,4 +1,5 @@
 import numjs from 'numjs';
+import Round from './Round.js'
 
 export default {
   findDifference: function(arr, name, days) {
@@ -15,34 +16,79 @@ export default {
     return diff
   },
 
-  roundValue: function(value, exp) {
-    let type = 'round'
-    // If the exp is undefined or zero...
-    if (typeof exp === 'undefined' || +exp === 0) {
-      return Math[type](value);
+  getMean: function(arr) {
+    let avg
+    if (arr.length === 0) {
+      let avg = 0
+    } else {
+      let sum = arr.reduce((previous, current) => current += previous);
+      let avg = sum / arr.length;
+      console.log(avg)
     }
-    value = +value;
-    exp = +exp;
-    // If the value is not a number or the exp is not an integer...
-    if (value === null || isNaN(value) || !(typeof exp === 'number' && exp % 1 === 0)) {
-      return NaN;
-    }
-    // If the value is negative...
-    if (value < 0) {
-      return -this.roundValue(-value, exp);
-    }
-    // Shift
-    value = value.toString().split('e');
-    value = Math[type](+(value[0] + 'e' + (value[1] ? (+value[1] - exp) : -exp)));
-    // Shift back
-    value = value.toString().split('e');
-    return +(value[0] + 'e' + (value[1] ? (+value[1] + exp) : exp));
+    return avg
   },
 
-  getMean: function(arr) {
-    const valArray = numjs.array(arr)
-    const mean = valArray.mean()
-    return mean
+  getDiffwithDate: function(arr, name) {
+    console.log(arr)
+    console.log(name)
+    // returns an arry of obj with date and count
+    const values = []
+    for (var i = 0; i < arr.length; i++) {
+      values.push({
+        count: arr[i][name],
+        query_date: arr[i]['query_date'],
+      })
+    }
+
+    const diff = []
+    for (var i = 0; i < values.length - 1; i++) {
+      let difference = values[i+1]['count'] - values[i]['count']
+      let val = difference / values[i]['count']
+
+      let percentChange = Round(val, -5)
+
+      let query_date = values[i+1]['query_date']
+      diff.push({
+        difference: difference,
+        percentChange: percentChange,
+        query_date: query_date
+      })
+    }   
+    return diff
+  },
+
+  findTotalStats: function(arr) {
+    var checkins = [];
+    var ratings = [];
+    var reviews = [];
+    const obj = {}
+    for (var i = 0; i < arr.length; i++) {
+      checkins.push(this.findRoundedDiffMean(arr[i].checkins, 'checkins'))
+      ratings.push(this.findRoundedDiffMean(arr[i].rating_count, 'rating_count'))
+      reviews.push(this.findRoundedDiffMean(arr[i].reviews, 'review_count'))
+    }
+
+    checkins = numjs.array(checkins);
+    ratings = numjs.array(ratings);
+    reviews = numjs.array(reviews);
+
+    const checkinsMean = Round(checkins.mean(), -6)
+    const ratingsMean = Round(ratings.mean(), -6)
+    const reviewsMean = Round(reviews.mean(), -6)
+
+    obj.checkinsMean = checkinsMean
+    obj.ratingsMean = ratingsMean
+    obj.reviewsMean = reviewsMean
+
+    return obj;
+  },
+
+  // finds the mean of the rounded difference
+  findRoundedDiffMean: function(arr,name) {
+    const diff = this.findDifference(arr, name)
+    const mean = this.getMean(diff)
+
+    return Round(mean, -2)
   }
 
 }

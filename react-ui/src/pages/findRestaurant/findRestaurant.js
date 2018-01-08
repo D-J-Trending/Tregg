@@ -18,6 +18,7 @@ import moment from 'moment';
 import geolib from 'geolib';
 import PlacesAutocomplete, { geocodeByAddress, getLatLng } from 'react-places-autocomplete';
 import Map from "../../utils/Map.js";
+import Filter from '../../utils/Filter.js';
 
 //Need to pass value from input field
 //Style chart and info into one element
@@ -47,49 +48,70 @@ class findRestaurant extends Component {
 			chartData: {},
 			searchedRestaurant: {},
 			showsidenav: true,
+			onSearchClick: true,
 			showline: true,
 			showbar: true,
 			address: "",
 			dropdown: '',
 			hidesearch: true
 		};
-		this.onChange = (address) => this.setState({ address })
+		this.onChange = (restaurantName) => this.setState({ restaurantName })
 	}
   
-	componentDidMount() {
+  componentWillMount() {
 		API.AllReviews()
 		.then(res => {
-			console.log(res);
-			console.log(res.data);
 			const coordsArr = []
 			res.data.forEach(item => {
 				coordsArr.push({
 					yelpId: item.yelpId,
-					coordinates: item.coordinates
+					coordinates: item.coordinates,
+					score: item.trending_score
 				})
 			})
-			console.log('COORDSARR: ', coordsArr)
+			// this.findPercentChange(res.data,'checkins', 'checkins')
+			// this.findPercentChange(res.data,'rating_count', 'rating_count')
+			// this.findPercentChange(res.data,'reviews', 'review_count')
+		console.log('BEFORE GEOLOCATE')
+		if (navigator.geolocation) {
+			navigator.geolocation.getCurrentPosition(position => {
+				console.log(position)
+				let userCoordinates = {
+					latitude: position.coords.latitude,
+					longitude: position.coords.longitude
+				};
+				console.log(res.data)
+				this.setState({
+					restaurantInfo: res.data,
+					coordsIdsArr: coordsArr,
+					userCoordinates: userCoordinates
+				})
+			})
+		} else {
 			this.setState({
 				restaurantInfo: res.data,
-				coordsIdsArr: coordsArr
+				coordsIdsArr: coordsArr,
+				userCoordinates: null
 			})
+		}
+		// 	console.log('Hi')
 
-			this.findPercentChange('checkins', 'checkins')
-			this.findPercentChange('rating_count', 'rating_count')
-			this.findPercentChange('reviews', 'review_count')
+
+		// 	})
+		// } else {
+
+		// }
 
 		})
 		.catch(err => console.log(err));
-	}
 
+  }
 
 	//handle Submit for Geolocation
 
 	handleFormSubmit = (event) => {
-    event.preventDefault()
-
-    Map.geoCode(this.state.address)
-  	}
+    return Map.geoCode(this.state.restaurantName)
+  };
 
 
 
@@ -121,24 +143,16 @@ class findRestaurant extends Component {
 
     	if (index === -1) {
     		datalabel = this.state.restaurantDetails.name
-    		console.log('doesn\'t exist, push label as is: ' + datalabel);
     	}
     	else {
     		datalabel = this.state.restaurantDetails.name + '1'
-    		console.log('datalabel: ' + datalabel)
     	}
 
     	const labelArray = this.state.chartData.datasets.map(index => {
     		return index.label;
     	})
 
-    	console.log(labelArray);
-
     	let numberoftimes = labelArray.filter(word => word === this.state.restaurantDetails.name+"1")
-
-    	console.log("/"+this.state.restaurantDetails.name+"/");
-
-    	console.log(numberoftimes);
 
 		this.setState({
 			chartData: {
@@ -156,22 +170,6 @@ class findRestaurant extends Component {
 		})
 	};
 
-	loadRestaurants = () => {
-		API.AllReviews()
-		.then(res => {
-		console.log(res)
-		})
-		.catch(err => console.log(err));
-	};
-
-	nameQuery = name => {
-		API.nameQuery(name)
-		.then(res => {
-		console.log(res)
-		})
-		.catch(err => console.log(err));
-	};
-
     //update state whenever field input changes
   handleInputChange = event => {
 		const { name, value } = event.target;
@@ -180,16 +178,29 @@ class findRestaurant extends Component {
 		});
 	};
 
+  geoCode = (address) => {
+  	geocodeByAddress(address)
+    	.then(results => getLatLng(results[0]))
+    	.then(latLng => {
+    		this.setState({
+    			geoCodeAddress: latLng
+    		})
+    	})
+  };
+
 	searchRestaurant = event => {
 		event.preventDefault();
+		this.onSearchClick();
 		if (this.state.restaurantName) {
+
+			this.geoCode(this.state.restaurantName)
+
 			const nameQue = (data) => {
 				API.nameQuery(this.state.restaurantName)
 				.then(res => {
 					// if no result found, start add new firm functions
 					// indexof, if data matches res.data, then take out
 					let fbResults = []
-					console.log(res)
 					if (res.data[0]) {
 						data.forEach(item => {
 
@@ -224,7 +235,6 @@ class findRestaurant extends Component {
 			}
 			API.APIsearch(url, params)
 				.then(res => {
-					console.log(res)
 					nameQue(res.data.data)
 				})
 				.catch(err => console.log(err))
@@ -239,13 +249,18 @@ class findRestaurant extends Component {
 			.then(res => {
 				console.log(res.data[0])
 
-				let checkinsAvg = this.findDifference(res.data[0].checkins, 'checkins')
-				let reviewsAvg = this.findDifference(res.data[0].reviews, 'review_count')
-				let ratingsAvg = this.findDifference(res.data[0].rating_count, 'rating_count')
-				let diff = this.findDiff(res.data[0].checkins, 'checkins');
-				let ratingDiff = this.findDiff(res.data[0].rating_count, 'rating_count');
-				let reviewDiff = this.findDiff(res.data[0].reviews, 'review_count');
-				let totalAvg = this.findTotalStats(this.state.restaurantInfo)
+				let checkinsAvg = Mathy.findRoundedDiffMean(res.data[0].checkins, 'checkins')
+				console.log(checkinsAvg)
+				let reviewsAvg = Mathy.findRoundedDiffMean(res.data[0].reviews, 'review_count')
+				console.log(reviewsAvg)
+				let ratingsAvg = Mathy.findRoundedDiffMean(res.data[0].rating_count, 'rating_count')
+				// console.log(checkinsAvg)
+				let diff = Mathy.getDiffwithDate(res.data[0].checkins, 'checkins');
+				// console.log(checkinsAvg)
+				let ratingDiff = Mathy.getDiffwithDate(res.data[0].rating_count, 'rating_count');
+				// console.log(checkinsAvg)
+				let reviewDiff = Mathy.getDiffwithDate(res.data[0].reviews, 'review_count');
+				// let totalAvg = this.findTotalStats(this.state.restaurantInfo)
 
 				this.setState({
 					restaurantDetails: res.data[0],
@@ -255,8 +270,8 @@ class findRestaurant extends Component {
 					ratingsAvg: ratingsAvg,
 					diffArr: diff,
 					ratingDiff: ratingDiff,
-					reviewDiff: reviewDiff,
-					totalAvg: totalAvg
+					reviewDiff: reviewDiff
+					// totalAvg: totalAvg
 				})
 				console.log(this.state)
 				this.generateChartData(this.state.diffArr)
@@ -265,14 +280,14 @@ class findRestaurant extends Component {
 	};
 
 	//create an array with differences for all restaurants in restaurantInfo
-	findPercentChange = (arraytocheck, arrayvariable) => {
+	findPercentChange = (resData,arraytocheck, arrayvariable) => {
 		//array to hold the daily increase in ratings, reviews, checkins
 		const allDifferences = []
 		//create array with differences for all restaurnts in restaurant info
-		this.state.restaurantInfo.map(item => {
+		resData.map(item => {
 			// console.log(item)
 			let obj = {}
-			let diff = this.findDiff(item[arraytocheck], arrayvariable)
+			let diff = Mathy.getDiffwithDate(item[arraytocheck], arrayvariable)
 			obj.yelpId = item.yelpId
 			obj.diff = diff
 			allDifferences.push(obj)
@@ -304,8 +319,6 @@ class findRestaurant extends Component {
 			compare.weeklyChangePercent = weeklyChange/percentChange1
 			compareAll.push(compare)
 		})
-		console.log(compareAll)
-
 		const stateParam = arraytocheck + 'change';
 
 		//sort arrays based on weekly percent change in descending order
@@ -315,7 +328,6 @@ class findRestaurant extends Component {
 				this.setState({
 					[stateParam]: sortedCompare
 				}, ()=> {
-					console.log(this.state)
 				})
 		// this.setState({
 		// 	[stateParam]: compareAll
@@ -333,73 +345,6 @@ class findRestaurant extends Component {
 
 		// 		console.log(sortedCompare)
 		// 	})
-	};
-
-	findDiff = (arr, name) => {
-		// returns an arry of obj with date and count
-		const values = []
-		for (var i = 0; i < arr.length; i++) {
-			values.push({
-				count: arr[i][name],
-				query_date: arr[i]['query_date'],
-			})
-		}
-
-		const diff = []
-		for (var i = 0; i < values.length - 1; i++) {
-			let difference = values[i+1]['count'] - values[i]['count']
-
-			let val = difference / values[i]['count']
-			let percentChange = Mathy.roundValue(val, -5)
-
-			let query_date = values[i+1]['query_date']
-			diff.push({
-				difference: difference,
-				percentChange: percentChange,
-				query_date: query_date
-			})
-		}		
-		return diff
-	};
-
-	findDifference = (arr, name) => {
-		const values = []
-		for (var i = 0; i < arr.length; i++) {
-			values.push(arr[i][name])
-		}
-		const diff = []
-		for (var i = 0; i < values.length - 1; i++) {
-			let difference = values[i+1] - values[i]
-			diff.push(difference)
-		}
-		let mean = Mathy.getMean(diff)
-		return Mathy.roundValue(mean, -2)
-	};
-
-	findTotalStats = (arr) => {
-		var checkins = [];
-		var ratings = [];
-		var reviews = [];
-		const obj = {}
-		for (var i = 0; i < arr.length; i++) {
-			checkins.push(this.findDifference(arr[i].checkins, 'checkins'))
-			ratings.push(this.findDifference(arr[i].rating_count, 'rating_count'))
-			reviews.push(this.findDifference(arr[i].reviews, 'review_count'))
-		}
-
-		checkins = numjs.array(checkins);
-		ratings = numjs.array(ratings);
-		reviews = numjs.array(reviews);
-
-		const checkinsMean = Mathy.roundValue(checkins.mean(), -6)
-		const ratingsMean = Mathy.roundValue(ratings.mean(), -6)
-		const reviewsMean = Mathy.roundValue(reviews.mean(), -6)
-
-		obj.checkinsMean = checkinsMean
-		obj.ratingsMean = ratingsMean
-		obj.reviewsMean = reviewsMean
-
-		return obj;
 	};
 
 	loadFilter = (ev) => {
@@ -425,14 +370,14 @@ class findRestaurant extends Component {
 		API.filterSearch('price', this.state.restaurantDetails.price)
 		.then(res => {
 			const priceData = res.data
-			let priceTotal = this.findTotalStats(priceData)
+			let priceTotal = Mathy.findTotalStats(priceData)
 			getAllTotal(priceTotal, getCategoryTotal, priceData)
 			
 		})
 		.catch(err => console.log('ERROR: ',err))
 		
 		const getAllTotal = (priceTotal, getCategoryTotal, priceData) => {
-			const allTotal = this.findTotalStats(this.state.restaurantInfo)
+			const allTotal = Mathy.findTotalStats(this.state.restaurantInfo)
 			getCategoryTotal(priceTotal, allTotal, priceData)
 		}
 		
@@ -455,7 +400,7 @@ class findRestaurant extends Component {
 								console.log('no push')
 							}
 						})
-						categoryTotal = this.findTotalStats(arrFirms)
+						categoryTotal = Mathy.findTotalStats(arrFirms)
 						this.setState({
 							priceTotal: priceTotal,
 							allTotal: allTotal,
@@ -466,10 +411,16 @@ class findRestaurant extends Component {
 			})
 		}
 	};
+	
+
 
 	onClick = () => {
     this.setState({ showsidenav: !this.state.showsidenav });
    };
+
+	onSearchClick = () => {
+		 this.setState({ searchIcon: !this.state.searchIcon});
+	};
 
 	showline = () => {
 			this.setState({ showline: !this.state.showline });
@@ -478,6 +429,7 @@ class findRestaurant extends Component {
 	showbar = () => {
 			this.setState({ showbar: !this.state.showbar });
 	};
+
 
 	hidesearch = () => {
 			this.setState({ hidesearch: !this.state.hidesearch });
@@ -500,6 +452,11 @@ class findRestaurant extends Component {
 		}
 	};
 
+
+// looks for yelpId via information sent from clicking on
+// search result. sends to yelpAPI in utils to pull info
+// and send to DB
+
 	getYelpAddToDb = (ev) => {
 		console.log('getYelpAddToDb')
 		const id = ev.currentTarget.getAttribute('value')
@@ -519,7 +476,12 @@ class findRestaurant extends Component {
 	};
 
 	findClosestRestaurants = (query) => {
-		const geo = {latitude: 37.82306519999999, longitude: -122.24868090000001}
+		var geo
+		if (this.state.userCoordinates === null) {
+			geo = {latitude: 37.82306519999999, longitude: -122.24868090000001}
+		} else {
+			geo = this.state.userCoordinates
+		}
 		const compareArr = this.state.coordsIdsArr
 		const newArr = []
 		// loops through coordsid array, gets distnace from compare and inputs into new array
@@ -529,24 +491,44 @@ class findRestaurant extends Component {
 			newArr.push({
 				yelpId: item.yelpId,
 				distance: distance,
-				coordinates: coords
+				coordinates: coords,
+				score: item.score['7day']['checkins']
 			})
+			
 		})
+
+		// sort by distance
 		newArr.sort((a,b) => {
 			return a.distance - b.distance
 		})
-		console.log('SORTED: ', newArr)
-		// console.log(geolib.getDistance(geo, compare))
-		// var coords = Geo.geoCodeByAddress(query)
-		// this.setState({
-		// 	search_coords: coords
-		// })
+
+		// take closest 30 and sort by highest score
+		const loop = 30 - newArr.length
+		const length = loop*-1
+
+		for (let i = 0; i < length; i++) {
+			newArr.pop()
+		}
+		const top10Arr = Filter.getTop10ByScore(newArr)
+		// display to HTML
+		this.setState({
+			top10Distance: top10Arr
+		})
+		console.log(this.state)
+	};
+
+	findDailyDiffAvg = (filtered_arr) => {
+		console.log(this.state)
+		const dailyAvg = Filter.dailyDiffAvg(this.state.restaurantInfo)
+		this.setState({
+			dailyCheckinAvgObj: dailyAvg
+		})
 	};
 
 	render() {
 
 		const inputProps = {
-	      value: this.state.address,
+	      value: this.state.restaurantName,
 	      onChange: this.onChange,
 	    }
 
@@ -554,34 +536,29 @@ class findRestaurant extends Component {
 		<div>
 			<div className="wrapper">	
 			{/*Main section*/}
+				<button onClick={this.findDailyDiffAvg}>DailyDiffAvg</button>
 				<button onClick={this.findClosestRestaurants}>BLAHHHH</button>
 				<button onClick={this.showline}>showline</button> 
 				<button onClick={this.showbar}>showbar</button> 
+
 				<button onClick={this.findPercentChange}>finddiffall</button>
 				<button onClick={this.hidesearch}>hidesearcharea</button>  
 
-
-		      	<div className="data-section columns">		      		
+				<a onClick={this.onSearchClick}>
+					<div className="inPut-with-icon">
+						<i className="fa fa-search"></i>
+					</div>
+				</a>
+				
+		      	<div className="data-section columns">
 		      		<div className="column auto">
 
 		      		{this.state.hidesearch ? (
 		      			<div className='columns search-area'>
 		      				<div className="column is-12">
 		      					<h1> Find A Restaurant </h1>
-										<form onSubmit={this.handleFormSubmit}>
-											<PlacesAutocomplete
-													inputProps={inputProps}
-													value={this.state.restaurantName}
-													onChange={this.handleInputChange}
-													name="restaurantName"
-													placeholder="restaurant"
-											/>
-											<button type="submit"
-													disabled={!(this.state.restaurantName)}
-													onClick={this.searchRestaurant}
-											>
-												Search Restaurant
-											</button>	
+										<form>
+											
 										
 											<div id='search-restaurant'>
 													{this.state.searchedRestaurant.length ? (
@@ -697,6 +674,58 @@ class findRestaurant extends Component {
 									)}
 			    		</div>
 			    	</div>
+
+			    	{ this.state.searchIcon ? 
+		      			<div className="side-nav column is-12">
+			      			<CSSTransitionGroup
+								transitionName="example"
+								transitionAppear={true}
+								transitionAppearTimeout={500}
+								transitionEnter={false}
+								transitionLeave={true}>
+								<div className='searchIcon'>
+				      			<PlacesAutocomplete
+									inputProps={inputProps}
+									value={this.state.restaurantName}
+									onChange={this.handleInputChange}
+									name="restaurantName"
+									placeholder="restaurant"
+								/>
+
+								<button type="submit"
+													disabled={!(this.state.restaurantName)}
+													onClick={this.searchRestaurant}
+
+											>
+												Search Restaurant
+											</button>
+								</div>
+				      		</CSSTransitionGroup>
+			      		</div>  		
+		      		: null }
+
+		      	{/*<div id='restaurants'>
+			      	{this.state.restaurantInfo.length ? (
+			        	<Searched>
+			          	{this.state.restaurantInfo.map(restaurant => (
+				            <Searcheditems key={restaurant._id} showDetails={(ev) => this.showDetails(ev)}
+				            	value={restaurant._id}
+				            >              
+											<p> Name of Restaurant: {restaurant.name} </p>
+											<p> Address: {restaurant.location.address}, {restaurant.location.city}, {restaurant.location.state} </p>
+											<p> Data Summary: 
+												<ul>
+													<li>Yelp Rating: {restaurant.rating[0].rating} </li>
+													<li>Yelp URL: <a href={restaurant.yelpURL} target='blank'>{restaurant.name}</a></li>
+												</ul>
+											</p>
+				            </Searcheditems>
+				          	))}
+			       		</Searched>
+						) : (
+						<h3>No Results to Display</h3>
+						)}
+			    </div>*/}
 				</div>
 			
 		</div>
