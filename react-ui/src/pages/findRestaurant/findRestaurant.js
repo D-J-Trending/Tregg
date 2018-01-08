@@ -626,33 +626,43 @@ class findRestaurant extends Component {
 						    		</form>
 		      				</div>
 		      			</div>
-		      			<div className='columns'>
-			      			<div className="column is-three-fifths">
-					      		<Chart className='charts' chartData={this.state.chartData} chartName="Average Checkins by Date"
-					      		 showline={this.state.showline} showbar={this.state.showbar}legendPosition="top"/>
-					      	</div>
-					      	<div className="column auto">
-					      		<div className="data-navigation">
-					      			<p class='percentage'>+75% Increase</p>
-					      			<p class='percentage'>-30% Decrease</p>
-											{this.state.details ? (
-												<Details 
-													name={this.state.restaurantDetails.name}
-													checkins={this.state.restaurantDetails.checkins}
-													checkinsAvg={this.state.checkinsAvg}
-													ratingCountAvg={this.state.ratingsAvg}
-													reviewsAvg={this.state.reviewsAvg}
-													totals={this.state.totalAvg}
-													handleInputChange={this.handleInputChange}
-													loadFilter={this.loadFilter}
-													getTotals={() => this.getTotals()}
-												/>
-												) : (
-												null
-											)}								
+		      		
+								{this.state.details ? (
+		      				<div>
+										<div className='columns'>
+				      				<div className='column-auto'>
+				      					<p className='restaurant-header'>{this.state.restaurantDetails.name}</p>
+				      					<p className='restaurant-address'>
+					      					{this.state.restaurantDetails.location.address}, {this.state.restaurantDetails.location.city}, {this.state.restaurantDetails.location.state} &#8226; <a target='blank' href={this.state.restaurantDetails.yelpURL}>Yelp Page</a>
+				      					</p>
+				      				</div>		      				
+				      			</div>
+				      			<div className='columns'>		      				
+					      			<div className="column is-8">			 
+							      		<Chart className='charts' chartData={this.state.chartData} chartName="Restaurant Checkins by Date"
+							      		 showline={this.state.showline} showbar={this.state.showbar}legendPosition="top"/>
+							      	</div>
+							      	<div className="column is-4">
+							      		<div className="data-navigation">
+							      			{/*<Dropdown onClick={this.dropdown} className={this.state.dropdown}/>*/}
+							      			<p className='percentage'>Weekly Percentage Change</p>							
+														<Stats 														
+															checkins={this.state.restaurantDetails.checkins}
+															checkinsAvg={this.state.checkinsAvg}
+															ratingCountAvg={this.state.ratingsAvg}
+															reviewsAvg={this.state.reviewsAvg}
+															totals={this.state.totalAvg}
+															handleInputChange={this.handleInputChange}
+															loadFilter={this.loadFilter}
+															getTotals={() => this.getTotals()}
+														/>																
+												</div>
+											</div>
 										</div>
 									</div>
-								</div>	
+										) : (
+										null
+									)}
 			    		</div>
 			    	</div>
 				</div>
