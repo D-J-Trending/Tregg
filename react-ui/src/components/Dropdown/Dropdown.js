@@ -5,7 +5,7 @@ const Dropdown = props =>
   <div className="dropdown" {...props}>
 	  <div className="dropdown-trigger">
 	    <button className="button" aria-haspopup="true" aria-controls="dropdown-menu">
-	      <span>Dropdown button</span>
+	      <span>Days</span>
 	      <span className="icon is-small">
 	        <i className="fa fa-angle-down" aria-hidden="true"></i>
 	      </span>
@@ -24,11 +24,7 @@ const Dropdown = props =>
 	      </a>
 	      <a href="#" className="dropdown-item">
 	        28 Days
-	      </a>
-	      <hr className="dropdown-divider"/>
-	      <a href="#" className="dropdown-item">
-	        With a divider
-	      </a>
+	      </a>	      
 	    </div>
 	  </div>
   </div>

@@ -43,18 +43,7 @@ class findRestaurant extends Component {
 			priceTotal: "",
 			categoryTotal: "",
 			totalAvg: "",
-			chartData: {
-					labels: [10,20],
-					datasets: [
-						{
-							label: 'Difference',
-							data: [11,21],
-							backgroundColor: [
-												'rgba(255, 99, 132, 0.2)',
-										]
-						}
-					]
-			},
+			chartData: {},
 			searchedRestaurant: {},
 			showsidenav: true,
 			showline: true,
@@ -656,7 +645,10 @@ class findRestaurant extends Component {
 		      				<div>
 										<div className='columns'>
 				      				<div className='column-auto'>
-				      					<p className='restaurant-header'>{this.state.restaurantDetails.name}</p>
+				      					<div>
+				      						<span className='restaurant-header'>{this.state.restaurantDetails.name}</span>
+				      						<span className='rank-section'>Trending Rank: <span className='rank-number'>4</span></span>				      						
+				      					</div>
 				      					<p className='restaurant-address'>
 					      					{this.state.restaurantDetails.location.address}, {this.state.restaurantDetails.location.city}, {this.state.restaurantDetails.location.state} &#8226; <a target='blank' href={this.state.restaurantDetails.yelpURL}>Yelp Page</a>
 				      					</p>
@@ -664,7 +656,7 @@ class findRestaurant extends Component {
 				      			</div>
 				      			<div className='columns'>		      				
 					      			<div className='column is-7'>			 
-							      		<Chart className='charts' chartData={this.state.chartData} chartName="Restaurant Checkins by Date"
+							      		<Chart className='charts' chartData={this.state.chartData} chartName="Checkins by Date"
 							      		 showline={this.state.showline} showbar={this.state.showbar}legendPosition="top"/>
 							      	</div>
 							      	<div className='column is-5 data-navigation'>							      	
@@ -673,7 +665,7 @@ class findRestaurant extends Component {
 						      			</div>
 						      			<Statsection/>
 						      			{/*<div className='columns'>
-													<Stats												
+													<Details												
 														checkins={this.state.restaurantDetails.checkins}
 														checkinsAvg={this.state.checkinsAvg}
 														ratingCountAvg={this.state.ratingsAvg}

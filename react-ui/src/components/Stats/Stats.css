@@ -1,3 +1,28 @@
 .stats {
-	text-align: center;
+	padding: 0px;
+}
+
+.fa-arrow-up {
+	color: green;
+}
+
+.fa-arrow-down {
+	color: red;
+}
+
+.stat-header, .stats-title {
+	text-decoration: underline;
+}
+
+.stats-title {
+	font-weight: bold;
+	font-size: 20px;
+}
+
+.fa-facebook-square {
+	color: #3B5998;
+}
+
+.fa-yelp {
+	color: #F15C4F;
 }
