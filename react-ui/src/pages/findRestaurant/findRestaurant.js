@@ -6,8 +6,9 @@ import Sidenav from "../../components/Sidenav";
 import Dropdown from "../../components/Dropdown";
 import API from "../../utils/API.js";
 import { Details } from "../../components/Details"
+import { Restdetails, Restheader } from "../../components/Restdetails"
 import { Stats, Statsection } from "../../components/Stats"
-import FilterData from "../../components/FilterData"
+import Filter from "../../components/Filter"
 import "./findRestaurant.css";
 import numjs from 'numjs';
 import Mathy from "../../utils/Mathy.js";
@@ -642,28 +643,29 @@ class findRestaurant extends Component {
 										null
 									)}
 								{this.state.details ? (
-		      				<div>
-										<div className='columns'>
-				      				<div className='column-auto'>
-				      					<div>
-				      						<span className='restaurant-header'>{this.state.restaurantDetails.name}</span>
-				      						<span className='rank-section'>Trending Rank: <span className='rank-number'>4</span></span>				      						
-				      					</div>
-				      					<p className='restaurant-address'>
-					      					{this.state.restaurantDetails.location.address}, {this.state.restaurantDetails.location.city}, {this.state.restaurantDetails.location.state} &#8226; <a target='blank' href={this.state.restaurantDetails.yelpURL}>Yelp Page</a>
-				      					</p>
-				      				</div>		      				
-				      			</div>
+		      				<div>	
+		      					<div className='columns'>	      				
+		      						<Restheader
+		      							restaurantHeader={this.state.restaurantDetails.name}
+		      							address={this.state.restaurantDetails.location.address}
+		      							city={this.state.restaurantDetails.location.city}
+		      							state={this.state.restaurantDetails.location.state}
+		      							yelpURL={this.state.restaurantDetails.yelpURL}
+		      						/>
+		      					</div>										
 				      			<div className='columns'>		      				
 					      			<div className='column is-7'>			 
 							      		<Chart className='charts' chartData={this.state.chartData} chartName="Checkins by Date"
 							      		 showline={this.state.showline} showbar={this.state.showbar}legendPosition="top"/>
 							      	</div>
-							      	<div className='column is-5 data-navigation'>							      	
+							      	<div className='column is-5 data-navigation'>							      		
 						      			<div className='columns'>
-						      				<Dropdown onClick={this.dropdown} className={this.state.dropdown}/>
+						      				<Filter>
+						      					<Dropdown onClick={this.dropdown} className={this.state.dropdown}/>						      		
+						      				</Filter>				      				
 						      			</div>
 						      			<Statsection/>
+						      			
 						      			{/*<div className='columns'>
 													<Details												
 														checkins={this.state.restaurantDetails.checkins}
@@ -677,6 +679,11 @@ class findRestaurant extends Component {
 													/>		
 												</div>*/}												
 											</div>
+										</div>
+										<div className='columns'>
+											<section className='section'>
+												<Restdetails/>
+											</section>
 										</div>
 									</div>
 										) : (
