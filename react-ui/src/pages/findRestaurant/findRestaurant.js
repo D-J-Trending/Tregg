@@ -651,6 +651,8 @@ class findRestaurant extends Component {
 		      							city={this.state.restaurantDetails.location.city}
 		      							state={this.state.restaurantDetails.location.state}
 		      							yelpURL={this.state.restaurantDetails.yelpURL}
+		      							yelpRating={this.state.restaurantDetails.star_rating}
+		      							fbRating={this.state.restaurantDetails.rating}
 		      						/>
 		      					</div>										
 				      			<div className='columns'>		      				
