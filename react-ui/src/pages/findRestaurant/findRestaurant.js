@@ -194,6 +194,7 @@ class findRestaurant extends Component {
 
 	searchRestaurant = event => {
 		event.preventDefault();
+		this.onSearchClick();
 		if (this.state.restaurantName) {
 
 			this.geoCode(this.state.restaurantName)
@@ -670,7 +671,7 @@ class findRestaurant extends Component {
 								<button type="submit"
 													disabled={!(this.state.restaurantName)}
 													onClick={this.searchRestaurant}
-													onClick={this.closeSearch}
+
 											>
 												Search Restaurant
 											</button>
