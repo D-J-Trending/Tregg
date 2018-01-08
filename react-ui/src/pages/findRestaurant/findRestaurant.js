@@ -483,6 +483,10 @@ class findRestaurant extends Component {
 			this.setState({ hidesearch: !this.state.hidesearch });
 	};
 
+	checkClick = ev => {
+		const value = ev.currentTarget.getAttribute('value')	
+	};
+
 	dropdown = () => {
 		if(this.state.dropdown === "dropdown is-active") {
 			this.setState({

@@ -4,11 +4,11 @@ import "./Filter.css";
 export const Filter = props => (
   <div className="filter" {...props}>
   	{props.children}
-  	<button {...props}> Similar Categories</button>
-  	<button {...props}> $ </button>
-  	<button {...props}> $$ </button>
-  	<button {...props}> $$$ </button>
-  	<button {...props}> $$$$ </button>	 
+  	<button className='button'{...props}> Similar Categories</button>
+  	<button className='button'{...props}> $ </button>
+  	<button className='button'{...props}> $$ </button>
+  	<button className='button'{...props}> $$$ </button>
+  	<button className='button'{...props}> $$$$ </button>	 
   </div>
 )
 
