@@ -254,10 +254,15 @@ class findRestaurant extends Component {
 				console.log(res.data[0])
 
 				let checkinsAvg = Mathy.findRoundedDiffMean(res.data[0].checkins, 'checkins')
+				console.log(checkinsAvg)
 				let reviewsAvg = Mathy.findRoundedDiffMean(res.data[0].reviews, 'review_count')
+				console.log(reviewsAvg)
 				let ratingsAvg = Mathy.findRoundedDiffMean(res.data[0].rating_count, 'rating_count')
+				// console.log(checkinsAvg)
 				let diff = Mathy.getDiffwithDate(res.data[0].checkins, 'checkins');
+				// console.log(checkinsAvg)
 				let ratingDiff = Mathy.getDiffwithDate(res.data[0].rating_count, 'rating_count');
+				// console.log(checkinsAvg)
 				let reviewDiff = Mathy.getDiffwithDate(res.data[0].reviews, 'review_count');
 				// let totalAvg = this.findTotalStats(this.state.restaurantInfo)
 
