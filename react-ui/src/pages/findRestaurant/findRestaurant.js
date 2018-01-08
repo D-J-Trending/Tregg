@@ -646,13 +646,13 @@ class findRestaurant extends Component {
 		      				<div>	
 		      					<div className='columns'>	      				
 		      						<Restheader
-		      							restaurantHeader={this.state.restaurantDetails.name}
+		      							restaurantName={this.state.restaurantDetails.name}
 		      							address={this.state.restaurantDetails.location.address}
 		      							city={this.state.restaurantDetails.location.city}
 		      							state={this.state.restaurantDetails.location.state}
 		      							yelpURL={this.state.restaurantDetails.yelpURL}
-		      							yelpRating={this.state.restaurantDetails.star_rating}
-		      							fbRating={this.state.restaurantDetails.rating}
+		      							yelpRating={this.state.restaurantDetails.star_rating[0].overall_star_rating}
+		      							fbRating={this.state.restaurantDetails.rating[0].rating}
 		      						/>
 		      					</div>										
 				      			<div className='columns'>		      				
