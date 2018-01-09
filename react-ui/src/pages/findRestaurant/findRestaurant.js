@@ -38,7 +38,7 @@ class findRestaurant extends Component {
 			restaurantDetails: false,
 			restaurantId: "",
 			filter: 'price',
-			filteredRestaurants: '',
+			priceFilteredRestaurants: '',
 			fbAPIResults: {},
 			details: false,
 			filteredTotal: "",
@@ -54,7 +54,7 @@ class findRestaurant extends Component {
 			showbar: true,
 			address: "",
 			dropdown: '',
-			hidesearch: true
+			hidesearch: false
 		};
 		this.onChange = (restaurantName) => this.setState({ restaurantName })
 	}
@@ -114,6 +114,16 @@ class findRestaurant extends Component {
     return Map.geoCode(this.state.restaurantName)
   };
 
+ 	priceAPISearch = (filter) => {
+ 		API.filterSearch('price', filter)
+ 			.then(res => {
+ 				console.log(res)
+ 				this.setState({
+ 					priceFilteredRestaurants: res.data
+ 				})
+ 			})
+ 			.catch(err => console.log(err))
+ 	}
 
   	//create labels and data arrays and sets chartData state
 	generateChartData = (res) => {
@@ -198,14 +208,15 @@ class findRestaurant extends Component {
 
  pressEnter = (ev) => {
   	if(ev.key == 13){
-  		this.Restaurant;
+  		ev.preventDefault();
+  		this.Restaurant();
   		console.log('iwas pressed(enter)')
   	}
   };
 
 	searchRestaurant = event => {
-		event.preventDefault();
 		this.onSearchClick();
+		this.hidesearch();
 		if (this.state.restaurantName) {
 
 			this.geoCode(this.state.restaurantName)
@@ -229,11 +240,13 @@ class findRestaurant extends Component {
 					this.setState({
 						fbAPIResults: fbResults,
 						searchedRestaurant: res.data,
+
 					})
 					console.log(this.state);
 					// this.generateChartData(this.state.restaurantInfo)
 				})
 				.catch(err => console.log(err));
+				
 			}
 
 			// searches through fb api before sending it through db api
@@ -276,7 +289,6 @@ class findRestaurant extends Component {
 				// console.log(checkinsAvg)
 				let reviewDiff = Mathy.getDiffwithDate(res.data[0].reviews, 'review_count');
 				// let totalAvg = this.findTotalStats(this.state.restaurantInfo)
-
 				this.setState({
 					restaurantDetails: res.data[0],
 					details: true,
@@ -290,6 +302,9 @@ class findRestaurant extends Component {
 				})
 				console.log(this.state)
 				this.generateChartData(this.state.diffArr)
+				this.hidesearch();
+
+
 			})
 			.catch(err => console.log(err))
 	};
@@ -433,11 +448,11 @@ class findRestaurant extends Component {
 
 
 	onClick = () => {
-    this.setState({ showsidenav: !this.state.showsidenav });
+    		this.setState({ showsidenav: !this.state.showsidenav });
    };
 
 	onSearchClick = () => {
-		 this.setState({ searchIcon: !this.state.searchIcon});
+		 	this.setState({ searchIcon: !this.state.searchIcon});
 	};
 
 	showline = () => {
@@ -569,14 +584,19 @@ class findRestaurant extends Component {
 					</div>
 				</a>
 				
+
+
+						      					<h1> Find A Restaurant </h1>
+
+
+						      					
 		      	<div className="data-section columns">
 		      		<div className="column auto">
 
 		      		{this.state.hidesearch ? (
 		      			<div className='columns search-area'>
 		      				<div className="column is-12">
-		      					<h1> Find A Restaurant </h1>
-										<form>
+
 											
 										
 											<div id='search-restaurant'>
@@ -636,7 +656,6 @@ class findRestaurant extends Component {
 													<h4>No results from Facebook API </h4>
 												)}
 											</div> 		    
-						    		</form>
 		      				</div>
 		      			</div>
 		      		) : (
@@ -705,7 +724,7 @@ class findRestaurant extends Component {
 								transitionEnter={false}
 								transitionLeave={true}>
 								<div className='searchIcon'>
-
+								<form>
 				      			<input
 									inputProps={inputProps}
 									value={this.state.restaurantName}
@@ -722,7 +741,7 @@ class findRestaurant extends Component {
 									>
 												Search Restaurant
 									</button>
-
+								</form>
 								
 								</div>
 				      		</CSSTransitionGroup>

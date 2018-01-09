@@ -106,21 +106,41 @@ export default {
 				}
 			})
 		})
-
+		const final_obj = {
+			'checkins': [],
+			'rating_count': [],
+			'reviews': []
+		}
 		// find avg for each date in obj
 		Object.keys(obj.checkins).map((objectKey, index) => {
 			let value = obj.checkins[objectKey]
-			obj.checkins[objectKey] =	Round(Mathy.getMean(value), -6)
+			let diff_avg =	Round(Mathy.getMean(value), -6)
+			let checkObj = {
+				query_date: objectKey,
+				difference: diff_avg
+			}
+			final_obj.checkins.push(checkObj)
 		})
 		Object.keys(obj.rating_count).map((objectKey, index) => {
 			let value = obj.rating_count[objectKey]
-			obj.rating_count[objectKey] =	Round(Mathy.getMean(value), -6)
+			let diff_avg =	Round(Mathy.getMean(value), -6)
+			let ratingObj = {
+				query_date: objectKey,
+				difference: diff_avg
+			}
+			final_obj.rating_count.push(ratingObj)
 		})
 		Object.keys(obj.reviews).map((objectKey, index) => {
 			let value = obj.reviews[objectKey]
-			obj.reviews[objectKey] =	Round(Mathy.getMean(value), -6)
+			let diff_avg =	Round(Mathy.getMean(value), -6)
+			let reviewObj = {
+				query_date: objectKey,
+				difference: diff_avg
+			}
+			final_obj.reviews.push(reviewObj)
 		})
-		return obj
+		console.log(final_obj)
+		return final_obj
 	}
 
 }
