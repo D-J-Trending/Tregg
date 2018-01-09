@@ -23,3 +23,7 @@
 .restaurant-info {
 	margin: 5px;
 }
+form {
+	position: relative;
+	float: left;
+}

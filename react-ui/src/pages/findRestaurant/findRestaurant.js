@@ -38,7 +38,7 @@ class findRestaurant extends Component {
 			restaurantDetails: false,
 			restaurantId: "",
 			filter: 'price',
-			priceFilteredRestaurants: '',
+			filteredRestaurants: '',
 			fbAPIResults: {},
 			details: false,
 			filteredTotal: "",
@@ -54,7 +54,7 @@ class findRestaurant extends Component {
 			showbar: true,
 			address: "",
 			dropdown: '',
-			hidesearch: false
+			hidesearch: true
 		};
 		this.onChange = (restaurantName) => this.setState({ restaurantName })
 	}
@@ -114,16 +114,7 @@ class findRestaurant extends Component {
     return Map.geoCode(this.state.restaurantName)
   };
 
- 	priceAPISearch = (filter) => {
- 		API.filterSearch('price', filter)
- 			.then(res => {
- 				console.log(res)
- 				this.setState({
- 					priceFilteredRestaurants: res.data
- 				})
- 			})
- 			.catch(err => console.log(err))
- 	}
+
 
   	//create labels and data arrays and sets chartData state
 	generateChartData = (res) => {
@@ -201,14 +192,16 @@ class findRestaurant extends Component {
  pressEnter = (ev) => {
   	if(ev.key == 13){
   		ev.preventDefault();
-  		this.Restaurant();
+  		this.searchRestaurant();
   		console.log('iwas pressed(enter)')
   	}
   };
 
 	searchRestaurant = event => {
-		this.onSearchClick();
-		this.hidesearch();
+		this.onSearchClick();;
+		this.setState ({
+			hidesearch:true
+		})
 		if (this.state.restaurantName) {
 
 			this.geoCode(this.state.restaurantName)
@@ -580,8 +573,6 @@ class findRestaurant extends Component {
 
 						      					<h1> Find A Restaurant </h1>
 
-
-						      					
 		      	<div className="data-section columns">
 		      		<div className="column auto">
 
@@ -596,7 +587,7 @@ class findRestaurant extends Component {
 														<CSSTransitionGroup
 													transitionName="example"
 													transitionAppear={true}
-													transitionAppearTimeout={500}
+													transitionAppearTimeout={1500}
 													transitionEnter={false}
 													transitionLeave={true}>
 															<Searched>
