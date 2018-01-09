@@ -115,7 +115,6 @@ class findRestaurant extends Component {
   };
 
 
-
   	//create labels and data arrays and sets chartData state
 	generateChartData = (res) => {
 		// const differenceArr = res[0].rating_count;		
@@ -128,8 +127,16 @@ class findRestaurant extends Component {
 			labels = this.state.chartData.labels;
 		}
 		const data = res.map(checkins => {
-			return checkins.difference
+			let dataset = {}
+			let queryDate = checkins.query_date.replace(/ .*/,'');
+			let checkinDiff = checkins.difference;
+			dataset = {
+				x: queryDate,
+				y: checkinDiff
+			};
+			return dataset;
 		})
+
 		//generate random color for new dataset
 		const dynamicColors = function() {
             var r = Math.floor(Math.random() * 255);
