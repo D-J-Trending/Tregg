@@ -42,9 +42,9 @@ class findRestaurant extends Component {
 			fbAPIResults: {},
 			details: false,
 			filteredTotal: "",
-			allTotal: "",
-			priceTotal: "",
-			categoryTotal: "",
+			allTotal: {},
+			priceTotal: {},
+			categoryTotal: {},
 			totalAvg: "",
 			chartData: {},
 			searchedRestaurant: {},
@@ -390,33 +390,36 @@ class findRestaurant extends Component {
 		}
 		
 		const getCategoryTotal = (priceTotal, allTotal, priceData, eachDayTotal) => {
-			let categoryTotal;
+			let categoryTotal
 			let categories = this.state.restaurantDetails.categories
 			let arrFirms = []
-		
+			let categoryString = ''
 			categories.forEach(item => {
-	
-				API.filterSearch('category', item.title)
-				.then(res => {
-						const categoryData = res.data
-						categoryData.forEach(item => {
-							var index = arrFirms.findIndex(x => x.name === item.name)
-	
-							if (index === -1) {
-								arrFirms.push(item)
-							}	else {
-								console.log('no push')
-							}
-						})
-						categoryTotal = Mathy.findTotalStats(arrFirms)
-						this.setState({
-							priceTotal: priceTotal,
-							allTotal: allTotal,
-							categoryTotal: categoryTotal
-							})
-				.catch(err => console.log(err))
-				})
+				categoryString += item.alias + ' '
 			})
+			console.log(categoryString)
+			API.filterSearch('category', categoryString)
+			.then(res => {
+				let categoryData = res.data
+				console.log(categoryData)
+				for (var i = 0; i < categoryData.length; i++) {
+					var index = arrFirms.findIndex(x => x.name === categoryData[i].name)
+
+					if (index === -1) {
+						arrFirms.push(categoryData[i])
+					}	else {
+						console.log('no push')
+					}
+				}
+				categoryTotal = Mathy.findTotalStats(arrFirms)
+				this.setState({
+					priceTotal: priceTotal,
+					allTotal: allTotal,
+					categoryTotal: categoryTotal
+				})
+				console.log(this.state)
+			})
+			.catch(err => console.log(err))
 		}
 	};
 	
