@@ -194,6 +194,13 @@ class findRestaurant extends Component {
     	})
   };
 
+ pressEnter = (ev) => {
+  	if(ev.key == 13){
+  		this.Restaurant;
+  		console.log('iwas pressed(enter)')
+  	}
+  };
+
 	searchRestaurant = event => {
 		event.preventDefault();
 		this.onSearchClick();
@@ -652,21 +659,25 @@ class findRestaurant extends Component {
 								transitionEnter={false}
 								transitionLeave={true}>
 								<div className='searchIcon'>
-				      			<PlacesAutocomplete
+
+				      			<PlacesAutocomplete input
 									inputProps={inputProps}
 									value={this.state.restaurantName}
 									onChange={this.handleInputChange}
 									name="restaurantName"
 									placeholder="restaurant"
-								/>
+									onKeyPress={this.pressEnter}
 
+								/>
 								<button type="submit"
 													disabled={!(this.state.restaurantName)}
 													onClick={this.searchRestaurant}
 
-											>
+									>
 												Search Restaurant
-											</button>
+									</button>
+
+								
 								</div>
 				      		</CSSTransitionGroup>
 			      		</div>  		
