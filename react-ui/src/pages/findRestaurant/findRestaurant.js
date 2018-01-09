@@ -5,10 +5,10 @@ import Chart from "../../components/Chart";
 import Sidenav from "../../components/Sidenav";
 import Dropdown from "../../components/Dropdown";
 import API from "../../utils/API.js";
-import { Details } from "../../components/Details"
-import { Restdetails, Restheader } from "../../components/Restdetails"
-import { Stats, Statsection } from "../../components/Stats"
-import chartFilter from "../../components/Filter"
+import { Details } from "../../components/Details";
+import { Restdetails, Restheader } from "../../components/Restdetails";
+import { Stats, Statsection } from "../../components/Stats";
+import Zilter from "../../components/chartFilter";
 import "./findRestaurant.css";
 import numjs from 'numjs';
 import Mathy from "../../utils/Mathy.js";
@@ -18,7 +18,8 @@ import moment from 'moment';
 import geolib from 'geolib';
 import PlacesAutocomplete, { geocodeByAddress, getLatLng } from 'react-places-autocomplete';
 import Map from "../../utils/Map.js";
-import Filter from '../../utils/Filter.js';
+import Filter from "../../utils/Filter"
+
 
 //Need to pass value from input field
 //Style chart and info into one element
@@ -650,9 +651,9 @@ class findRestaurant extends Component {
 							      	</div>
 							      	<div className='column is-5 data-navigation'>							      		
 						      			<div className='columns'>
-						      				<chartFilter>
+						      				<Zilter>
 						      					<Dropdown onClick={this.dropdown} className={this.state.dropdown}/>						      		
-						      				</chartFilter>				      				
+						      				</Zilter>				      				
 						      			</div>
 						      			<Statsection/>
 						      			
