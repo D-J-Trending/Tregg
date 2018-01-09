@@ -74,6 +74,8 @@ class findRestaurant extends Component {
 			// this.findPercentChange(res.data,'rating_count', 'rating_count')
 			// this.findPercentChange(res.data,'reviews', 'review_count')
 		console.log('BEFORE GEOLOCATE')
+		const avgLine = this.findDailyDiffAvg(res.data)
+
 		if (navigator.geolocation) {
 			navigator.geolocation.getCurrentPosition(position => {
 				console.log(position)
@@ -83,6 +85,7 @@ class findRestaurant extends Component {
 				};
 				console.log(res.data)
 				this.setState({
+					filteredRestaurants: avgLine,
 					restaurantInfo: res.data,
 					coordsIdsArr: coordsArr,
 					userCoordinates: userCoordinates
@@ -90,6 +93,7 @@ class findRestaurant extends Component {
 			})
 		} else {
 			this.setState({
+				filteredRestaurants: avgLine,
 				restaurantInfo: res.data,
 				coordsIdsArr: coordsArr,
 				userCoordinates: null
@@ -295,6 +299,7 @@ class findRestaurant extends Component {
 				})
 				console.log(this.state)
 				this.generateChartData(this.state.diffArr)
+				this.generateChartData(this.state.filteredRestaurants.checkins)
 				this.hidesearch();
 
 
@@ -465,8 +470,9 @@ class findRestaurant extends Component {
 	 	API.filterSearch('price', value)
 	    .then(res => {
 	        console.log(res)
+	        let priceAvg = this.findDailyDiffAvg(res.data)
 	        this.setState({
-	          priceFilteredRestaurants: res.data
+	          priceFilteredRestaurants: priceAvg
 	        })
 	    })
 	    .catch(err => console.log(err))
@@ -552,10 +558,11 @@ class findRestaurant extends Component {
 
 	findDailyDiffAvg = (filtered_arr) => {
 		console.log(this.state)
-		const dailyAvg = Filter.dailyDiffAvg(this.state.restaurantInfo)
-		this.setState({
-			dailyCheckinAvgObj: dailyAvg
-		})
+		const dailyAvg = Filter.dailyDiffAvg(filtered_arr)
+		// this.setState({
+		// 	dailyCheckinAvgObj: dailyAvg
+		// })
+		return dailyAvg
 	};
 
 	render() {
