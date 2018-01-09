@@ -123,7 +123,7 @@ class findRestaurant extends Component {
  				})
  			})
  			.catch(err => console.log(err))
- 	}
+ 	};
 
   	//create labels and data arrays and sets chartData state
 	generateChartData = (res) => {
@@ -457,7 +457,8 @@ class findRestaurant extends Component {
 
 	checkClick = ev => {
 		const value = ev.currentTarget.getAttribute('value')
-		console.log(value);	
+		console.log(value);
+		this.priceAPISearch(value)
 	};
 
 	dropdown = () => {
