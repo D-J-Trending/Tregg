@@ -6,9 +6,9 @@ export const chartFilter = props => (
   	{props.children}
   	<button className='button'{...props}> Similar Categories</button>
   	<button className='button' value='$' onClick={props.checkClick}> $ </button>
-  	<button className='button' value='$' onClick={props.checkClick}> $$ </button>
-  	<button className='button' value='$' onClick={props.checkClick}> $$$ </button>
-  	<button className='button' value='$' onClick={props.checkClick}> $$$$ </button>	 
+  	<button className='button' value='$$' onClick={props.checkClick}> $$ </button>
+  	<button className='button' value='$$$' onClick={props.checkClick}> $$$ </button>
+  	<button className='button' value='$$$$' onClick={props.checkClick}> $$$$ </button>	 
   </div>
 )
 

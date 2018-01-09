@@ -1,7 +1,8 @@
 .chart-filter {
-	display: inline-flex;
+	/*display: inline-flex;*/
 }
 
-button {
+.chart-filter button {
 	margin: 2px;
+	display: block;
 }
