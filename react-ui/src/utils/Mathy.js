@@ -17,15 +17,20 @@ export default {
   },
 
   getMean: function(arr) {
-    let avg
-    if (arr.length === 0) {
-      let avg = 0
+    var total = 0;
+    if (arr.length > 0) {
+      for(var i = 0; i < arr.length; i++) {
+          total += arr[i];
+      }
+      var avg = total / arr.length;
+      return avg
+
     } else {
-      let sum = arr.reduce((previous, current) => current += previous);
-      let avg = sum / arr.length;
-      console.log(avg)
+      var avg = 0
+      return avg
+
     }
-    return avg
+    
   },
 
   getDiffwithDate: function(arr, name) {
@@ -62,20 +67,22 @@ export default {
     var ratings = [];
     var reviews = [];
     const obj = {}
+    console.log(arr[10])
     for (var i = 0; i < arr.length; i++) {
       checkins.push(this.findRoundedDiffMean(arr[i].checkins, 'checkins'))
       ratings.push(this.findRoundedDiffMean(arr[i].rating_count, 'rating_count'))
       reviews.push(this.findRoundedDiffMean(arr[i].reviews, 'review_count'))
     }
+    console.log(checkins)
 
-    checkins = numjs.array(checkins);
-    ratings = numjs.array(ratings);
-    reviews = numjs.array(reviews);
+    // checkins = numjs.array(checkins);
+    // ratings = numjs.array(ratings);
+    // reviews = numjs.array(reviews);
 
-    const checkinsMean = Round(checkins.mean(), -6)
-    const ratingsMean = Round(ratings.mean(), -6)
-    const reviewsMean = Round(reviews.mean(), -6)
-
+    const checkinsMean = Round(this.getMean(checkins), -6)
+    const ratingsMean = Round(this.getMean(ratings), -6)
+    const reviewsMean = Round(this.getMean(reviews), -6)
+    console.log(checkinsMean)
     obj.checkinsMean = checkinsMean
     obj.ratingsMean = ratingsMean
     obj.reviewsMean = reviewsMean
@@ -87,7 +94,6 @@ export default {
   findRoundedDiffMean: function(arr,name) {
     const diff = this.findDifference(arr, name)
     const mean = this.getMean(diff)
-
     return Round(mean, -2)
   }
 

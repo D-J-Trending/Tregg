@@ -48,12 +48,25 @@ module.exports = {
 				})
 				.catch(err => res.status(422).json(err));
 		} else if (req.params.type === 'category') {
-			console.log(req.query.filter)
-			let animal = req.query.filter
+			let category = req.query.filter
+			console.log(category)
+			category = category.split(' ')
+			console.log(category)
+
+			const objectAddTitle = (catArr) => {
+				catArr.forEach((item,i) => {
+					catArr[i] = {alias: item}
+				})
+				console.log(catArr)
+			}
+			objectAddTitle(category)
+			// turns string into {'alias: ' + string} to each in category 
 			db.Restaurants
 				.find({
 					categories: {
-						$elemMatch: {title: animal}
+						'$elemMatch': {
+							'$or': category
+						}
 					}
 				})
 				.then(dbModel => {
