@@ -65,6 +65,7 @@ export default {
     var ratings = [];
     var reviews = [];
     const obj = {}
+
     for (var i = 0; i < arr.length; i++) {
       checkins.push(this.findRoundedDiffMean(arr[i].checkins, 'checkins'))
       ratings.push(this.findRoundedDiffMean(arr[i].rating_count, 'rating_count'))
