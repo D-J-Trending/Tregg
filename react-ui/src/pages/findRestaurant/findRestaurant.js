@@ -8,7 +8,7 @@ import API from "../../utils/API.js";
 import { Details } from "../../components/Details";
 import { Restdetails, Restheader } from "../../components/Restdetails";
 import { Stats, Statsection } from "../../components/Stats";
-import ChartFilter from "../../components/chartFilter";
+import ChartFilter from "../../components/ChartFilter";
 import "./findRestaurant.css";
 import numjs from 'numjs';
 import Mathy from "../../utils/Mathy.js";
@@ -437,8 +437,6 @@ class findRestaurant extends Component {
 			.catch(err => console.log(err))
 		}
 	};
-	
-
 
 	onClick = () => {
     		this.setState({ showsidenav: !this.state.showsidenav });
@@ -461,9 +459,17 @@ class findRestaurant extends Component {
 			this.setState({ hidesearch: !this.state.hidesearch });
 	};
 
-	checkClick = ev => {
+	priceFilteredRestaurants = ev => {
 		const value = ev.currentTarget.getAttribute('value')
-		console.log(value);	
+		console.log(value);
+	 	API.filterSearch('price', value)
+	    .then(res => {
+	        console.log(res)
+	        this.setState({
+	          priceFilteredRestaurants: res.data
+	        })
+	    })
+	    .catch(err => console.log(err))
 	};
 
 	dropdown = () => {
@@ -666,38 +672,29 @@ class findRestaurant extends Component {
 		      						/>
 		      					</div>										
 				      			<div className='columns'>		      				
-					      			<div className='column is-7'>			 
+					      			<div className='column is-9'>			 
 							      		<Chart className='charts' chartData={this.state.chartData} chartName="Checkins by Date"
 							      		 showline={this.state.showline} showbar={this.state.showbar}legendPosition="top"/>
 							      	</div>
-							      	<div className='column is-5 data-navigation'>							      		
+							      	<div className='column is-3 data-navigation'>							      		
 						      			<div className='columns'>
 						      				<ChartFilter 
-						      					checkClick={this.checkClick}
+						      					checkClick={this.priceFilteredRestaurants}
 						      				>
 						      					<Dropdown onClick={this.dropdown} className={this.state.dropdown}/>						      		
 						      				</ChartFilter>				      				
 						      			</div>
-						      			<Statsection/>
 						      			
-						      			{/*<div className='columns'>
-													<Details												
-														checkins={this.state.restaurantDetails.checkins}
-														checkinsAvg={this.state.checkinsAvg}
-														ratingCountAvg={this.state.ratingsAvg}
-														reviewsAvg={this.state.reviewsAvg}
-														totals={this.state.totalAvg}
-														handleInputChange={this.handleInputChange}
-														loadFilter={this.loadFilter}
-														getTotals={() => this.getTotals()}
-													/>		
-												</div>*/}												
+						      											
 											</div>
 										</div>
 										<div className='columns'>
-											<section className='section'>
-												<Restdetails/>
-											</section>
+											<div className='column is-12'>
+												<section className='section'>
+													<Statsection/>
+													
+												</section>
+											</div>
 										</div>
 									</div>
 										) : (
