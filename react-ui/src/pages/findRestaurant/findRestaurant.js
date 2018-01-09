@@ -3,9 +3,12 @@ import { Input, Form, Searchbtn } from "../../components/Form";
 import { Searched, Searcheditems, FbSearchedItems } from "../../components/Searched";
 import Chart from "../../components/Chart";
 import Sidenav from "../../components/Sidenav";
+import Dropdown from "../../components/Dropdown";
 import API from "../../utils/API.js";
-import { Details } from "../../components/Details"
-import FilterData from "../../components/FilterData"
+import { Details } from "../../components/Details";
+import { Restdetails, Restheader } from "../../components/Restdetails";
+import { Stats, Statsection } from "../../components/Stats";
+import ChartFilter from "../../components/chartFilter";
 import "./findRestaurant.css";
 import numjs from 'numjs';
 import Mathy from "../../utils/Mathy.js";
@@ -15,7 +18,8 @@ import moment from 'moment';
 import geolib from 'geolib';
 import PlacesAutocomplete, { geocodeByAddress, getLatLng } from 'react-places-autocomplete';
 import Map from "../../utils/Map.js";
-import Filter from '../../utils/Filter.js';
+import Filter from "../../utils/Filter"
+
 
 //Need to pass value from input field
 //Style chart and info into one element
@@ -42,23 +46,15 @@ class findRestaurant extends Component {
 			priceTotal: {},
 			categoryTotal: {},
 			totalAvg: "",
-			chartData: {
-					labels: [10,20],
-					datasets: [
-						{
-							label: 'Difference',
-							data: [11,21],
-							backgroundColor: [
-												'rgba(255, 99, 132, 0.2)',
-										]
-						}
-					]
-			},
+			chartData: {},
 			searchedRestaurant: {},
 			showsidenav: true,
+			onSearchClick: true,
 			showline: true,
 			showbar: true,
 			address: "",
+			dropdown: '',
+			hidesearch: true
 		};
 		this.onChange = (restaurantName) => this.setState({ restaurantName })
 	}
@@ -202,8 +198,16 @@ class findRestaurant extends Component {
     	})
   };
 
+ pressEnter = (ev) => {
+  	if(ev.key == 13){
+  		this.Restaurant;
+  		console.log('iwas pressed(enter)')
+  	}
+  };
+
 	searchRestaurant = event => {
 		event.preventDefault();
+		this.onSearchClick();
 		if (this.state.restaurantName) {
 
 			this.geoCode(this.state.restaurantName)
@@ -427,10 +431,16 @@ class findRestaurant extends Component {
 			.catch(err => console.log(err))
 		}
 	};
+	
+
 
 	onClick = () => {
     this.setState({ showsidenav: !this.state.showsidenav });
    };
+
+	onSearchClick = () => {
+		 this.setState({ searchIcon: !this.state.searchIcon});
+	};
 
 	showline = () => {
 			this.setState({ showline: !this.state.showline });
@@ -439,9 +449,35 @@ class findRestaurant extends Component {
 	showbar = () => {
 			this.setState({ showbar: !this.state.showbar });
 	};
+
+
+	hidesearch = () => {
+			this.setState({ hidesearch: !this.state.hidesearch });
+	};
+
+	checkClick = ev => {
+		const value = ev.currentTarget.getAttribute('value')
+		console.log(value);	
+	};
+
+	dropdown = () => {
+		if(this.state.dropdown === "dropdown is-active") {
+			this.setState({
+				dropdown: "dropdown"
+			})
+		}
+		else {
+			this.setState({
+				dropdown: "dropdown is-active"
+			})
+		}
+	};
+
+
 // looks for yelpId via information sent from clicking on
 // search result. sends to yelpAPI in utils to pull info
 // and send to DB
+
 	getYelpAddToDb = (ev) => {
 		console.log('getYelpAddToDb')
 		const id = ev.currentTarget.getAttribute('value')
@@ -523,45 +559,27 @@ class findRestaurant extends Component {
 			{/*Main section*/}
 				<button onClick={this.findDailyDiffAvg}>DailyDiffAvg</button>
 				<button onClick={this.findClosestRestaurants}>BLAHHHH</button>
-				<button onClick={this.onClick}>showsidenav true</button> 
 				<button onClick={this.showline}>showline</button> 
 				<button onClick={this.showbar}>showbar</button> 
-				<button onClick={this.findPercentChange}>findDiffall</button> 
 
+				<button onClick={this.findPercentChange}>finddiffall</button>
+				<button onClick={this.hidesearch}>hidesearcharea</button>  
 
+				<a onClick={this.onSearchClick}>
+					<div className="inPut-with-icon">
+						<i className="fa fa-search"></i>
+					</div>
+				</a>
+				
 		      	<div className="data-section columns">
-
-		      		{ this.state.showsidenav ? 
-		      			<div className="side-nav column is-2">
-			      			<CSSTransitionGroup
-								transitionName="example"
-								transitionAppear={true}
-								transitionAppearTimeout={500}
-								transitionEnter={false}
-								transitionLeave={true}>
-				      			<Sidenav/>
-				      		</CSSTransitionGroup>
-			      		</div>  		
-		      		: null }
-		      		
 		      		<div className="column auto">
-		      			<div className='columns'>
+
+		      		{this.state.hidesearch ? (
+		      			<div className='columns search-area'>
 		      				<div className="column is-12">
 		      					<h1> Find A Restaurant </h1>
 										<form>
-											<PlacesAutocomplete
-													inputProps={inputProps}
-													value={this.state.restaurantName}
-													onChange={this.handleInputChange}
-													name="restaurantName"
-													placeholder="restaurant"
-											/>
-											<button type="submit"
-													disabled={!(this.state.restaurantName)}
-													onClick={this.searchRestaurant}
-											>
-												Search Restaurant
-											</button>	
+											
 										
 											<div id='search-restaurant'>
 													{this.state.searchedRestaurant.length ? (
@@ -623,35 +641,95 @@ class findRestaurant extends Component {
 						    		</form>
 		      				</div>
 		      			</div>
-		      			<div className='columns'>
-			      			<div className="column is-three-fifths">
-					      		<Chart className='charts' chartData={this.state.chartData} chartName="Average Checkins by Date"
-					      		 showline={this.state.showline} showbar={this.state.showbar}legendPosition="top"/>
-					      	</div>
-					      	<div className="column auto">
-					      		<div className="data-navigation">
-					      			<p class='percentage'>+75% Increase</p>
-					      			<p class='percentage'>-30% Decrease</p>
-											{this.state.details ? (
-												<Details 
-													name={this.state.restaurantDetails.name}
-													checkins={this.state.restaurantDetails.checkins}
-													checkinsAvg={this.state.checkinsAvg}
-													ratingCountAvg={this.state.ratingsAvg}
-													reviewsAvg={this.state.reviewsAvg}
-													totals={this.state.totalAvg}
-													handleInputChange={this.handleInputChange}
-													loadFilter={this.loadFilter}
-													getTotals={() => this.getTotals()}
-												/>
-												) : (
-												null
-											)}
+		      		) : (
+										null
+									)}
+								{this.state.details ? (
+		      				<div className='restaurant-info'>	
+		      					<div className='columns'>	      				
+		      						<Restheader
+		      							restaurantName={this.state.restaurantDetails.name}
+		      							address={this.state.restaurantDetails.location.address}
+		      							city={this.state.restaurantDetails.location.city}
+		      							state={this.state.restaurantDetails.location.state}
+		      							yelpURL={this.state.restaurantDetails.yelpURL}
+		      							yelpRating={this.state.restaurantDetails.star_rating[0].overall_star_rating}
+		      							fbRating={this.state.restaurantDetails.rating[0].rating}
+		      						/>
+		      					</div>										
+				      			<div className='columns'>		      				
+					      			<div className='column is-7'>			 
+							      		<Chart className='charts' chartData={this.state.chartData} chartName="Checkins by Date"
+							      		 showline={this.state.showline} showbar={this.state.showbar}legendPosition="top"/>
+							      	</div>
+							      	<div className='column is-5 data-navigation'>							      		
+						      			<div className='columns'>
+						      				<ChartFilter 
+						      					checkClick={this.checkClick}
+						      				>
+						      					<Dropdown onClick={this.dropdown} className={this.state.dropdown}/>						      		
+						      				</ChartFilter>				      				
+						      			</div>
+						      			<Statsection/>
+						      			
+						      			{/*<div className='columns'>
+													<Details												
+														checkins={this.state.restaurantDetails.checkins}
+														checkinsAvg={this.state.checkinsAvg}
+														ratingCountAvg={this.state.ratingsAvg}
+														reviewsAvg={this.state.reviewsAvg}
+														totals={this.state.totalAvg}
+														handleInputChange={this.handleInputChange}
+														loadFilter={this.loadFilter}
+														getTotals={() => this.getTotals()}
+													/>		
+												</div>*/}												
+											</div>
+										</div>
+										<div className='columns'>
+											<section className='section'>
+												<Restdetails/>
+											</section>
 										</div>
 									</div>
-								</div>	
+										) : (
+										null
+									)}
 			    		</div>
 			    	</div>
+
+			    	{ this.state.searchIcon ? 
+		      			<div className="side-nav column is-12">
+			      			<CSSTransitionGroup
+								transitionName="example"
+								transitionAppear={true}
+								transitionAppearTimeout={500}
+								transitionEnter={false}
+								transitionLeave={true}>
+								<div className='searchIcon'>
+
+				      			<input
+									inputProps={inputProps}
+									value={this.state.restaurantName}
+									onChange={this.handleInputChange}
+									name="restaurantName"
+									placeholder="restaurant"
+									onKeyPress={this.pressEnter}
+
+								/>
+								<button type="submit"
+													disabled={!(this.state.restaurantName)}
+													onClick={this.searchRestaurant}
+
+									>
+												Search Restaurant
+									</button>
+
+								
+								</div>
+				      		</CSSTransitionGroup>
+			      		</div>  		
+		      		: null }
 
 		      	{/*<div id='restaurants'>
 			      	{this.state.restaurantInfo.length ? (
