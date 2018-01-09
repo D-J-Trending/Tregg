@@ -34,7 +34,7 @@ class findRestaurant extends Component {
 			restaurantDetails: false,
 			restaurantId: "",
 			filter: 'price',
-			filteredRestaurants: '',
+			priceFilteredRestaurants: '',
 			fbAPIResults: {},
 			details: false,
 			filteredTotal: "",
@@ -118,7 +118,16 @@ class findRestaurant extends Component {
     return Map.geoCode(this.state.restaurantName)
   };
 
-
+ 	priceAPISearch = (filter) => {
+ 		API.filterSearch('price', filter)
+ 			.then(res => {
+ 				console.log(res)
+ 				this.setState({
+ 					priceFilteredRestaurants: res.data
+ 				})
+ 			})
+ 			.catch(err => console.log(err))
+ 	}
 
   	//create labels and data arrays and sets chartData state
 	generateChartData = (res) => {
@@ -637,12 +646,6 @@ class findRestaurant extends Component {
 												/>
 												) : (
 												null
-											)}
-											{this.state.filteredRestaurants.length ? (
-												<h4> Something </h4>
-												// <FilterData />
-											) : (
-												<h4> Nothing </h4>
 											)}
 										</div>
 									</div>
