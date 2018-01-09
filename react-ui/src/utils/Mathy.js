@@ -34,8 +34,6 @@ export default {
   },
 
   getDiffwithDate: function(arr, name) {
-    console.log(arr)
-    console.log(name)
     // returns an arry of obj with date and count
     const values = []
     for (var i = 0; i < arr.length; i++) {
@@ -67,13 +65,11 @@ export default {
     var ratings = [];
     var reviews = [];
     const obj = {}
-    console.log(arr[10])
     for (var i = 0; i < arr.length; i++) {
       checkins.push(this.findRoundedDiffMean(arr[i].checkins, 'checkins'))
       ratings.push(this.findRoundedDiffMean(arr[i].rating_count, 'rating_count'))
       reviews.push(this.findRoundedDiffMean(arr[i].reviews, 'review_count'))
     }
-    console.log(checkins)
 
     // checkins = numjs.array(checkins);
     // ratings = numjs.array(ratings);
@@ -82,7 +78,6 @@ export default {
     const checkinsMean = Round(this.getMean(checkins), -6)
     const ratingsMean = Round(this.getMean(ratings), -6)
     const reviewsMean = Round(this.getMean(reviews), -6)
-    console.log(checkinsMean)
     obj.checkinsMean = checkinsMean
     obj.ratingsMean = ratingsMean
     obj.reviewsMean = reviewsMean
