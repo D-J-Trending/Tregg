@@ -8,7 +8,7 @@ import API from "../../utils/API.js";
 import { Details } from "../../components/Details";
 import { Restdetails, Restheader } from "../../components/Restdetails";
 import { Stats, Statsection } from "../../components/Stats";
-import ChartFilter from "../../components/ChartFilter";
+import ChartFilter from "../../components/chartFilter";
 import "./findRestaurant.css";
 import numjs from 'numjs';
 import Mathy from "../../utils/Mathy.js";
@@ -196,7 +196,7 @@ class findRestaurant extends Component {
     		})
     	})
   };
-
+ 
  pressEnter = (ev) => {
   	if(ev.key == 13){
   		ev.preventDefault();
@@ -206,9 +206,8 @@ class findRestaurant extends Component {
   };
 
 	searchRestaurant = event => {
-		this.onSearchClick();;
 		this.setState ({
-			hidesearch:true
+			hidesearch:true,
 		})
 		if (this.state.restaurantName) {
 
@@ -296,6 +295,7 @@ class findRestaurant extends Component {
 				console.log(this.state)
 				this.generateChartData(this.state.diffArr)
 				this.hidesearch();
+				this.onSearchClick();
 
 
 			})
@@ -719,16 +719,10 @@ class findRestaurant extends Component {
 									onChange={this.handleInputChange}
 									name="restaurantName"
 									placeholder="restaurant"
-									onKeyPress={this.pressEnter}
+									onKeyPress={this.searchRestaurant}
 
 								/>
-								<button type="submit"
-													disabled={!(this.state.restaurantName)}
-													onClick={this.searchRestaurant}
-
-									>
-												Search Restaurant
-									</button>
+							
 								</form>
 								
 								</div>
