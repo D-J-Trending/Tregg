@@ -8,7 +8,7 @@ import API from "../../utils/API.js";
 import { Details } from "../../components/Details";
 import { Restdetails, Restheader } from "../../components/Restdetails";
 import { Stats, Statsection } from "../../components/Stats";
-import Zilter from "../../components/chartFilter";
+import ChartFilter from "../../components/chartFilter";
 import "./findRestaurant.css";
 import numjs from 'numjs';
 import Mathy from "../../utils/Mathy.js";
@@ -651,9 +651,9 @@ class findRestaurant extends Component {
 							      	</div>
 							      	<div className='column is-5 data-navigation'>							      		
 						      			<div className='columns'>
-						      				<Zilter>
+						      				<ChartFilter>
 						      					<Dropdown onClick={this.dropdown} className={this.state.dropdown}/>						      		
-						      				</Zilter>				      				
+						      				</ChartFilter>				      				
 						      			</div>
 						      			<Statsection/>
 						      			
@@ -693,7 +693,7 @@ class findRestaurant extends Component {
 								transitionLeave={true}>
 								<div className='searchIcon'>
 
-				      			<PlacesAutocomplete input
+				      			<input
 									inputProps={inputProps}
 									value={this.state.restaurantName}
 									onChange={this.handleInputChange}
