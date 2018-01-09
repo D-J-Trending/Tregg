@@ -1,8 +1,36 @@
 import numjs from 'numjs';
 import Round from './Round.js'
-export default {
 
-  getDiffwithDate: (arr, name) => {
+export default {
+  findDifference: function(arr, name, days) {
+    const values = []
+    for (var i = 0; i < arr.length; i++) {
+      values.push(arr[i][name])
+    }
+    const diff = []
+    for (var i = 0; i < values.length - 1; i++) {
+      let difference = values[i+1] - values[i]
+      diff.push(difference)
+    }
+
+    return diff
+  },
+
+  getMean: function(arr) {
+    let avg
+    if (arr.length === 0) {
+      let avg = 0
+    } else {
+      let sum = arr.reduce((previous, current) => current += previous);
+      let avg = sum / arr.length;
+      console.log(avg)
+    }
+    return avg
+  },
+
+  getDiffwithDate: function(arr, name) {
+    console.log(arr)
+    console.log(name)
     // returns an arry of obj with date and count
     const values = []
     for (var i = 0; i < arr.length; i++) {
@@ -29,7 +57,7 @@ export default {
     return diff
   },
 
-  findTotalStats: (arr) => {
+  findTotalStats: function(arr) {
     var checkins = [];
     var ratings = [];
     var reviews = [];
@@ -56,30 +84,11 @@ export default {
   },
 
   // finds the mean of the rounded difference
-  findRoundedDiffMean: (arr, name) => {
+  findRoundedDiffMean: function(arr,name) {
     const diff = this.findDifference(arr, name)
     const mean = this.getMean(diff)
+
     return Round(mean, -2)
-  },
-
-  findDifference: (arr, name, days) => {
-    const values = []
-    for (var i = 0; i < arr.length; i++) {
-      values.push(arr[i][name])
-    }
-    const diff = []
-    for (var i = 0; i < values.length - 1; i++) {
-      let difference = values[i+1] - values[i]
-      diff.push(difference)
-    }
-
-    return diff
-  },
-
-  getMean: arr => {
-    let sum = arr.reduce((previous, current) => current += previous);
-    let avg = sum / arr.length;
-    return avg
   }
 
 }

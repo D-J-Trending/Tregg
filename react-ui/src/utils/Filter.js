@@ -1,6 +1,7 @@
 import axios from "axios";
 import Mathy from './Mathy.js'
 import Round from './Round.js'
+
 export default {
 	getTop10ByScore: function(sortArr) {
 		const top10 = []

@@ -3,9 +3,12 @@ import { Input, Form, Searchbtn } from "../../components/Form";
 import { Searched, Searcheditems, FbSearchedItems } from "../../components/Searched";
 import Chart from "../../components/Chart";
 import Sidenav from "../../components/Sidenav";
+import Dropdown from "../../components/Dropdown";
 import API from "../../utils/API.js";
 import { Details } from "../../components/Details"
-import FilterData from "../../components/FilterData"
+import { Restdetails, Restheader } from "../../components/Restdetails"
+import { Stats, Statsection } from "../../components/Stats"
+import chartFilter from "../../components/Filter"
 import "./findRestaurant.css";
 import numjs from 'numjs';
 import Mathy from "../../utils/Mathy.js";
@@ -42,24 +45,15 @@ class findRestaurant extends Component {
 			priceTotal: "",
 			categoryTotal: "",
 			totalAvg: "",
-			chartData: {
-					labels: [10,20],
-					datasets: [
-						{
-							label: 'Difference',
-							data: [11,21],
-							backgroundColor: [
-												'rgba(255, 99, 132, 0.2)',
-										]
-						}
-					]
-			},
+			chartData: {},
 			searchedRestaurant: {},
 			showsidenav: true,
 			onSearchClick: true,
 			showline: true,
 			showbar: true,
 			address: "",
+			dropdown: '',
+			hidesearch: true
 		};
 		this.onChange = (restaurantName) => this.setState({ restaurantName })
 	}
@@ -263,10 +257,15 @@ class findRestaurant extends Component {
 				console.log(res.data[0])
 
 				let checkinsAvg = Mathy.findRoundedDiffMean(res.data[0].checkins, 'checkins')
+				console.log(checkinsAvg)
 				let reviewsAvg = Mathy.findRoundedDiffMean(res.data[0].reviews, 'review_count')
+				console.log(reviewsAvg)
 				let ratingsAvg = Mathy.findRoundedDiffMean(res.data[0].rating_count, 'rating_count')
+				// console.log(checkinsAvg)
 				let diff = Mathy.getDiffwithDate(res.data[0].checkins, 'checkins');
+				// console.log(checkinsAvg)
 				let ratingDiff = Mathy.getDiffwithDate(res.data[0].rating_count, 'rating_count');
+				// console.log(checkinsAvg)
 				let reviewDiff = Mathy.getDiffwithDate(res.data[0].reviews, 'review_count');
 				// let totalAvg = this.findTotalStats(this.state.restaurantInfo)
 
@@ -437,9 +436,34 @@ class findRestaurant extends Component {
 	showbar = () => {
 			this.setState({ showbar: !this.state.showbar });
 	};
+
+
+	hidesearch = () => {
+			this.setState({ hidesearch: !this.state.hidesearch });
+	};
+
+	checkClick = ev => {
+		const value = ev.currentTarget.getAttribute('value')	
+	};
+
+	dropdown = () => {
+		if(this.state.dropdown === "dropdown is-active") {
+			this.setState({
+				dropdown: "dropdown"
+			})
+		}
+		else {
+			this.setState({
+				dropdown: "dropdown is-active"
+			})
+		}
+	};
+
+
 // looks for yelpId via information sent from clicking on
 // search result. sends to yelpAPI in utils to pull info
 // and send to DB
+
 	getYelpAddToDb = (ev) => {
 		console.log('getYelpAddToDb')
 		const id = ev.currentTarget.getAttribute('value')
@@ -521,11 +545,12 @@ class findRestaurant extends Component {
 			{/*Main section*/}
 				<button onClick={this.findDailyDiffAvg}>DailyDiffAvg</button>
 				<button onClick={this.findClosestRestaurants}>BLAHHHH</button>
-				<button onClick={this.onClick}>showsidenav true</button> 
 				<button onClick={this.showline}>showline</button> 
 				<button onClick={this.showbar}>showbar</button> 
-				<button onClick={this.findPercentChange}>findDiffall</button> 
-				
+
+				<button onClick={this.findPercentChange}>finddiffall</button>
+				<button onClick={this.hidesearch}>hidesearcharea</button>  
+
 				<a onClick={this.onSearchClick}>
 					<div className="inPut-with-icon">
 						<i className="fa fa-search"></i>
@@ -533,22 +558,10 @@ class findRestaurant extends Component {
 				</a>
 				
 		      	<div className="data-section columns">
-
-		      		{ this.state.showsidenav ? 
-		      			<div className="side-nav column is-2">
-			      			<CSSTransitionGroup
-								transitionName="example"
-								transitionAppear={true}
-								transitionAppearTimeout={500}
-								transitionEnter={false}
-								transitionLeave={true}>
-				      			<Sidenav/>
-				      		</CSSTransitionGroup>
-			      		</div>  		
-		      		: null }
-		      		
 		      		<div className="column auto">
-		      			<div className='columns'>
+
+		      		{this.state.hidesearch ? (
+		      			<div className='columns search-area'>
 		      				<div className="column is-12">
 		      					<h1> Find A Restaurant </h1>
 										<form>
@@ -614,39 +627,58 @@ class findRestaurant extends Component {
 						    		</form>
 		      				</div>
 		      			</div>
-		      			<div className='columns'>
-			      			<div className="column is-three-fifths">
-					      		<Chart className='charts' chartData={this.state.chartData} chartName="Average Checkins by Date"
-					      		 showline={this.state.showline} showbar={this.state.showbar}legendPosition="top"/>
-					      	</div>
-					      	<div className="column auto">
-					      		<div className="data-navigation">
-					      			<p class='percentage'>+75% Increase</p>
-					      			<p class='percentage'>-30% Decrease</p>
-											{this.state.details ? (
-												<Details 
-													name={this.state.restaurantDetails.name}
-													checkins={this.state.restaurantDetails.checkins}
-													checkinsAvg={this.state.checkinsAvg}
-													ratingCountAvg={this.state.ratingsAvg}
-													reviewsAvg={this.state.reviewsAvg}
-													totals={this.state.totalAvg}
-													handleInputChange={this.handleInputChange}
-													loadFilter={this.loadFilter}
-													getTotals={() => this.getTotals()}
-												/>
-												) : (
-												null
-											)}
-											{this.state.filteredRestaurants.length ? (
-												<h4> Something </h4>
-												// <FilterData />
-											) : (
-												<h4> Nothing </h4>
-											)}
+		      		) : (
+										null
+									)}
+								{this.state.details ? (
+		      				<div>	
+		      					<div className='columns'>	      				
+		      						<Restheader
+		      							restaurantName={this.state.restaurantDetails.name}
+		      							address={this.state.restaurantDetails.location.address}
+		      							city={this.state.restaurantDetails.location.city}
+		      							state={this.state.restaurantDetails.location.state}
+		      							yelpURL={this.state.restaurantDetails.yelpURL}
+		      							yelpRating={this.state.restaurantDetails.star_rating[0].overall_star_rating}
+		      							fbRating={this.state.restaurantDetails.rating[0].rating}
+		      						/>
+		      					</div>										
+				      			<div className='columns'>		      				
+					      			<div className='column is-7'>			 
+							      		<Chart className='charts' chartData={this.state.chartData} chartName="Checkins by Date"
+							      		 showline={this.state.showline} showbar={this.state.showbar}legendPosition="top"/>
+							      	</div>
+							      	<div className='column is-5 data-navigation'>							      		
+						      			<div className='columns'>
+						      				<chartFilter>
+						      					<Dropdown onClick={this.dropdown} className={this.state.dropdown}/>						      		
+						      				</chartFilter>				      				
+						      			</div>
+						      			<Statsection/>
+						      			
+						      			{/*<div className='columns'>
+													<Details												
+														checkins={this.state.restaurantDetails.checkins}
+														checkinsAvg={this.state.checkinsAvg}
+														ratingCountAvg={this.state.ratingsAvg}
+														reviewsAvg={this.state.reviewsAvg}
+														totals={this.state.totalAvg}
+														handleInputChange={this.handleInputChange}
+														loadFilter={this.loadFilter}
+														getTotals={() => this.getTotals()}
+													/>		
+												</div>*/}												
+											</div>
+										</div>
+										<div className='columns'>
+											<section className='section'>
+												<Restdetails/>
+											</section>
 										</div>
 									</div>
-								</div>	
+										) : (
+										null
+									)}
 			    		</div>
 			    	</div>
 
