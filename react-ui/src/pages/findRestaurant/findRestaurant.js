@@ -444,7 +444,8 @@ class findRestaurant extends Component {
 	};
 
 	checkClick = ev => {
-		const value = ev.currentTarget.getAttribute('value')	
+		const value = ev.currentTarget.getAttribute('value')
+		console.log(value);	
 	};
 
 	dropdown = () => {
@@ -632,7 +633,7 @@ class findRestaurant extends Component {
 										null
 									)}
 								{this.state.details ? (
-		      				<div>	
+		      				<div className='restaurant-info'>	
 		      					<div className='columns'>	      				
 		      						<Restheader
 		      							restaurantName={this.state.restaurantDetails.name}
@@ -651,7 +652,9 @@ class findRestaurant extends Component {
 							      	</div>
 							      	<div className='column is-5 data-navigation'>							      		
 						      			<div className='columns'>
-						      				<ChartFilter>
+						      				<ChartFilter 
+						      					checkClick={this.checkClick}
+						      				>
 						      					<Dropdown onClick={this.dropdown} className={this.state.dropdown}/>						      		
 						      				</ChartFilter>				      				
 						      			</div>
