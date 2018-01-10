@@ -1,7 +1,7 @@
 
 export default {
 	createDataSet: function(dataSet, name, dotted) {
-		console.log(dataSet)
+		// console.log(dataSet)
 		let data = dataSet.map(each => {
 		    let dataset = {}
 		    let queryDate = each.query_date.replace(/ .*/,'');
