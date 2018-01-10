@@ -254,7 +254,7 @@ class findRestaurant extends Component {
 	};
 	createInitialChartDataSet = (diffDateArr, filterLabel, avgLineDataSet, firmDetails) => {
 		// creates average line's chart data set
-		const avgLineChartData = ChartDataSet.createDataSet(avgLineDataSet, 'Average')
+		const avgLineChartData = ChartDataSet.createDataSet(avgLineDataSet, 'Average', true)
 		const diffDataChartData = ChartDataSet.createDataSet(diffDateArr, firmDetails.name)
 		console.log(avgLineChartData)
 		console.log(diffDataChartData)
@@ -274,7 +274,7 @@ class findRestaurant extends Component {
 
 	//create labels and data arrays and sets chartData state
 	generateChartData = (res, filterLabel) => {
-		const newChartData = ChartDataSet.createDataSet(res, filterLabel)
+		const newChartData = ChartDataSet.createDataSet(res, filterLabel, true)
 		// Have new chart data, next:
 		// determine which length is longer bw current and new
     let labels = res.map(checkins => {
