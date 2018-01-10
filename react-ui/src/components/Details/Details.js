@@ -8,6 +8,7 @@ export class Details extends Component {
 
 	componentDidMount() {
 		this.props.getTotals();
+		this.props.loadFilter(null, 'all')
 		console.log(this.props.restaurantDetails)
 	};
 
@@ -41,8 +42,9 @@ export class Details extends Component {
 		<h3>
 			Avg review count </h3>
 		<p>29929</p>
+
 		<h3> Total Checkins Mean</h3>
-			<p></p>
+			<p>{this.props.allTotals.checkinsMean}</p>
 		<h3> Total Ratings Mean</h3>
 			<p></p>
 		<h3> Total Reviews Mean</h3>

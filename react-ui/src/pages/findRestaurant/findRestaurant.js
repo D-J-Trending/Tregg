@@ -42,10 +42,7 @@ class findRestaurant extends Component {
 			filteredRestaurants: '',
 			fbAPIResults: {},
 			details: false,
-			filteredTotal: "",
-			allTotal: {},
-			priceTotal: {},
-			categoryTotal: {},
+			allTotalAvgs: {},
 			totalAvg: "",
 			chartData: [],
 			searchedRestaurant: {},
@@ -363,22 +360,29 @@ class findRestaurant extends Component {
 		// 	})
 	};
 
-	loadFilter = (ev) => {
+	loadFilter = (ev, filter) => {
 		console.log(ev.target.value)
-
-		if (ev.target.value === 'price') {
+		if (filter) {
 			this.setState({
-				totalAvg: this.state.priceTotal
-			})
-		} else if (ev.target.value === 'all') {
-			this.setState({
-				totalAvg: this.state.allTotal
+				totalAvg: this.state.allTotalAvgs.allTotal
 			})
 		} else {
-			this.setState({
-				totalAvg: this.state.categoryTotal
-			})
+			if (ev.target.value === 'price') {
+				this.setState({
+					totalAvg: this.state.allTotalAvgs.priceTotal
+				})
+			} else if (ev.target.value === 'all') {
+				this.setState({
+					totalAvg: this.state.allTotalAvgs.allTotal
+				})
+			} else {
+				this.setState({
+					totalAvg: this.state.allTotalAvgs.categoryTotal
+				})
+			}
 		}
+
+
 	};
 
 	getTotals = () => {
@@ -421,9 +425,11 @@ class findRestaurant extends Component {
 				}
 				categoryTotal = Mathy.findTotalStats(arrFirms)
 				this.setState({
-					priceTotal: priceTotal,
-					allTotal: allTotal,
-					categoryTotal: categoryTotal
+					allTotalAvgs: {
+						priceTotal: priceTotal,
+						allTotal: allTotal,
+						categoryTotal: categoryTotal
+					}
 				})
 				console.log(this.state)
 			})
@@ -747,7 +753,8 @@ class findRestaurant extends Component {
 													<Details
 													restaurantDetails={this.state.restaurantDetails}
 													getTotals={() => this.getTotals()}
-													loadFilter={() => this.loadFilter()}
+													loadFilter={(ev, filter) => this.loadFilter(ev, filter)}
+													allTotals={this.state.totalAvg}
 													/>
 												</section>
 											</div>
