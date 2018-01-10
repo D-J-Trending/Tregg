@@ -80,12 +80,12 @@ class findRestaurant extends Component {
 
 		if (navigator.geolocation) {
 			navigator.geolocation.getCurrentPosition(position => {
-				console.log(position)
+				// console.log(position)
 				let userCoordinates = {
 					latitude: position.coords.latitude,
 					longitude: position.coords.longitude
 				};
-				console.log(res.data)
+				// console.log(res.data)
 				this.setState({
 					filteredRestaurants: avgLine,
 					restaurantInfo: res.data,
@@ -102,13 +102,6 @@ class findRestaurant extends Component {
 				userCoordinates: null
 			})
 		}
-		// 	console.log('Hi')
-
-
-		// 	})
-		// } else {
-
-		// }
 
 		})
 		.catch(err => console.log(err));
@@ -143,7 +136,7 @@ class findRestaurant extends Component {
   	if(ev.key == 13){
   		ev.preventDefault();
   		this.searchRestaurant();
-  		console.log('iwas pressed(enter)')
+  		// console.log('iwas pressed(enter)')
   	}
   };
 
@@ -177,7 +170,7 @@ class findRestaurant extends Component {
 						searchedRestaurant: res.data,
 
 					})
-					console.log(this.state);
+					// console.log(this.state);
 					// this.generateChartData(this.state.restaurantInfo)
 				})
 				.catch(err => console.log(err));
@@ -210,12 +203,12 @@ class findRestaurant extends Component {
 		const id = event.currentTarget.getAttribute('value');
 		API.returnDetails(id)
 			.then(res => {
-				console.log(res.data[0])
+				// console.log(res.data[0])
 
 				let checkinsAvg = Mathy.findRoundedDiffMean(res.data[0].checkins, 'checkins')
-				console.log(checkinsAvg)
+				// console.log(checkinsAvg)
 				let reviewsAvg = Mathy.findRoundedDiffMean(res.data[0].reviews, 'review_count')
-				console.log(reviewsAvg)
+				// console.log(reviewsAvg)
 				let ratingsAvg = Mathy.findRoundedDiffMean(res.data[0].rating_count, 'rating_count')
 				// console.log(checkinsAvg)
 				let diff = Mathy.getDiffwithDate(res.data[0].checkins, 'checkins');
@@ -226,8 +219,8 @@ class findRestaurant extends Component {
 				// let totalAvg = this.findTotalStats(this.state.restaurantInfo)
 				let totalWeeklyDiff = this.findTotalWeeklyDiff(res.data[0])
 				
-				console.log(this.state.chartData)
-				console.log(this.state.filteredRestaurants.checkins)
+				// console.log(this.state.chartData)
+				// console.log(this.state.filteredRestaurants.checkins)
 
 				// passes in diff array, skips filterlabel, and passes in avg line data
 				// to create data set
@@ -245,10 +238,10 @@ class findRestaurant extends Component {
 					detailsWeeklyStats: totalWeeklyDiff,
 					chartData: initialChartData
 					// totalAvg: totalAvg
-				})
+				},()=> {
+						console.log(this.state) 
+					})
 				this.hidesearch();
-
-
 			})
 			.catch(err => console.log(err))
 	};
@@ -256,14 +249,14 @@ class findRestaurant extends Component {
 		// creates average line's chart data set
 		const avgLineChartData = ChartDataSet.createDataSet(avgLineDataSet, 'Average', true)
 		const diffDataChartData = ChartDataSet.createDataSet(diffDateArr, firmDetails.name)
-		console.log(avgLineChartData)
-		console.log(diffDataChartData)
+		// console.log(avgLineChartData)
+		// console.log(diffDataChartData)
 
 		let labels = avgLineDataSet.map(checkins => {
 			let queryDate = checkins.query_date.replace(/ .*/,'');
 			return queryDate;
 		})
-		console.log(labels)
+		// console.log(labels)
 
 		return {
 			labels: labels,
@@ -285,7 +278,7 @@ class findRestaurant extends Component {
         labels = this.state.chartData.labels;
     }
     // replace array with new
-    console.log(this.state.chartData)
+    // console.log(this.state.chartData)
     let stateDataSet = this.state.chartData.datasets
     stateDataSet.pop()
     stateDataSet.push(newChartData)
@@ -364,7 +357,7 @@ class findRestaurant extends Component {
 	};
 
 	loadFilter = (ev) => {
-		console.log(ev.target.value)
+		// console.log(ev.target.value)
 
 		if (ev.target.value === 'price') {
 			this.setState({
@@ -405,18 +398,18 @@ class findRestaurant extends Component {
 			categories.forEach(item => {
 				categoryString += item.alias + ' '
 			})
-			console.log(categoryString)
+			// console.log(categoryString)
 			API.filterSearch('category', categoryString)
 			.then(res => {
 				let categoryData = res.data
-				console.log(categoryData)
+				// console.log(categoryData)
 				for (var i = 0; i < categoryData.length; i++) {
 					var index = arrFirms.findIndex(x => x.name === categoryData[i].name)
 
 					if (index === -1) {
 						arrFirms.push(categoryData[i])
 					}	else {
-						console.log('no push')
+						// console.log('no push')
 					}
 				}
 				categoryTotal = Mathy.findTotalStats(arrFirms)
@@ -454,10 +447,10 @@ class findRestaurant extends Component {
 
 	priceFilteredRestaurants = ev => {
 		const value = ev.currentTarget.getAttribute('value')
-		console.log(value);
+		// console.log(value);
 	 	API.filterSearch('price', value)
 	    .then(res => {
-	        console.log(res)
+	        // console.log(res)
 	        let priceAvg = this.findDailyDiffAvg(res.data)
 	       	const newChartData = this.generateChartData(priceAvg.checkins, value)
 	        this.setState({
@@ -486,7 +479,7 @@ class findRestaurant extends Component {
 // and send to DB
 
 	getYelpAddToDb = (ev) => {
-		console.log('getYelpAddToDb')
+		// console.log('getYelpAddToDb')
 		const id = ev.currentTarget.getAttribute('value')
 		const name = ev.currentTarget.getAttribute('data-name')
 		const city = ev.currentTarget.getAttribute('data-city')
@@ -542,12 +535,12 @@ class findRestaurant extends Component {
 		this.setState({
 			top10Distance: top10Arr
 		})
-		console.log(this.state)
+		// console.log(this.state)
 	};
 
 	//create daily avg from array of multiple restaurants
 	findDailyDiffAvg = (filtered_arr) => {
-		console.log(this.state)
+		// console.log(this.state)
 		const dailyAvg = Filter.dailyDiffAvg(filtered_arr)
 		// this.setState({
 		// 	dailyCheckinAvgObj: dailyAvg
@@ -563,10 +556,10 @@ class findRestaurant extends Component {
 			let lastSlicedSum = Mathy.findSum(lastWeekSliced, 'difference')
 			let previousSlicedSum = Mathy.findSum(previousWeekSliced, 'difference')
 			const percentDiff = lastSlicedSum - previousSlicedSum
-			console.log(lastSlicedSum)
-			console.log(previousSlicedSum)
+			// console.log(lastSlicedSum)
+			// console.log(previousSlicedSum)
 			let finalPercent = percentDiff / previousSlicedSum
-			finalPercent = Round(finalPercent * 100, -2)
+			finalPercent = Round(finalPercent * 100, -1)
 			if (isNaN(finalPercent)) {
 				finalPercent = "N/A"
 			} else {
