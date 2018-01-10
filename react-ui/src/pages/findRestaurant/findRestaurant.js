@@ -91,6 +91,7 @@ class findRestaurant extends Component {
 					userCoordinates: userCoordinates
 				})
 			})
+
 		} else {
 			this.setState({
 				filteredRestaurants: avgLine,
