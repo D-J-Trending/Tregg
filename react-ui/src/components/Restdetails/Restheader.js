@@ -1,18 +1,51 @@
-import React from "react";
+import React, {Component} from 'react';
 import "./Restdetails.css";
 
-export const Restheader = props => (
-  <div className='column is-12'>
-  	<div className='columns'>
-			<div className='column is-3'>
-				<span className='restaurant-header'>{props.restaurantName}</span>		
-				<p className='restaurant-address'>{props.address}, {props.city}, {props.state}</p>		      						
+export class Restheader extends Component {
+
+constructor(props) {
+		super(props)
+	};
+
+stars = () => {
+	// console.log(this.props.yelpRating)
+	switch (this.props.yelpRating) {
+		case 1:
+			return <img src='img/yelp_stars/web_and_ios/regular/regular_1.png' alt='yelpimg'/>
+		case 1.5:
+			return <img src='img/yelp_stars/web_and_ios/regular/regular_1_half.png' alt='yelpimg'/>
+		case 2:
+			return <img src='img/yelp_stars/web_and_ios/regular/regular_2.png' alt='yelpimg'/>
+		case 2.5:
+			return <img src='img/yelp_stars/web_and_ios/regular/regular_2_half.png' alt='yelpimg'/>
+		case 3:
+			return <img src='img/yelp_stars/web_and_ios/regular/regular_3.png' alt='yelpimg'/>
+		case 3.5:
+			return <img src='img/yelp_stars/web_and_ios/regular/regular_3_half.png' alt='yelpimg'/>							
+		case 4:
+			return <img src='img/yelp_stars/web_and_ios/regular/regular_4.png' alt='yelpimg'/>
+		case 4.5: 
+			return <img src='img/yelp_stars/web_and_ios/regular/regular_4_half.png' alt='yelpimg'/>
+		case 5: 
+			return <img src='img/yelp_stars/web_and_ios/regular/regular_5.png' alt='yelpimg'/>	
+	}	
+}
+
+	render() {
+		return (
+			<div className='column is-12'>
+			  	<div className='columns'>
+				<div className='column is-3'>
+					<span className='restaurant-header'>{this.props.restaurantName}</span>		
+					<p className='restaurant-address'>{this.props.address}, {this.props.city}, {this.props.state}</p>		      						
+				</div>
+				<div className='column auto'>
+					<span className='rank-section'>Trending Rank: <span className='rank-number'>{this.props.rank}</span></span><br/>
+					<span><a target='blank' href={this.props.yelpURL}> <img className='trademark' src='img/Yelp_trademark_RGB_outline.png' alt='yelp-trademark'/></a>{this.stars()} &#124; </span>
+					<span><a target='blank' href={this.props.fb_url}> FB Rating</a>: {this.props.fbRating}</span>				
+				</div>		
+				</div>		
 			</div>
-			<div className='column auto'>
-				<span className='rank-section'>Trending Rank: <span className='rank-number'>7</span></span><br/>
-				<span><a target='blank' href={props.yelpURL}> Yelp Stars</a>: {props.yelpRating} &#124; </span>
-				<span> FB Rating: {props.fbRating}</span>				
-			</div>		
-		</div>		
-	</div>
-);
+		)
+	}	
+}

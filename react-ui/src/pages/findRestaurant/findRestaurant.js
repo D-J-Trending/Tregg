@@ -19,19 +19,8 @@ import moment from 'moment';
 import geolib from 'geolib';
 import PlacesAutocomplete, { geocodeByAddress, getLatLng } from 'react-places-autocomplete';
 import Map from "../../utils/Map.js";
-import Filter from "../../utils/Filter";
-
-
-const customStyles = {
-  content : {
-    top                   : '50%',
-    left                  : '50%',
-    right                 : 'auto',
-    bottom                : 'auto',
-    marginRight           : '-50%',
-    transform             : 'translate(-50%, -50%)'
-  }
-};
+import Round from '../../utils/Round'
+import ChartDataSet from '../../utils/ChartDataSet'
 //Need to pass value from input field
 //Style chart and info into one element
 //Allow to click on element to view stats
@@ -49,6 +38,7 @@ class findRestaurant extends Component {
 			restaurantDetails: false,
 			restaurantId: "",
 			filter: 'price',
+			filterLabel: 'All Restaurants',
 			filteredRestaurants: '',
 			fbAPIResults: {},
 			details: false,
@@ -57,9 +47,11 @@ class findRestaurant extends Component {
 			priceTotal: {},
 			categoryTotal: {},
 			totalAvg: "",
-			chartData: {},
+			chartData: [],
 			searchedRestaurant: {},
 			onSearchClick: false,
+			detailsWeeklyStats: {},
+			showsidenav: true,
 			showline: true,
 			showbar: true,
 			address: "",
@@ -89,34 +81,32 @@ class findRestaurant extends Component {
 			// this.findPercentChange(res.data,'rating_count', 'rating_count')
 			// this.findPercentChange(res.data,'reviews', 'review_count')
 		console.log('BEFORE GEOLOCATE')
+		const avgLine = this.findDailyDiffAvg(res.data)
+
 		if (navigator.geolocation) {
 			navigator.geolocation.getCurrentPosition(position => {
-				console.log(position)
+				// console.log(position)
 				let userCoordinates = {
 					latitude: position.coords.latitude,
 					longitude: position.coords.longitude
 				};
-				console.log(res.data)
+				// console.log(res.data)
 				this.setState({
+					filteredRestaurants: avgLine,
 					restaurantInfo: res.data,
 					coordsIdsArr: coordsArr,
 					userCoordinates: userCoordinates
 				})
 			})
+
 		} else {
 			this.setState({
+				filteredRestaurants: avgLine,
 				restaurantInfo: res.data,
 				coordsIdsArr: coordsArr,
 				userCoordinates: null
 			})
 		}
-		// 	console.log('Hi')
-
-
-		// 	})
-		// } else {
-
-		// }
 
 		})
 		.catch(err => console.log(err));
@@ -218,8 +208,6 @@ class findRestaurant extends Component {
     		})
     	})
   };
- 
- 
 
 	searchRestaurant = event => {
 		this.onSearchClick();
@@ -251,7 +239,7 @@ class findRestaurant extends Component {
 						searchedRestaurant: res.data,
 
 					})
-					console.log(this.state);
+					// console.log(this.state);
 					// this.generateChartData(this.state.restaurantInfo)
 				})
 				.catch(err => console.log(err));
@@ -284,12 +272,12 @@ class findRestaurant extends Component {
 		const id = event.currentTarget.getAttribute('value');
 		API.returnDetails(id)
 			.then(res => {
-				console.log(res.data[0])
+				// console.log(res.data[0])
 
 				let checkinsAvg = Mathy.findRoundedDiffMean(res.data[0].checkins, 'checkins')
-				console.log(checkinsAvg)
+				// console.log(checkinsAvg)
 				let reviewsAvg = Mathy.findRoundedDiffMean(res.data[0].reviews, 'review_count')
-				console.log(reviewsAvg)
+				// console.log(reviewsAvg)
 				let ratingsAvg = Mathy.findRoundedDiffMean(res.data[0].rating_count, 'rating_count')
 				// console.log(checkinsAvg)
 				let diff = Mathy.getDiffwithDate(res.data[0].checkins, 'checkins');
@@ -298,6 +286,15 @@ class findRestaurant extends Component {
 				// console.log(checkinsAvg)
 				let reviewDiff = Mathy.getDiffwithDate(res.data[0].reviews, 'review_count');
 				// let totalAvg = this.findTotalStats(this.state.restaurantInfo)
+				let totalWeeklyDiff = this.findTotalWeeklyDiff(res.data[0])
+				
+				// console.log(this.state.chartData)
+				// console.log(this.state.filteredRestaurants.checkins)
+
+				// passes in diff array, skips filterlabel, and passes in avg line data
+				// to create data set
+				const initialChartData = this.createInitialChartDataSet(diff, null, this.state.filteredRestaurants.checkins, res.data[0])
+
 				this.setState({
 					restaurantDetails: res.data[0],
 					details: true,
@@ -306,11 +303,13 @@ class findRestaurant extends Component {
 					ratingsAvg: ratingsAvg,
 					diffArr: diff,
 					ratingDiff: ratingDiff,
-					reviewDiff: reviewDiff
+					reviewDiff: reviewDiff,
+					detailsWeeklyStats: totalWeeklyDiff,
+					chartData: initialChartData
 					// totalAvg: totalAvg
-				})
-				console.log(this.state)
-				this.generateChartData(this.state.diffArr)
+				},()=> {
+						console.log(this.state) 
+					})
 				this.hidesearch();
 				this.setState({
 					restaurantName: "",
@@ -318,6 +317,48 @@ class findRestaurant extends Component {
 
 			})
 			.catch(err => console.log(err))
+	};
+	createInitialChartDataSet = (diffDateArr, filterLabel, avgLineDataSet, firmDetails) => {
+		// creates average line's chart data set
+		const avgLineChartData = ChartDataSet.createDataSet(avgLineDataSet, 'Average', true)
+		const diffDataChartData = ChartDataSet.createDataSet(diffDateArr, firmDetails.name)
+		// console.log(avgLineChartData)
+		// console.log(diffDataChartData)
+
+		let labels = avgLineDataSet.map(checkins => {
+			let queryDate = checkins.query_date.replace(/ .*/,'');
+			return queryDate;
+		})
+		// console.log(labels)
+
+		return {
+			labels: labels,
+			datasets: [diffDataChartData, avgLineChartData]
+		}
+	};
+
+
+	//create labels and data arrays and sets chartData state
+	generateChartData = (res, filterLabel) => {
+		const newChartData = ChartDataSet.createDataSet(res, filterLabel, true)
+		// Have new chart data, next:
+		// determine which length is longer bw current and new
+    let labels = res.map(checkins => {
+        let queryDate = checkins.query_date.replace(/ .*/,'');
+        return queryDate;
+    })
+    if(labels.length <= this.state.chartData.labels.length) {
+        labels = this.state.chartData.labels;
+    }
+    // replace array with new
+    // console.log(this.state.chartData)
+    let stateDataSet = this.state.chartData.datasets
+    stateDataSet.pop()
+    stateDataSet.push(newChartData)
+    return {
+			labels: labels,
+			datasets: stateDataSet
+		}
 	};
 
 	//create an array with differences for all restaurants in restaurantInfo
@@ -389,7 +430,7 @@ class findRestaurant extends Component {
 	};
 
 	loadFilter = (ev) => {
-		console.log(ev.target.value)
+		// console.log(ev.target.value)
 
 		if (ev.target.value === 'price') {
 			this.setState({
@@ -430,18 +471,18 @@ class findRestaurant extends Component {
 			categories.forEach(item => {
 				categoryString += item.alias + ' '
 			})
-			console.log(categoryString)
+			// console.log(categoryString)
 			API.filterSearch('category', categoryString)
 			.then(res => {
 				let categoryData = res.data
-				console.log(categoryData)
+				// console.log(categoryData)
 				for (var i = 0; i < categoryData.length; i++) {
 					var index = arrFirms.findIndex(x => x.name === categoryData[i].name)
 
 					if (index === -1) {
 						arrFirms.push(categoryData[i])
 					}	else {
-						console.log('no push')
+						// console.log('no push')
 					}
 				}
 				categoryTotal = Mathy.findTotalStats(arrFirms)
@@ -501,12 +542,14 @@ class findRestaurant extends Component {
 
 	priceFilteredRestaurants = ev => {
 		const value = ev.currentTarget.getAttribute('value')
-		console.log(value);
+		// console.log(value);
 	 	API.filterSearch('price', value)
 	    .then(res => {
-	        console.log(res)
+	        // console.log(res)
+	        let priceAvg = this.findDailyDiffAvg(res.data)
+	       	const newChartData = this.generateChartData(priceAvg.checkins, value)
 	        this.setState({
-	          priceFilteredRestaurants: res.data
+	        	chartData: newChartData
 	        })
 	    })
 	    .catch(err => console.log(err))
@@ -531,7 +574,7 @@ class findRestaurant extends Component {
 // and send to DB
 
 	getYelpAddToDb = (ev) => {
-		console.log('getYelpAddToDb')
+		// console.log('getYelpAddToDb')
 		const id = ev.currentTarget.getAttribute('value')
 		const name = ev.currentTarget.getAttribute('data-name')
 		const city = ev.currentTarget.getAttribute('data-city')
@@ -587,17 +630,61 @@ class findRestaurant extends Component {
 		this.setState({
 			top10Distance: top10Arr
 		})
-		console.log(this.state)
+		// console.log(this.state)
 	};
 
+	//create daily avg from array of multiple restaurants
 	findDailyDiffAvg = (filtered_arr) => {
-		console.log(this.state)
-		const dailyAvg = Filter.dailyDiffAvg(this.state.restaurantInfo)
-		this.setState({
-			dailyCheckinAvgObj: dailyAvg
-		})
+		// console.log(this.state)
+		const dailyAvg = Filter.dailyDiffAvg(filtered_arr)
+		// this.setState({
+		// 	dailyCheckinAvgObj: dailyAvg
+		// })
+		return dailyAvg
 	};
 
+	findTotalWeeklyDiff = (restaurantDetails) => {
+		// returns the sum and percent change object
+		const getWeeklyDiffPercentChange = (diffObjArr) => {
+			let lastWeekSliced = diffObjArr.slice(-7)
+			let previousWeekSliced = diffObjArr.slice(-14, -7)
+			let lastSlicedSum = Mathy.findSum(lastWeekSliced, 'difference')
+			let previousSlicedSum = Mathy.findSum(previousWeekSliced, 'difference')
+			const percentDiff = lastSlicedSum - previousSlicedSum
+			// console.log(lastSlicedSum)
+			// console.log(previousSlicedSum)
+			let finalPercent = percentDiff / previousSlicedSum
+			finalPercent = Round(finalPercent * 100, -1)
+			if (isNaN(finalPercent)) {
+				finalPercent = "N/A"
+			} else {
+				finalPercent = finalPercent + '%'
+			}
+			
+			return {thisWeekSum: lastSlicedSum, lastWeekSum: previousSlicedSum, percentChange: finalPercent}
+		}
+		// use restaurant details to pass into array
+		// get difftotals for each category
+		let checkinsDiff = Mathy.getDiffwithDate(restaurantDetails.checkins, 'checkins')
+		let ratingsDiff = Mathy.getDiffwithDate(restaurantDetails.rating_count, 'rating_count')
+		let reviewsDiff = Mathy.getDiffwithDate(restaurantDetails.reviews, 'review_count')
+		// sum differences from last 7 days in array
+
+		const checkinsObj = getWeeklyDiffPercentChange(checkinsDiff)
+		const ratingsObj = getWeeklyDiffPercentChange(ratingsDiff)
+		const reviewsObj = getWeeklyDiffPercentChange(reviewsDiff)
+		let enoughData = true
+		if (restaurantDetails.checkins.length <= 10) {
+			enoughData = false
+		}
+		return {
+				checkins: checkinsObj,
+				ratings: ratingsObj,
+				reviews: reviewsObj,
+				enoughData: enoughData
+				}
+	};
+	
 	render() {
 
 		const inputProps = {
@@ -609,7 +696,7 @@ class findRestaurant extends Component {
 		<div>
 			<div className="wrapper">	
 			{/*Main section*/}
-				<button onClick={this.findDailyDiffAvg}>DailyDiffAvg</button>
+				<button onClick={this.findTotalWeeklyDiff}>findTotalWeeklyDiff</button>
 				<button onClick={this.findClosestRestaurants}>BLAHHHH</button>
 				<button onClick={this.showline}>showline</button> 
 				<button onClick={this.showbar}>showbar</button> 
@@ -732,13 +819,17 @@ class findRestaurant extends Component {
 		      				<div className='restaurant-info'>	
 		      					<div className='columns'>	      				
 		      						<Restheader
+		      							rank={this.state.restaurantDetails.rank}		      							
 		      							restaurantName={this.state.restaurantDetails.name}
 		      							address={this.state.restaurantDetails.location.address}
 		      							city={this.state.restaurantDetails.location.city}
 		      							state={this.state.restaurantDetails.location.state}
 		      							yelpURL={this.state.restaurantDetails.yelpURL}
-		      							yelpRating={this.state.restaurantDetails.star_rating[0].overall_star_rating}
-		      							fbRating={this.state.restaurantDetails.rating[0].rating}
+		      							fb_url={this.state.restaurantDetails.fb_url}
+		      							fbRating={this.state.restaurantDetails.star_rating[0].overall_star_rating}
+		      							yelpRating={this.state.restaurantDetails.rating[0].rating}
+		      							
+
 		      						/>
 		      					</div>										
 				      			<div className='columns'>		      				
@@ -761,7 +852,10 @@ class findRestaurant extends Component {
 										<div className='columns'>
 											<div className='column is-12'>
 												<section className='section'>
-													<Statsection/>
+													<Statsection
+													weeklyStats={this.state.detailsWeeklyStats}
+													enoughData={this.state.detailsWeeklyStats.enoughData}
+													/>
 													
 												</section>
 											</div>

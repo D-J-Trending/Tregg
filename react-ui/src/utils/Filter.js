@@ -85,24 +85,32 @@ export default {
 				let checkinsFilteredArr = diffandDatesCheckins.filter(boom => boom.query_date === value)
 				let ratingsFilteredArr = diffandDatesRatings.filter(boom => boom.query_date === value)
 				let reviewsFilteredArr = diffandDatesReviews.filter(boom => boom.query_date === value)
-
-				if (obj['checkins'][value] === undefined) {
-					obj['checkins'][value] = []
-					obj['checkins'][value].push(checkinsFilteredArr[0].difference)
-				} else {
-					obj['checkins'][value].push(checkinsFilteredArr[0].difference)
+				
+				if (checkinsFilteredArr.length > 0) {
+					if (obj['checkins'][value] === undefined) {
+						obj['checkins'][value] = []
+						obj['checkins'][value].push(checkinsFilteredArr[0].difference)
+					} else {
+						obj['checkins'][value].push(checkinsFilteredArr[0].difference)
+					}
 				}
-				if (obj['rating_count'][value] === undefined) {
-					obj['rating_count'][value] = []
-					obj['rating_count'][value].push(ratingsFilteredArr[0].difference)
-				} else {
-					obj['rating_count'][value].push(ratingsFilteredArr[0].difference)
+				
+				if (ratingsFilteredArr.length > 0) {
+					if (obj['rating_count'][value] === undefined) {
+						obj['rating_count'][value] = []
+						obj['rating_count'][value].push(ratingsFilteredArr[0].difference)
+					} else {
+						obj['rating_count'][value].push(ratingsFilteredArr[0].difference)
+					}
 				}
-				if (obj['reviews'][value] === undefined) {
-					obj['reviews'][value] = []
-					obj['reviews'][value].push(reviewsFilteredArr[0].difference)
-				} else {
-					obj['reviews'][value].push(reviewsFilteredArr[0].difference)
+				
+				if (reviewsFilteredArr.length > 0) {
+					if (obj['reviews'][value] === undefined) {
+						obj['reviews'][value] = []
+						obj['reviews'][value].push(reviewsFilteredArr[0].difference)
+					} else {
+							obj['reviews'][value].push(reviewsFilteredArr[0].difference)
+					}
 				}
 			})
 		})
@@ -139,7 +147,21 @@ export default {
 			}
 			final_obj.reviews.push(reviewObj)
 		})
-		console.log(final_obj)
+		final_obj.checkins = final_obj.checkins.sort(function(a,b){
+			var c = new Date(a.query_date);
+			var d = new Date(b.query_date);
+			return c-d;
+		});
+		final_obj.rating_count = final_obj.rating_count.sort(function(a,b){
+			var c = new Date(a.query_date);
+			var d = new Date(b.query_date);
+			return c-d;
+		});
+		final_obj.reviews = final_obj.reviews.sort(function(a,b){
+			var c = new Date(a.query_date);
+			var d = new Date(b.query_date);
+			return c-d;
+		});
 		return final_obj
 	}
 
