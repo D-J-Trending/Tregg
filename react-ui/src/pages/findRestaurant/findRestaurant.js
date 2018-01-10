@@ -574,12 +574,7 @@ class findRestaurant extends Component {
 	};
 
 	findTotalWeeklyDiff = (restaurantDetails) => {
-		// use restaurant details to pass into array
-		// get difftotals for each category
-		let checkinsDiff = Mathy.getDiffwithDate(this.state.restaurantDetails.checkins, 'checkins')
-		let ratingsDiff = Mathy.getDiffwithDate(this.state.restaurantDetails.rating_count, 'rating_count')
-		let reviewsDiff = Mathy.getDiffwithDate(this.state.restaurantDetails.reviews, 'review_count')
-		// sum differences from last 7 days in array
+		// returns the sum and percent change object
 		const getWeeklyDiffPercentChange = (diffObjArr) => {
 			let lastWeekSliced = diffObjArr.slice(-7)
 			let previousWeekSliced = diffObjArr.slice(-14, -7)
@@ -588,10 +583,23 @@ class findRestaurant extends Component {
 			const percentDiff = lastSlicedSum - previousSlicedSum
 			console.log(lastSlicedSum)
 			console.log(previousSlicedSum)
-			let finalPercent = Round(percentDiff / previousSlicedSum, -4)
-			finalPercent = finalPercent * 100 + "%"
+			let finalPercent = percentDiff / previousSlicedSum
+			finalPercent = Round(finalPercent * 100, -2)
+			if (isNaN(finalPercent)) {
+				finalPercent = "N/A"
+			} else {
+				finalPercent = finalPercent + '%'
+			}
+			
 			return {thisWeekSum: lastSlicedSum, lastWeekSum: previousSlicedSum, percentChange: finalPercent}
 		}
+		// use restaurant details to pass into array
+		// get difftotals for each category
+		let checkinsDiff = Mathy.getDiffwithDate(restaurantDetails.checkins, 'checkins')
+		let ratingsDiff = Mathy.getDiffwithDate(restaurantDetails.rating_count, 'rating_count')
+		let reviewsDiff = Mathy.getDiffwithDate(restaurantDetails.reviews, 'review_count')
+		// sum differences from last 7 days in array
+
 		const checkinsObj = getWeeklyDiffPercentChange(checkinsDiff)
 		const ratingsObj = getWeeklyDiffPercentChange(ratingsDiff)
 		const reviewsObj = getWeeklyDiffPercentChange(reviewsDiff)
@@ -738,7 +746,9 @@ class findRestaurant extends Component {
 										<div className='columns'>
 											<div className='column is-12'>
 												<section className='section'>
-													<Statsection/>
+													<Statsection
+													weeklyStats={this.state.detailsWeeklyStats}
+													/>
 													
 												</section>
 											</div>
