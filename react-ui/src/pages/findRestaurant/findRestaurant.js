@@ -20,7 +20,7 @@ import PlacesAutocomplete, { geocodeByAddress, getLatLng } from 'react-places-au
 import Map from "../../utils/Map.js";
 import Filter from "../../utils/Filter"
 import Round from '../../utils/Round'
-
+import ChartDataSet from '../../utils/ChartDataSet'
 //Need to pass value from input field
 //Style chart and info into one element
 //Allow to click on element to view stats
@@ -47,7 +47,7 @@ class findRestaurant extends Component {
 			priceTotal: {},
 			categoryTotal: {},
 			totalAvg: "",
-			chartData: {},
+			chartData: [],
 			searchedRestaurant: {},
 			detailsWeeklyStats: {},
 			showsidenav: true,
@@ -120,67 +120,6 @@ class findRestaurant extends Component {
 	handleFormSubmit = (event) => {
     return Map.geoCode(this.state.restaurantName)
   };
-
-
-
-  	//create labels and data arrays and sets chartData state
-	generateChartData = (res, filterLabel) => {
-		console.log(res)
-		// const differenceArr = res[0].rating_count;		
-		let labels = res.map(checkins => {
-			let queryDate = checkins.query_date.replace(/ .*/,'');
-			return queryDate;
-		})
-		//check if current data set is bigger, otherwise leave label state unchanged
-		if(labels.length <= this.state.chartData.labels.length) {
-			labels = this.state.chartData.labels;
-		}
-		const data = res.map(checkins => {
-			let dataset = {}
-			let queryDate = checkins.query_date.replace(/ .*/,'');
-			let checkinDiff = checkins.difference;
-			dataset = {
-				x: queryDate,
-				y: checkinDiff
-			};
-			return dataset;
-		})
-
-		//generate random color for new dataset
-		const dynamicColors = function() {
-            var r = Math.floor(Math.random() * 255);
-            var g = Math.floor(Math.random() * 255);
-            var b = Math.floor(Math.random() * 255);
-            return "rgba(" + r + "," + g + "," + b + ", 0.2)";
-        };
-
-    let datalabel = '';
-  	let index = this.state.chartData.datasets.findIndex( x => x.label === this.state.restaurantDetails.name)
-  	if (index === -1) {
-  		datalabel = this.state.restaurantDetails.name
-  	}	else {
-  		datalabel = this.state.filterLabel
-  	}
-  	const labelArray = this.state.chartData.datasets.map(index => {
-  		return index.label;
-  	})
-  	let numberoftimes = labelArray.filter(word => word === this.state.restaurantDetails.name+"1")
-
-		this.setState({
-			chartData: {
-				labels: labels,
-				datasets: this.state.chartData.datasets.concat([
-					{
-						label: datalabel,
-						data: data,
-						backgroundColor: [dynamicColors()]
-					}
-				])
-			}
-		}, () => {
-			console.log(this.state);
-		})
-	};
 
     //update state whenever field input changes
   handleInputChange = event => {
@@ -286,6 +225,14 @@ class findRestaurant extends Component {
 				let reviewDiff = Mathy.getDiffwithDate(res.data[0].reviews, 'review_count');
 				// let totalAvg = this.findTotalStats(this.state.restaurantInfo)
 				let totalWeeklyDiff = this.findTotalWeeklyDiff(res.data[0])
+				
+				console.log(this.state.chartData)
+				console.log(this.state.filteredRestaurants.checkins)
+
+				// passes in diff array, skips filterlabel, and passes in avg line data
+				// to create data set
+				const initialChartData = this.createInitialChartDataSet(diff, null, this.state.filteredRestaurants.checkins, res.data[0])
+
 				this.setState({
 					restaurantDetails: res.data[0],
 					details: true,
@@ -295,19 +242,57 @@ class findRestaurant extends Component {
 					diffArr: diff,
 					ratingDiff: ratingDiff,
 					reviewDiff: reviewDiff,
-					detailsWeeklyStats: totalWeeklyDiff
+					detailsWeeklyStats: totalWeeklyDiff,
+					chartData: initialChartData
 					// totalAvg: totalAvg
 				})
-				console.log(this.state)
-				console.log(diff)
-				console.log(this.state.filteredRestaurants.checkins)
-				this.generateChartData(diff)
-				this.generateChartData(this.state.filteredRestaurants.checkins)
 				this.hidesearch();
 
 
 			})
 			.catch(err => console.log(err))
+	};
+	createInitialChartDataSet = (diffDateArr, filterLabel, avgLineDataSet, firmDetails) => {
+		// creates average line's chart data set
+		const avgLineChartData = ChartDataSet.createDataSet(avgLineDataSet, 'Average')
+		const diffDataChartData = ChartDataSet.createDataSet(diffDateArr, firmDetails.name)
+		console.log(avgLineChartData)
+		console.log(diffDataChartData)
+
+		let labels = avgLineDataSet.map(checkins => {
+			let queryDate = checkins.query_date.replace(/ .*/,'');
+			return queryDate;
+		})
+		console.log(labels)
+
+		return {
+			labels: labels,
+			datasets: [diffDataChartData, avgLineChartData]
+		}
+	};
+
+
+	//create labels and data arrays and sets chartData state
+	generateChartData = (res, filterLabel) => {
+		const newChartData = ChartDataSet.createDataSet(res, filterLabel)
+		// Have new chart data, next:
+		// determine which length is longer bw current and new
+    let labels = res.map(checkins => {
+        let queryDate = checkins.query_date.replace(/ .*/,'');
+        return queryDate;
+    })
+    if(labels.length <= this.state.chartData.labels.length) {
+        labels = this.state.chartData.labels;
+    }
+    // replace array with new
+    console.log(this.state.chartData)
+    let stateDataSet = this.state.chartData.datasets
+    stateDataSet.pop()
+    stateDataSet.push(newChartData)
+    return {
+			labels: labels,
+			datasets: stateDataSet
+		}
 	};
 
 	//create an array with differences for all restaurants in restaurantInfo
@@ -474,13 +459,10 @@ class findRestaurant extends Component {
 	    .then(res => {
 	        console.log(res)
 	        let priceAvg = this.findDailyDiffAvg(res.data)
+	       	const newChartData = this.generateChartData(priceAvg.checkins, value)
 	        this.setState({
-	          priceFilteredRestaurants: priceAvg,
-	          filterLabel: value
-	        }, ()=> {
-	        		console.log(this.state)
-	        		this.generateChartData(this.state.priceFilteredRestaurants.checkins, this.state.filterLabel) 
-	        	})
+	        	chartData: newChartData
+	        })
 	    })
 	    .catch(err => console.log(err))
 	};
