@@ -8,7 +8,7 @@ import API from "../../utils/API.js";
 import { Details } from "../../components/Details";
 import { Restdetails, Restheader } from "../../components/Restdetails";
 import { Stats, Statsection } from "../../components/Stats";
-import ChartFilter from "../../components/chartFilter";
+import ChartFilter from "../../components/ChartFilter";
 import "./findRestaurant.css";
 import numjs from 'numjs';
 import Mathy from "../../utils/Mathy.js";
@@ -38,6 +38,7 @@ class findRestaurant extends Component {
 			restaurantDetails: false,
 			restaurantId: "",
 			filter: 'price',
+			filterLabel: 'All Restaurants',
 			filteredRestaurants: '',
 			fbAPIResults: {},
 			details: false,
@@ -122,7 +123,7 @@ class findRestaurant extends Component {
 
 
   	//create labels and data arrays and sets chartData state
-	generateChartData = (res) => {
+	generateChartData = (res, filterLabel) => {
 		// const differenceArr = res[0].rating_count;		
 		let labels = res.map(checkins => {
 			let queryDate = checkins.query_date.replace(/ .*/,'');
@@ -151,22 +152,17 @@ class findRestaurant extends Component {
             return "rgba(" + r + "," + g + "," + b + ", 0.2)";
         };
 
-        let datalabel = '';
-
-    	let index = this.state.chartData.datasets.findIndex( x => x.label === this.state.restaurantDetails.name)
-
-    	if (index === -1) {
-    		datalabel = this.state.restaurantDetails.name
-    	}
-    	else {
-    		datalabel = this.state.restaurantDetails.name + '1'
-    	}
-
-    	const labelArray = this.state.chartData.datasets.map(index => {
-    		return index.label;
-    	})
-
-    	let numberoftimes = labelArray.filter(word => word === this.state.restaurantDetails.name+"1")
+    let datalabel = '';
+  	let index = this.state.chartData.datasets.findIndex( x => x.label === this.state.restaurantDetails.name)
+  	if (index === -1) {
+  		datalabel = this.state.restaurantDetails.name
+  	}	else {
+  		datalabel = this.state.filterLabel
+  	}
+  	const labelArray = this.state.chartData.datasets.map(index => {
+  		return index.label;
+  	})
+  	let numberoftimes = labelArray.filter(word => word === this.state.restaurantDetails.name+"1")
 
 		this.setState({
 			chartData: {
@@ -473,8 +469,12 @@ class findRestaurant extends Component {
 	        console.log(res)
 	        let priceAvg = this.findDailyDiffAvg(res.data)
 	        this.setState({
-	          priceFilteredRestaurants: priceAvg
-	        })
+	          priceFilteredRestaurants: priceAvg,
+	          filterLabel: value
+	        }, ()=> {
+	        		console.log(this.state)
+	        		this.generateChartData(this.state.priceFilteredRestaurants.checkins, this.state.filterLabel) 
+	        	})
 	    })
 	    .catch(err => console.log(err))
 	};
@@ -557,6 +557,7 @@ class findRestaurant extends Component {
 		console.log(this.state)
 	};
 
+	//create daily avg from array of multiple restaurants
 	findDailyDiffAvg = (filtered_arr) => {
 		console.log(this.state)
 		const dailyAvg = Filter.dailyDiffAvg(filtered_arr)
@@ -670,13 +671,16 @@ class findRestaurant extends Component {
 		      				<div className='restaurant-info'>	
 		      					<div className='columns'>	      				
 		      						<Restheader
+		      							rank={this.state.restaurantDetails.rank}		      							
 		      							restaurantName={this.state.restaurantDetails.name}
 		      							address={this.state.restaurantDetails.location.address}
 		      							city={this.state.restaurantDetails.location.city}
 		      							state={this.state.restaurantDetails.location.state}
 		      							yelpURL={this.state.restaurantDetails.yelpURL}
+		      							fb_url={this.state.restaurantDetails.fb_url}
 		      							yelpRating={this.state.restaurantDetails.star_rating[0].overall_star_rating}
 		      							fbRating={this.state.restaurantDetails.rating[0].rating}
+
 		      						/>
 		      					</div>										
 				      			<div className='columns'>		      				

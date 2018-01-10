@@ -9,9 +9,9 @@ export const Restheader = props => (
 				<p className='restaurant-address'>{props.address}, {props.city}, {props.state}</p>		      						
 			</div>
 			<div className='column auto'>
-				<span className='rank-section'>Trending Rank: <span className='rank-number'>7</span></span><br/>
+				<span className='rank-section'>Trending Rank: <span className='rank-number'>{props.rank}</span></span><br/>
 				<span><a target='blank' href={props.yelpURL}> Yelp Stars</a>: {props.yelpRating} &#124; </span>
-				<span> FB Rating: {props.fbRating}</span>				
+				<span><a target='blank' href={props.fb_url}> FB Rating</a>: {props.fbRating}</span>				
 			</div>		
 		</div>		
 	</div>
