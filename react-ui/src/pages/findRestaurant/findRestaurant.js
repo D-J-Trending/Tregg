@@ -603,10 +603,15 @@ class findRestaurant extends Component {
 		const checkinsObj = getWeeklyDiffPercentChange(checkinsDiff)
 		const ratingsObj = getWeeklyDiffPercentChange(ratingsDiff)
 		const reviewsObj = getWeeklyDiffPercentChange(reviewsDiff)
+		let enoughData = true
+		if (restaurantDetails.checkins.length <= 10) {
+			enoughData = false
+		}
 		return {
 				checkins: checkinsObj,
 				ratings: ratingsObj,
-				reviews: reviewsObj
+				reviews: reviewsObj,
+				enoughData: enoughData
 				}
 	};
 	
@@ -748,6 +753,7 @@ class findRestaurant extends Component {
 												<section className='section'>
 													<Statsection
 													weeklyStats={this.state.detailsWeeklyStats}
+													enoughData={this.state.detailsWeeklyStats.enoughData}
 													/>
 													
 												</section>
