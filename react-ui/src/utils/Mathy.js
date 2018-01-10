@@ -16,6 +16,20 @@ export default {
     return diff
   },
 
+  findSum: function(arr, key) {
+    var total = 0
+    if (key) {
+      for(var i = 0; i < arr.length; i++) {
+            total += arr[i][key];
+      }
+    } else {
+      for(var i = 0; i < arr.length; i++) {
+            total += arr[i];
+      }  
+    }
+    return total
+  },
+
   getMean: function(arr) {
     var total = 0;
     if (arr.length > 0) {

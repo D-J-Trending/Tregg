@@ -19,7 +19,7 @@ import geolib from 'geolib';
 import PlacesAutocomplete, { geocodeByAddress, getLatLng } from 'react-places-autocomplete';
 import Map from "../../utils/Map.js";
 import Filter from "../../utils/Filter"
-
+import Round from '../../utils/Round'
 
 //Need to pass value from input field
 //Style chart and info into one element
@@ -49,6 +49,7 @@ class findRestaurant extends Component {
 			totalAvg: "",
 			chartData: {},
 			searchedRestaurant: {},
+			detailsWeeklyStats: {},
 			showsidenav: true,
 			onSearchClick: true,
 			showline: true,
@@ -284,6 +285,7 @@ class findRestaurant extends Component {
 				// console.log(checkinsAvg)
 				let reviewDiff = Mathy.getDiffwithDate(res.data[0].reviews, 'review_count');
 				// let totalAvg = this.findTotalStats(this.state.restaurantInfo)
+				let totalWeeklyDiff = this.findTotalWeeklyDiff(res.data[0])
 				this.setState({
 					restaurantDetails: res.data[0],
 					details: true,
@@ -292,7 +294,8 @@ class findRestaurant extends Component {
 					ratingsAvg: ratingsAvg,
 					diffArr: diff,
 					ratingDiff: ratingDiff,
-					reviewDiff: reviewDiff
+					reviewDiff: reviewDiff,
+					detailsWeeklyStats: totalWeeklyDiff
 					// totalAvg: totalAvg
 				})
 				console.log(this.state)
@@ -570,6 +573,48 @@ class findRestaurant extends Component {
 		return dailyAvg
 	};
 
+	findTotalWeeklyDiff = (restaurantDetails) => {
+		// returns the sum and percent change object
+		const getWeeklyDiffPercentChange = (diffObjArr) => {
+			let lastWeekSliced = diffObjArr.slice(-7)
+			let previousWeekSliced = diffObjArr.slice(-14, -7)
+			let lastSlicedSum = Mathy.findSum(lastWeekSliced, 'difference')
+			let previousSlicedSum = Mathy.findSum(previousWeekSliced, 'difference')
+			const percentDiff = lastSlicedSum - previousSlicedSum
+			console.log(lastSlicedSum)
+			console.log(previousSlicedSum)
+			let finalPercent = percentDiff / previousSlicedSum
+			finalPercent = Round(finalPercent * 100, -2)
+			if (isNaN(finalPercent)) {
+				finalPercent = "N/A"
+			} else {
+				finalPercent = finalPercent + '%'
+			}
+			
+			return {thisWeekSum: lastSlicedSum, lastWeekSum: previousSlicedSum, percentChange: finalPercent}
+		}
+		// use restaurant details to pass into array
+		// get difftotals for each category
+		let checkinsDiff = Mathy.getDiffwithDate(restaurantDetails.checkins, 'checkins')
+		let ratingsDiff = Mathy.getDiffwithDate(restaurantDetails.rating_count, 'rating_count')
+		let reviewsDiff = Mathy.getDiffwithDate(restaurantDetails.reviews, 'review_count')
+		// sum differences from last 7 days in array
+
+		const checkinsObj = getWeeklyDiffPercentChange(checkinsDiff)
+		const ratingsObj = getWeeklyDiffPercentChange(ratingsDiff)
+		const reviewsObj = getWeeklyDiffPercentChange(reviewsDiff)
+		let enoughData = true
+		if (restaurantDetails.checkins.length <= 10) {
+			enoughData = false
+		}
+		return {
+				checkins: checkinsObj,
+				ratings: ratingsObj,
+				reviews: reviewsObj,
+				enoughData: enoughData
+				}
+	};
+	
 	render() {
 
 		const inputProps = {
@@ -581,7 +626,7 @@ class findRestaurant extends Component {
 		<div>
 			<div className="wrapper">	
 			{/*Main section*/}
-				<button onClick={this.findDailyDiffAvg}>DailyDiffAvg</button>
+				<button onClick={this.findTotalWeeklyDiff}>findTotalWeeklyDiff</button>
 				<button onClick={this.findClosestRestaurants}>BLAHHHH</button>
 				<button onClick={this.showline}>showline</button> 
 				<button onClick={this.showbar}>showbar</button> 
@@ -706,7 +751,10 @@ class findRestaurant extends Component {
 										<div className='columns'>
 											<div className='column is-12'>
 												<section className='section'>
-													<Statsection/>
+													<Statsection
+													weeklyStats={this.state.detailsWeeklyStats}
+													enoughData={this.state.detailsWeeklyStats.enoughData}
+													/>
 													
 												</section>
 											</div>
