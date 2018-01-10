@@ -1,7 +1,7 @@
 import React from "react";
 import "./ChartFilter.css";
 
-export const chartFilter = props => (
+export const ChartFilter = props => (
   <div className="chart-filter" {...props}>
   	{props.children}
   	<button className='button'{...props}> Similar Categories</button>
@@ -12,4 +12,4 @@ export const chartFilter = props => (
   </div>
 )
 
-export default chartFilter;
+export default ChartFilter;
