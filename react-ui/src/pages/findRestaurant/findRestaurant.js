@@ -38,7 +38,7 @@ class findRestaurant extends Component {
 			restaurantDetails: false,
 			restaurantId: "",
 			filter: 'price',
-			filterLabel: 'avgLine',
+			filterLabel: 'All Restaurants',
 			filteredRestaurants: '',
 			fbAPIResults: {},
 			details: false,
