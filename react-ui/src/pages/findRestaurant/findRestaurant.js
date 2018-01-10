@@ -74,7 +74,7 @@ class findRestaurant extends Component {
 			// this.findPercentChange(res.data,'rating_count', 'rating_count')
 			// this.findPercentChange(res.data,'reviews', 'review_count')
 		console.log('BEFORE GEOLOCATE')
-		const avgLine = this.findDailyDiffAvg(res.data)
+		// const avgLine = this.findDailyDiffAvg(res.data)
 
 		if (navigator.geolocation) {
 			navigator.geolocation.getCurrentPosition(position => {
@@ -85,7 +85,7 @@ class findRestaurant extends Component {
 				};
 				console.log(res.data)
 				this.setState({
-					filteredRestaurants: avgLine,
+					// filteredRestaurants: avgLine,
 					restaurantInfo: res.data,
 					coordsIdsArr: coordsArr,
 					userCoordinates: userCoordinates
@@ -94,7 +94,7 @@ class findRestaurant extends Component {
 
 		} else {
 			this.setState({
-				filteredRestaurants: avgLine,
+				// filteredRestaurants: avgLine,
 				restaurantInfo: res.data,
 				coordsIdsArr: coordsArr,
 				userCoordinates: null
@@ -675,8 +675,10 @@ class findRestaurant extends Component {
 		      							city={this.state.restaurantDetails.location.city}
 		      							state={this.state.restaurantDetails.location.state}
 		      							yelpURL={this.state.restaurantDetails.yelpURL}
+		      							fb_url={this.state.restaurantDetails.fb_url}
 		      							yelpRating={this.state.restaurantDetails.star_rating[0].overall_star_rating}
 		      							fbRating={this.state.restaurantDetails.rating[0].rating}
+
 		      						/>
 		      					</div>										
 				      			<div className='columns'>		      				
