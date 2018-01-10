@@ -2,6 +2,10 @@
 	padding: 0px;
 }
 
+.fa-sort-asc, .fa-sort-desc {
+	margin-left: 2px
+}
+
 .fa-sort-asc {
 	color: green;
 }
