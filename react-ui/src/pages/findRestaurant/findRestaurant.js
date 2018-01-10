@@ -8,7 +8,7 @@ import API from "../../utils/API.js";
 import { Details } from "../../components/Details";
 import { Restdetails, Restheader } from "../../components/Restdetails";
 import { Stats, Statsection } from "../../components/Stats";
-import ChartFilter from "../../components/ChartFilter";
+import ChartFilter from "../../components/chartFilter";
 import "./findRestaurant.css";
 import numjs from 'numjs';
 import Mathy from "../../utils/Mathy.js";
@@ -91,6 +91,7 @@ class findRestaurant extends Component {
 					userCoordinates: userCoordinates
 				})
 			})
+
 		} else {
 			this.setState({
 				filteredRestaurants: avgLine,
