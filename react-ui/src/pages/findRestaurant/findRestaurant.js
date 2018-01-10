@@ -741,6 +741,17 @@ class findRestaurant extends Component {
 												</section>
 											</div>
 										</div>
+										<div className='columns'>
+											<div className='column is-12'>
+												<section className='section'>
+													<Details
+													restaurantDetails={this.state.restaurantDetails}
+													getTotals={() => this.getTotals()}
+													loadFilter={() => this.loadFilter()}
+													/>
+												</section>
+											</div>
+										</div>
 									</div>
 										) : (
 										null
