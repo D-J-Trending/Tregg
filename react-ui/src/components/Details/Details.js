@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import './Details.css'
 
 export class Details extends Component {
 	constructor(props) {
@@ -10,17 +11,27 @@ export class Details extends Component {
 		console.log(this.props.restaurantDetails)
 	};
 
+	getLastElement = (arr, filter) => {
+		var lastItem = arr.pop();
+		return lastItem[filter]
+	}
+
 	render() {
 		return (
 	
 	<div className="details">
-		<h3>
-		{this.props.restaurantDetails.name}
-		</h3>
-		{this.props.restaurantDetails.checkins.map(item => (
 
-			<p>{item.checkins}</p>
-		))}
+		<h4>
+		{this.props.restaurantDetails.name}
+		</h4>
+		<img className="detailsImg"src={this.props.restaurantDetails.yelpImg} />
+		
+		<h3> Total *FBLOGO* Checkins </h3>
+		<p>{this.getLastElement(this.props.restaurantDetails.checkins, 'checkins')}</p>
+		<h3> Total *FBLOGO* Ratings </h3>
+		<p>{this.getLastElement(this.props.restaurantDetails.rating_count, 'rating_count')}</p>
+		<h3> Total *YelpLOGO* Reviews </h3>
+		<p>{this.getLastElement(this.props.restaurantDetails.reviews, 'review_count')}</p>		
 		<h3>
 			Avg Checkins </h3>
 		<p>2552</p>

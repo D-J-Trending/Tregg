@@ -1,5 +1,5 @@
 import React from "react";
-import "./chartFilter.css";
+import "./ChartFilter.css";
 
 export const chartFilter = props => (
   <div className="chart-filter" {...props}>
