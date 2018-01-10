@@ -8,7 +8,7 @@ import API from "../../utils/API.js";
 import { Details } from "../../components/Details";
 import { Restdetails, Restheader } from "../../components/Restdetails";
 import { Stats, Statsection } from "../../components/Stats";
-import ChartFilter from "../../components/chartFilter";
+import ChartFilter from "../../components/ChartFilter";
 import "./findRestaurant.css";
 import numjs from 'numjs';
 import Mathy from "../../utils/Mathy.js";
@@ -708,8 +708,9 @@ class findRestaurant extends Component {
 		      							state={this.state.restaurantDetails.location.state}
 		      							yelpURL={this.state.restaurantDetails.yelpURL}
 		      							fb_url={this.state.restaurantDetails.fb_url}
-		      							yelpRating={this.state.restaurantDetails.star_rating[0].overall_star_rating}
-		      							fbRating={this.state.restaurantDetails.rating[0].rating}
+		      							fbRating={this.state.restaurantDetails.star_rating[0].overall_star_rating}
+		      							yelpRating={this.state.restaurantDetails.rating[0].rating}
+		      							
 
 		      						/>
 		      					</div>										
