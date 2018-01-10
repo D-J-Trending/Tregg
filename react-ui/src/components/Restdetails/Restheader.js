@@ -9,7 +9,14 @@ constructor(props) {
 
 stars = () => {
 	console.log('foo')
-	return
+	console.log(this.props.yelpRating)
+	switch (this.props.yelpRating) {
+		case 4:
+			return <img src='yelp_stars/web_and_ios/regular/regular_4.png' alt='yelpimg'/>
+		case 4.5: 
+			return <img src='yelp_stars/web_and_ios/regular/regular_4_half.png' alt='yelpimg'/>
+	}
+	
 }
 
 	render() {
@@ -22,7 +29,7 @@ stars = () => {
 				</div>
 				<div className='column auto'>
 					<span className='rank-section'>Trending Rank: <span className='rank-number'>{this.props.rank}</span></span><br/>
-					<span><a target='blank' href={this.props.yelpURL}> Yelp Stars</a>:{this.stars()}<img src='yelp_stars/web_and_ios/regular/regular_1.png' alt='yelpimg'/>{this.props.yelpRating} &#124; </span>
+					<span><a target='blank' href={this.props.yelpURL}> Yelp Stars</a>:{this.stars()} &#124; </span>
 					<span><a target='blank' href={this.props.fb_url}> FB Rating</a>: {this.props.fbRating}</span>				
 				</div>		
 				</div>		
