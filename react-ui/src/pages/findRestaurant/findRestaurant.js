@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import Modal from "react-modal";
 import { Input, Form, Searchbtn } from "../../components/Form";
 import { Searched, Searcheditems, FbSearchedItems } from "../../components/Searched";
 import Chart from "../../components/Chart";
@@ -18,9 +19,19 @@ import moment from 'moment';
 import geolib from 'geolib';
 import PlacesAutocomplete, { geocodeByAddress, getLatLng } from 'react-places-autocomplete';
 import Map from "../../utils/Map.js";
-import Filter from "../../utils/Filter"
+import Filter from "../../utils/Filter";
 
 
+const customStyles = {
+  content : {
+    top                   : '50%',
+    left                  : '50%',
+    right                 : 'auto',
+    bottom                : 'auto',
+    marginRight           : '-50%',
+    transform             : 'translate(-50%, -50%)'
+  }
+};
 //Need to pass value from input field
 //Style chart and info into one element
 //Allow to click on element to view stats
@@ -48,15 +59,19 @@ class findRestaurant extends Component {
 			totalAvg: "",
 			chartData: {},
 			searchedRestaurant: {},
-			showsidenav: true,
-			onSearchClick: true,
+			onSearchClick: false,
 			showline: true,
 			showbar: true,
 			address: "",
 			dropdown: '',
-			hidesearch: true
+			hidesearch: false,
+			modalIsOpen: false,
+			searchlogo: true
 		};
 		this.onChange = (restaurantName) => this.setState({ restaurantName })
+		this.openModal = this.openModal.bind(this);
+    	this.afterOpenModal = this.afterOpenModal.bind(this);
+    	this.closeModal = this.closeModal.bind(this);
 	}
   
   componentWillMount() {
@@ -112,8 +127,15 @@ class findRestaurant extends Component {
 
 	handleFormSubmit = (event) => {
     return Map.geoCode(this.state.restaurantName)
-  };
+ 	};
 
+ 	//handle Submit for searchRestaurant//
+ 	pressEnter = (ev) => {
+  	if(ev.keyCode == 13 || ev.hich ==13 ){
+  	  	this.searchRestaurant();
+  		ev.preventDefault();
+  		}
+  	};
 
 
   	//create labels and data arrays and sets chartData state
@@ -197,17 +219,12 @@ class findRestaurant extends Component {
     	})
   };
  
- pressEnter = (ev) => {
-  	if(ev.key == 13){
-  		ev.preventDefault();
-  		this.searchRestaurant();
-  		console.log('iwas pressed(enter)')
-  	}
-  };
+ 
 
 	searchRestaurant = event => {
+		this.onSearchClick();
 		this.setState ({
-			hidesearch:true,
+			hidesearch:true
 		})
 		if (this.state.restaurantName) {
 
@@ -295,8 +312,9 @@ class findRestaurant extends Component {
 				console.log(this.state)
 				this.generateChartData(this.state.diffArr)
 				this.hidesearch();
-				this.onSearchClick();
-
+				this.setState({
+					restaurantName: "",
+				})
 
 			})
 			.catch(err => console.log(err))
@@ -437,11 +455,29 @@ class findRestaurant extends Component {
 			.catch(err => console.log(err))
 		}
 	};
+									//**************************************//
+									//********onClick Functions************//
+									//************************************//
+
+	openModal = () => {
+    this.setState({modalIsOpen: true});
+    this.searchlogo();
+  	};
+
+  	afterOpenModal = () => {
+    // references are now sync'd and can be accessed.
+    this.subtitle.style.color = '#f00';
+  	};
+
+  	closeModal = () => {
+    this.setState({modalIsOpen: false});
+    this.setState({searchlogo: true})
+  	};
 
 	onClick = () => {
     		this.setState({ showsidenav: !this.state.showsidenav });
-   };
-
+   	};
+ 
 	onSearchClick = () => {
 		 	this.setState({ searchIcon: !this.state.searchIcon});
 	};
@@ -458,6 +494,10 @@ class findRestaurant extends Component {
 	hidesearch = () => {
 			this.setState({ hidesearch: !this.state.hidesearch });
 	};
+
+	searchlogo = () => {
+		this.setState({ searchlogo: !this.state.searchlogo});
+	}
 
 	priceFilteredRestaurants = ev => {
 		const value = ev.currentTarget.getAttribute('value')
@@ -575,14 +615,44 @@ class findRestaurant extends Component {
 				<button onClick={this.showbar}>showbar</button> 
 
 				<button onClick={this.findPercentChange}>finddiffall</button>
-				<button onClick={this.hidesearch}>hidesearcharea</button>  
+				<button onClick={this.hidesearch}>hidesearcharea</button>
 
+				<button onClick={this.openModal}>Open Modal</button>
+
+			        <Modal
+			          isOpen={this.state.modalIsOpen}
+			          onAfterOpen={this.afterOpenModal}
+			          onRequestClose={this.closeModal}
+			          contentLabel="Example Modal"
+			        >
+
+			          <h2 ref={subtitle => this.subtitle = subtitle}>Hello</h2>
+			          <button className="modalClosed" onClick={this.closeModal}>close</button>
+			          <div>I am a modal</div>
+			          <form>
+			            <input />
+			            <button>tab navigation</button>
+			            <button>stays</button>
+			            <button>inside</button>
+			            <button>the modal</button>
+			          </form>
+			        </Modal> 
+
+
+			{ this.state.searchlogo ? 
+				<CSSTransitionGroup
+								transitionName="example"
+								transitionAppear={true}
+								transitionAppearTimeout={500}
+								transitionEnter={false}
+								transitionLeave={true}>
 				<a onClick={this.onSearchClick}>
 					<div className="inPut-with-icon">
 						<i className="fa fa-search"></i>
 					</div>
 				</a>
-				
+				</CSSTransitionGroup>
+			: null }
 
 
 						      					<h1> Find A Restaurant </h1>
@@ -712,17 +782,17 @@ class findRestaurant extends Component {
 								transitionEnter={false}
 								transitionLeave={true}>
 								<div className='searchIcon'>
-								<form>
+								<form type="submit">
 				      			<input
+				      				className="searchBar"
 									inputProps={inputProps}
 									value={this.state.restaurantName}
 									onChange={this.handleInputChange}
 									name="restaurantName"
 									placeholder="restaurant"
-									onKeyPress={this.searchRestaurant}
+									onKeyDown={this.pressEnter}
 
 								/>
-							
 								</form>
 								
 								</div>

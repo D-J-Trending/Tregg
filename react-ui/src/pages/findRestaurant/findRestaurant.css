@@ -27,3 +27,30 @@ form {
 	position: relative;
 	float: left;
 }
+
+.ReactModal__Content ReactModal__Content--after-open {
+	position: absolute;
+    top: 50%;
+    left: 50%;
+    right: auto;
+    bottom: auto;
+    border: 1px solid rgb(204, 204, 204);
+    background: rgb(255, 255, 255);
+    overflow: auto;
+    border-radius: 4px;
+    outline: none;
+    padding: 20px;
+    margin-right: -50%;
+    transform: translate(-50%, -50%)
+}
+
+.modalClosed {
+	position: fixed;
+    right: 40px;
+    top: 8px;
+}
+.searchBar {
+	position: relative;
+    top: -160px;
+    right: -90px;
+}
