@@ -8,7 +8,7 @@ import API from "../../utils/API.js";
 import { Details } from "../../components/Details";
 import { Restdetails, Restheader } from "../../components/Restdetails";
 import { Stats, Statsection } from "../../components/Stats";
-import ChartFilter from "../../components/ChartFilter";
+import ChartFilter from "../../components/chartFilter";
 import "./findRestaurant.css";
 import numjs from 'numjs';
 import Mathy from "../../utils/Mathy.js";
@@ -124,6 +124,7 @@ class findRestaurant extends Component {
 
   	//create labels and data arrays and sets chartData state
 	generateChartData = (res, filterLabel) => {
+		console.log(res)
 		// const differenceArr = res[0].rating_count;		
 		let labels = res.map(checkins => {
 			let queryDate = checkins.query_date.replace(/ .*/,'');
@@ -295,7 +296,9 @@ class findRestaurant extends Component {
 					// totalAvg: totalAvg
 				})
 				console.log(this.state)
-				this.generateChartData(this.state.diffArr)
+				console.log(diff)
+				console.log(this.state.filteredRestaurants.checkins)
+				this.generateChartData(diff)
 				this.generateChartData(this.state.filteredRestaurants.checkins)
 				this.hidesearch();
 

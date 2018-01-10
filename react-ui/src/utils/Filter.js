@@ -114,6 +114,7 @@ export default {
 				}
 			})
 		})
+		console.log(obj)
 		const final_obj = {
 			'checkins': [],
 			'rating_count': [],
@@ -148,6 +149,21 @@ export default {
 			final_obj.reviews.push(reviewObj)
 		})
 		console.log(final_obj)
+		final_obj.checkins = final_obj.checkins.sort(function(a,b){
+			var c = new Date(a.query_date);
+			var d = new Date(b.query_date);
+			return c-d;
+		});
+		final_obj.rating_count = final_obj.rating_count.sort(function(a,b){
+			var c = new Date(a.query_date);
+			var d = new Date(b.query_date);
+			return c-d;
+		});
+		final_obj.reviews = final_obj.reviews.sort(function(a,b){
+			var c = new Date(a.query_date);
+			var d = new Date(b.query_date);
+			return c-d;
+		});
 		return final_obj
 	}
 
