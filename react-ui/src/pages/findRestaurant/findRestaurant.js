@@ -9,7 +9,8 @@ import API from "../../utils/API.js";
 import { Details } from "../../components/Details";
 import { Restdetails, Restheader } from "../../components/Restdetails";
 import { Stats, Statsection } from "../../components/Stats";
-import ChartFilter from "../../components/chartFilter";
+import ChartFilter from "../../components/ChartFilter";
+import Filter from "../../utils/Filter";
 import "./findRestaurant.css";
 import numjs from 'numjs';
 import Mathy from "../../utils/Mathy.js";
@@ -740,19 +741,12 @@ class findRestaurant extends Component {
 				</a>
 				</CSSTransitionGroup>
 			: null }
-
-
-						      					<h1> Find A Restaurant </h1>
-
+			
 		      	<div className="data-section columns">
 		      		<div className="column auto">
-
 		      		{this.state.hidesearch ? (
 		      			<div className='columns search-area'>
-		      				<div className="column is-12">
-
-											
-										
+		      				<div className="column is-12">										
 											<div id='search-restaurant'>
 													{this.state.searchedRestaurant.length ? (
 														<CSSTransitionGroup
@@ -851,7 +845,7 @@ class findRestaurant extends Component {
 										</div>
 										<div className='columns'>
 											<div className='column is-12'>
-												<section className='section'>
+												<section className='stats-section section'>
 													<Statsection
 													weeklyStats={this.state.detailsWeeklyStats}
 													enoughData={this.state.detailsWeeklyStats.enoughData}

@@ -20,7 +20,7 @@ export class Statsection extends Component {
       return <i className="fa fa-sort-desc"></i>
     } else{
       console.log('default')
-      return <i className="fa fa-sort-desc"></i>
+      return
     }
   }
 
