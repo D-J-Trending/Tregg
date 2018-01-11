@@ -9,7 +9,7 @@ import API from "../../utils/API.js";
 import { Details } from "../../components/Details";
 import { Restdetails, Restheader } from "../../components/Restdetails";
 import { Stats, Statsection } from "../../components/Stats";
-import ChartFilter from "../../components/chartFilter";
+import ChartFilter from "../../components/ChartFilter";
 import Filter from "../../utils/Filter";
 import "./findRestaurant.css";
 import numjs from 'numjs';
@@ -938,6 +938,7 @@ class findRestaurant extends Component {
 												<section className='stats-section section'>
 													<Statsection
 													restaurantDetails={this.state.restaurantDetails}
+													allTotals={this.state.totalAvg}
 													detailsAvgs={this.state.restaurantDetailsAvg}
 													weeklyStats={this.state.detailsWeeklyStats}
 													enoughData={this.state.detailsWeeklyStats.enoughData}

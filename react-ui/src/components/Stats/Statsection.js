@@ -30,18 +30,18 @@ export class Statsection extends Component {
 				<div className='columns stat-header'>
 					<div className='column auto'>Source</div>
 					<div className='column auto has-text-centered'>This Week</div>
-      				<div className='column auto has-text-centered'>%Change</div>
-      				<div className='column auto has-text-centered'>Last Week</div>
-              <div className='column auto has-text-centered'>Daily Avg</div>
-              <div className='column auto has-text-centered'>All-Time</div>
-                              {/*<div className='column auto has-text-centered'>Lowest Day</div>  
-                              <div className='column auto has-text-centered'>Highest Day</div>  
-                              <div className='column auto has-text-centered'>Daily Avg</div>
-                              <div className='column auto has-text-centered'>All Time Total </div>*/}        				
-      			</div>
+  				<div className='column auto has-text-centered'>%Change</div>
+  				<div className='column auto has-text-centered'>Last Week</div>
+          <div className='column auto has-text-centered'>Daily Avg</div>
+          <div className='column auto has-text-centered'>All-Time</div>
+                          {/*<div className='column auto has-text-centered'>Lowest Day</div>  
+                          <div className='column auto has-text-centered'>Highest Day</div>  
+                          <div className='column auto has-text-centered'>Daily Avg</div>
+                          <div className='column auto has-text-centered'>All Time Total </div>*/}        				
+  			</div>
 
 				<div className='columns'>
-					<div className='column auto'><i className="fa fa-facebook-square"></i> Checkins</div>
+					<div className='column auto'><i className="fa fa-facebook-official"></i> Checkins</div>
       				<div className='column auto has-text-centered'>{this.props.weeklyStats.checkins.thisWeekSum} </div>
       				<div className='column auto has-text-centered'>{this.props.weeklyStats.checkins.percentChange}{this.arrows(this.props.weeklyStats.checkins.percentChange)}</div>
               <div className='column auto has-text-centered'>{this.props.weeklyStats.checkins.lastWeekSum}</div>
@@ -50,7 +50,7 @@ export class Statsection extends Component {
                        				     				
       			</div>
       		<div className='columns'>
-					<div className='column auto'><i className="fa fa-facebook-square"></i> Ratings</div>
+					<div className='column auto'><i className="fa fa-facebook-official"></i> Ratings</div>
       				<div className='column auto has-text-centered'>{this.props.weeklyStats.ratings.thisWeekSum}</div>
       				<div className='column auto has-text-centered'>{this.props.weeklyStats.ratings.percentChange}{this.arrows(this.props.weeklyStats.ratings.percentChange)}</div>
       				<div className='column auto has-text-centered'>{this.props.weeklyStats.ratings.lastWeekSum}</div>
@@ -59,12 +59,26 @@ export class Statsection extends Component {
       			</div>   
       		<div className='columns'>
 					<div className='column auto'><i className="fa fa-yelp"></i> Reviews</div>
-      				<div className='column auto has-text-centered'>{this.props.weeklyStats.reviews.thisWeekSum}</div>
-      				<div className='column auto has-text-centered'>{this.props.weeklyStats.reviews.percentChange}{this.arrows(this.props.weeklyStats.reviews.percentChange)}</div>
-      				<div className='column auto has-text-centered'>{this.props.weeklyStats.reviews.lastWeekSum}</div>
-              <div className='column auto has-text-centered'>{this.props.detailsAvgs.reviewsAvg}</div>
-              <div className='column auto has-text-centered'>{this.getLastElement(this.props.restaurantDetails.reviews, 'review_count')}</div>           				
-      			</div>         								      		
+    				<div className='column auto has-text-centered'>{this.props.weeklyStats.reviews.thisWeekSum}</div>
+    				<div className='column auto has-text-centered'>{this.props.weeklyStats.reviews.percentChange}{this.arrows(this.props.weeklyStats.reviews.percentChange)}</div>
+    				<div className='column auto has-text-centered'>{this.props.weeklyStats.reviews.lastWeekSum}</div>
+            <div className='column auto has-text-centered'>{this.props.detailsAvgs.reviewsAvg}</div>
+            <div className='column auto has-text-centered'>{this.getLastElement(this.props.restaurantDetails.reviews, 'review_count')}</div>           				
+    			</div>  
+
+          <div className='columns stat-header all-restaurant-averages'>
+            <div className='column auto has-text-centered'>All Restaurant Daily Averages</div>
+          </div>
+          <div className='columns stat-header'>
+            <div className='column auto has-text-centered'><i className="fa fa-facebook-square"></i> Checkins</div>
+            <div className='column auto has-text-centered'><i className="fa fa-facebook-square"></i> Ratings</div>
+            <div className='column auto has-text-centered'><i className="fa fa-yelp"></i> Reviews</div>             
+          </div>
+          <div className='columns call-restaurant-numbers'>
+            <div className='column auto has-text-centered'>{this.props.allTotals.checkinsMean}</div>
+            <div className='column auto has-text-centered'>{this.props.allTotals.ratingsMean}</div>
+            <div className='column auto has-text-centered'>{this.props.allTotals.reviewsMean}</div>                
+          </div>  
 			</div>
 		)
 	}	
