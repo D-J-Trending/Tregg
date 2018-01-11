@@ -539,6 +539,50 @@ class findRestaurant extends Component {
 
 	searchlogo = () => {
 		this.setState({ searchlogo: !this.state.searchlogo});
+	};
+
+	filterClick1 = (ev) => {
+		this.setState({
+			filter1: false,
+			filter2: false,
+			filter3: false,
+			filter4: false
+		})
+		this.setState({ filter1: !this.state.filter1});
+		this.priceFilteredRestaurants(ev)
+	};
+
+	filterClick2 = (ev) => {
+		this.setState({
+			filter1: false,
+			filter2: false,
+			filter3: false,
+			filter4: false
+		})
+		this.setState({ filter2: !this.state.filter2});
+		this.priceFilteredRestaurants(ev)
+	};
+
+	filterClick3 = (ev) => {
+		this.setState({
+			filter1: false,
+			filter2: false,
+			filter3: false,
+			filter4: false
+		})
+		this.setState({ filter3: !this.state.filter3});
+		this.priceFilteredRestaurants(ev)
+	};
+
+	filterClick4 = (ev) => {
+		this.setState({
+			filter1: false,
+			filter2: false,
+			filter3: false,
+			filter4: false
+		})
+		this.setState({ filter4: !this.state.filter4});
+		this.priceFilteredRestaurants(ev)
 	}
 
 	priceFilteredRestaurants = ev => {
@@ -551,7 +595,7 @@ class findRestaurant extends Component {
 	       	const newChartData = this.generateChartData(priceAvg.checkins, value)
 	        this.setState({
 	        	chartData: newChartData
-	        })
+	        }, ()=> console.log(this.state))
 	    })
 	    .catch(err => console.log(err))
 	};
@@ -819,11 +863,9 @@ class findRestaurant extends Component {
 		      							city={this.state.restaurantDetails.location.city}
 		      							state={this.state.restaurantDetails.location.state}
 		      							yelpURL={this.state.restaurantDetails.yelpURL}
-		      							fb_url={this.state.restaurantDetails.fb_url}
+		      							fb_url={this.state.restaurantDetails.fbURL}
 		      							fbRating={this.state.restaurantDetails.star_rating[0].overall_star_rating}
-		      							yelpRating={this.state.restaurantDetails.rating[0].rating}
-		      							
-
+		      							yelpRating={this.state.restaurantDetails.rating[0].rating}		      					
 		      						/>
 		      					</div>										
 				      			<div className='columns'>		      				
@@ -834,7 +876,10 @@ class findRestaurant extends Component {
 							      	<div className='column is-3 data-navigation'>							      		
 						      			<div className='columns'>
 						      				<ChartFilter 
-						      					checkClick={this.priceFilteredRestaurants}
+						      					checkClick1={this.filterClick1}
+						      					checkClick2={this.filterClick2}
+						      					checkClick3={this.filterClick3}
+						      					checkClick4={this.filterClick4}
 						      				>
 						      					<Dropdown onClick={this.dropdown} className={this.state.dropdown}/>						      		
 						      				</ChartFilter>				      				
