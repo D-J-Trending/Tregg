@@ -117,6 +117,47 @@ export default {
     const diff = this.findDifference(arr, name)
     const mean = this.getMean(diff)
     return Round(mean, -2)
-  }
+  },
 
+  findTotalWeeklyDiff: function(restaurantDetails) {
+    // returns the sum and percent change object
+    const getWeeklyDiffPercentChange = (diffObjArr) => {
+      let lastWeekSliced = diffObjArr.slice(-7)
+      let previousWeekSliced = diffObjArr.slice(-14, -7)
+      let lastSlicedSum = this.findSum(lastWeekSliced, 'difference')
+      let previousSlicedSum = this.findSum(previousWeekSliced, 'difference')
+      const percentDiff = lastSlicedSum - previousSlicedSum
+      // console.log(lastSlicedSum)
+      // console.log(previousSlicedSum)
+      let finalPercent = percentDiff / previousSlicedSum
+      finalPercent = Round(finalPercent * 100, -1)
+      if (isNaN(finalPercent)) {
+        finalPercent = "N/A"
+      } else {
+        finalPercent = finalPercent + '%'
+      }
+      
+      return {thisWeekSum: lastSlicedSum, lastWeekSum: previousSlicedSum, percentChange: finalPercent}
+    }
+    // use restaurant details to pass into array
+    // get difftotals for each category
+    let checkinsDiff = this.getDiffwithDate(restaurantDetails.checkins, 'checkins')
+    let ratingsDiff = this.getDiffwithDate(restaurantDetails.rating_count, 'rating_count')
+    let reviewsDiff = this.getDiffwithDate(restaurantDetails.reviews, 'review_count')
+    // sum differences from last 7 days in array
+
+    const checkinsObj = getWeeklyDiffPercentChange(checkinsDiff)
+    const ratingsObj = getWeeklyDiffPercentChange(ratingsDiff)
+    const reviewsObj = getWeeklyDiffPercentChange(reviewsDiff)
+    let enoughData = true
+    if (restaurantDetails.checkins.length <= 10) {
+      enoughData = false
+    }
+    return {
+        checkins: checkinsObj,
+        ratings: ratingsObj,
+        reviews: reviewsObj,
+        enoughData: enoughData
+        }
+  }
 }

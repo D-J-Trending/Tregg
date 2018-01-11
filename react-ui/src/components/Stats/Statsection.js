@@ -1,14 +1,71 @@
 import React, {Component} from 'react';
 import "./Stats.css";
 import ReactTooltip from 'react-tooltip';
-
+import Mathy from '../../utils/Mathy';
+import Stats from './Stats.js';
+const obj = {}
 export class Statsection extends Component {
 	constructor(props) {
 		super(props)
+    this.state = {
+      restaurantDetailsAvg: {},
+      weeklyStats: {},
+      show: false,
+      checkinsAvg: "",
+      reviewsAvg: "",
+      ratingsAvg: "",
+      ratingDiff: "", 
+      reviewDiff: "", 
+      weeklyStats: "",
+      totalAvg: "", 
+      totalVelocityAvg: ""
+    }
 	};
 
+
+
+  componentDidMount() {
+    // const getTotals = this.props.getTotals;
+    // getTotals()
+
+    const checkinsAvg = Mathy.findRoundedDiffMean(this.props.restaurantDetails.checkins, 'checkins')
+    const reviewsAvg = Mathy.findRoundedDiffMean(this.props.restaurantDetails.reviews, 'review_count')
+    const ratingsAvg = Mathy.findRoundedDiffMean(this.props.restaurantDetails.rating_count, 'rating_count')
+    
+    const ratingDiff = Mathy.getDiffwithDate(this.props.restaurantDetails.rating_count, 'rating_count');
+    const reviewDiff = Mathy.getDiffwithDate(this.props.restaurantDetails.reviews, 'review_count');
+
+    const totalWeeklyDiff = Mathy.findTotalWeeklyDiff(this.props.restaurantDetails)
+
+    const totalAvg = Mathy.findTotalStats(this.props.restaurantInfo)
+    const totalVelocityAvg = Mathy.findAvgVelocity(this.props.restaurantInfo)
+    console.log(this.props)
+    this.setState({
+      checkinsAvg: checkinsAvg,
+      reviewsAvg: reviewsAvg,
+      ratingsAvg: ratingsAvg,
+      ratingDiff: ratingDiff,
+      reviewDiff: reviewDiff,
+      weeklyStats: totalWeeklyDiff,
+      totalAvg: totalAvg,
+      totalVelocityAvg: totalVelocityAvg,
+      restaurantDetails: this.props.restaurantDetails
+    })
+
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    if (!this.state.show) {
+      this.setState({
+        show: true
+      })
+    }
+  }
+
   getLastElement = (arr, filter) => {
-    var lastItem = arr.pop();
+    // if lastiem undefined
+    const index = arr.length - 1
+    const lastItem = arr[index]
     return lastItem[filter]
   }
 
@@ -27,6 +84,8 @@ export class Statsection extends Component {
   }
 
 	render() {
+    console.log(this.props)
+    console.log(this.state)
 		return (
 			<div className="stats">	
 				<div className='columns stat-header'>
@@ -61,45 +120,24 @@ export class Statsection extends Component {
                           <div className='column auto has-text-centered'>Daily Avg</div>
                           <div className='column auto has-text-centered'>All Time Total </div>*/}        				
   			</div>
-				<div className='columns'>
-					<div className='column auto'><i className="fa fa-facebook-official"></i> Checkins</div>
-      				<div className='column auto has-text-centered'>{this.props.weeklyStats.checkins.thisWeekSum} </div>
-      				<div className='column auto has-text-centered'>{this.props.weeklyStats.checkins.percentChange}{this.arrows(this.props.weeklyStats.checkins.percentChange)}</div>
-              <div className='column auto has-text-centered'>{this.props.weeklyStats.checkins.lastWeekSum}</div>
-              <div className='column auto has-text-centered'>{this.props.detailsAvgs.checkinsAvg}</div>  
-              <div className='column auto has-text-centered'>{this.getLastElement(this.props.restaurantDetails.checkins, 'checkins')}</div>
-                       				     				
-      			</div>
-      		<div className='columns'>
-					<div className='column auto'><i className="fa fa-facebook-official"></i> Ratings</div>
-      				<div className='column auto has-text-centered'>{this.props.weeklyStats.ratings.thisWeekSum}</div>
-      				<div className='column auto has-text-centered'>{this.props.weeklyStats.ratings.percentChange}{this.arrows(this.props.weeklyStats.ratings.percentChange)}</div>
-      				<div className='column auto has-text-centered'>{this.props.weeklyStats.ratings.lastWeekSum}</div>
-              <div className='column auto has-text-centered'>{this.props.detailsAvgs.ratingsAvg}</div>
-              <div className='column auto has-text-centered'>{this.getLastElement(this.props.restaurantDetails.rating_count, 'rating_count')}</div>        				
-      			</div>   
-      		<div className='columns'>
-					<div className='column auto'><i className="fa fa-yelp"></i> Reviews</div>
-    				<div className='column auto has-text-centered'>{this.props.weeklyStats.reviews.thisWeekSum}</div>
-    				<div className='column auto has-text-centered'>{this.props.weeklyStats.reviews.percentChange}{this.arrows(this.props.weeklyStats.reviews.percentChange)}</div>
-    				<div className='column auto has-text-centered'>{this.props.weeklyStats.reviews.lastWeekSum}</div>
-            <div className='column auto has-text-centered'>{this.props.detailsAvgs.reviewsAvg}</div>
-            <div className='column auto has-text-centered'>{this.getLastElement(this.props.restaurantDetails.reviews, 'review_count')}</div>           				
-    			</div>  
-
-          <div className='columns stat-header all-restaurant-averages'>
-            <div className='column auto has-text-centered'>All Restaurant Daily Averages</div>
-          </div>
-          <div className='columns stat-header'>
-            <div className='column auto has-text-centered'><i className="fa fa-facebook-square"></i> Checkins</div>
-            <div className='column auto has-text-centered'><i className="fa fa-facebook-square"></i> Ratings</div>
-            <div className='column auto has-text-centered'><i className="fa fa-yelp"></i> Reviews</div>             
-          </div>
-          <div className='columns call-restaurant-numbers'>
-            <div className='column auto has-text-centered'>{this.props.allTotals.checkinsMean}</div>
-            <div className='column auto has-text-centered'>{this.props.allTotals.ratingsMean}</div>
-            <div className='column auto has-text-centered'>{this.props.allTotals.reviewsMean}</div>                
-          </div>  
+        {this.state.show ? 
+          <Stats
+            restaurantDetails={this.state.restaurantDetails}
+            checkinsAvg={this.state.checkinsAvg}
+            reviewsAvg={this.state.reviewsAvg}
+            ratingsAvg={this.state.ratingsAvg}
+            ratingDiff={this.state.ratingDiff}
+            reviewDiff={this.state.reviewDiff}
+            weeklyStats={this.state.weeklyStats}
+            totalAvg={this.state.totalAvg}
+            totalVelocityAvg={this.state.totalVelocityAvg}
+            getLastElement={(arr, filter) =>this.getLastElement(arr, filter)}
+            arrows={(value) => this.arrows(value)}
+            allTotals= 'props'
+          />
+          :
+          null
+        }
 			</div>
 		)
 	}	

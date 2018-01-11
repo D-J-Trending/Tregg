@@ -276,53 +276,35 @@ class findRestaurant extends Component {
 		}
   };
 
-	showDetails = event => {
+	showDetails = (event, callback) => {
 		const array = []
 		const id = event.currentTarget.getAttribute('value');
 		console.log(this.state)
-		let totalAvg = Mathy.findTotalStats(this.state.restaurantInfo)
-		let totalVelocityAvg = Mathy.findAvgVelocity(this.state.restaurantInfo)
+
 		API.returnDetails(id)
 			.then(res => {
-				// console.log(res.data[0])
-
-				let checkinsAvg = Mathy.findRoundedDiffMean(res.data[0].checkins, 'checkins')
-				let reviewsAvg = Mathy.findRoundedDiffMean(res.data[0].reviews, 'review_count')
-				let ratingsAvg = Mathy.findRoundedDiffMean(res.data[0].rating_count, 'rating_count')
-				// console.log(checkinsAvg)
-				let diff = Mathy.getDiffwithDate(res.data[0].checkins, 'checkins');
-				// console.log(checkinsAvg)
-				let ratingDiff = Mathy.getDiffwithDate(res.data[0].rating_count, 'rating_count');
-				// console.log(checkinsAvg)
-				let reviewDiff = Mathy.getDiffwithDate(res.data[0].reviews, 'review_count');
-
-				let totalWeeklyDiff = this.findTotalWeeklyDiff(res.data[0])
+				console.log(res.data)
+		
 				// passes in diff array, skips filterlabel, and passes in avg line data
 				// to create data set
+				let diff = Mathy.getDiffwithDate(res.data[0].checkins, 'checkins');
 				const initialChartData = this.createInitialChartDataSet(diff, null, this.state.filteredRestaurants.checkins, res.data[0])
+
 				const obj = {
 					restaurantDetails: res.data[0],
 					details: true,
-					restaurantDetailsAvg: {
-						checkinsAvg: checkinsAvg,
-						reviewsAvg: reviewsAvg,
-						ratingsAvg: ratingsAvg
-					},
-					diffArr: diff,
-					ratingDiff: ratingDiff,
-					reviewDiff: reviewDiff,
-					detailsWeeklyStats: totalWeeklyDiff,
 					chartData: initialChartData,
-					totalAvg: totalAvg,
-					totalVelocityAvg: totalVelocityAvg,
-					restaurantName: ""
+					restaurantName: ""					
 				}
-				this.setState(obj)
+				callback(obj)
+				
 			})
 			.catch(err => console.log(err))
-
 				this.hidesearch();
 };
+	callback = (obj) => {
+		this.setState(obj)
+	}
 
 	createInitialChartDataSet = (diffDateArr, filterLabel, avgLineDataSet, firmDetails) => {
 		// creates average line's chart data set
@@ -731,47 +713,7 @@ class findRestaurant extends Component {
 		return dailyAvg
 	};
 
-	findTotalWeeklyDiff = (restaurantDetails) => {
-		// returns the sum and percent change object
-		const getWeeklyDiffPercentChange = (diffObjArr) => {
-			let lastWeekSliced = diffObjArr.slice(-7)
-			let previousWeekSliced = diffObjArr.slice(-14, -7)
-			let lastSlicedSum = Mathy.findSum(lastWeekSliced, 'difference')
-			let previousSlicedSum = Mathy.findSum(previousWeekSliced, 'difference')
-			const percentDiff = lastSlicedSum - previousSlicedSum
-			// console.log(lastSlicedSum)
-			// console.log(previousSlicedSum)
-			let finalPercent = percentDiff / previousSlicedSum
-			finalPercent = Round(finalPercent * 100, -1)
-			if (isNaN(finalPercent)) {
-				finalPercent = "N/A"
-			} else {
-				finalPercent = finalPercent + '%'
-			}
-			
-			return {thisWeekSum: lastSlicedSum, lastWeekSum: previousSlicedSum, percentChange: finalPercent}
-		}
-		// use restaurant details to pass into array
-		// get difftotals for each category
-		let checkinsDiff = Mathy.getDiffwithDate(restaurantDetails.checkins, 'checkins')
-		let ratingsDiff = Mathy.getDiffwithDate(restaurantDetails.rating_count, 'rating_count')
-		let reviewsDiff = Mathy.getDiffwithDate(restaurantDetails.reviews, 'review_count')
-		// sum differences from last 7 days in array
 
-		const checkinsObj = getWeeklyDiffPercentChange(checkinsDiff)
-		const ratingsObj = getWeeklyDiffPercentChange(ratingsDiff)
-		const reviewsObj = getWeeklyDiffPercentChange(reviewsDiff)
-		let enoughData = true
-		if (restaurantDetails.checkins.length <= 10) {
-			enoughData = false
-		}
-		return {
-				checkins: checkinsObj,
-				ratings: ratingsObj,
-				reviews: reviewsObj,
-				enoughData: enoughData
-				}
-	};
 	
 	render() {
 
@@ -784,8 +726,7 @@ class findRestaurant extends Component {
 		<div>
 			<div className="wrapper">	
 			{/*Main section*/}
-				<button onClick={this.findTotalWeeklyDiff}>findTotalWeeklyDiff</button>
-				<button onClick={this.findClosestRestaurants}>BLAHHHH</button>
+
 				<button onClick={this.showline}>showline</button> 
 				<button onClick={this.showbar}>showbar</button> 
 
@@ -841,7 +782,7 @@ class findRestaurant extends Component {
 													transitionLeave={true}>
 															<Searched>
 																{this.state.searchedRestaurant.map(restaurant => (
-																	<Searcheditems className='searcheditems' key={restaurant._id} showDetails={(ev) => this.showDetails(ev)}
+																	<Searcheditems className='searcheditems' key={restaurant._id} showDetails={(ev) => this.showDetails(ev, this.callback)}
 																		value={restaurant._id}
 																	>              
 																		<p> Name of Restaurant: {restaurant.name} </p>
@@ -936,13 +877,9 @@ class findRestaurant extends Component {
 											<div className='column is-12'>
 												<section className='stats-section section'>
 													<Statsection
-													weeklyStats={this.state.detailsWeeklyStats}
-													enoughData={this.state.detailsWeeklyStats.enoughData}
+													restaurantInfo={this.state.restaurantInfo}
 													restaurantDetails={this.state.restaurantDetails}
 													allTotals={this.state.totalAvg}
-													detailsAvgs={this.state.restaurantDetailsAvg}
-													weeklyStats={this.state.detailsWeeklyStats}
-													enoughData={this.state.detailsWeeklyStats.enoughData}
 													/>
 													
 												</section>
@@ -953,13 +890,13 @@ class findRestaurant extends Component {
 												<section className='section'>
 													<Details
 													restaurantDetails={this.state.restaurantDetails}
-													getTotals={() => this.getTotals()}
-													loadFilter={(ev, filter) => this.loadFilter(ev, filter)}
-													detailsAvgs={this.state.restaurantDetailsAvg}
-													allTotals={this.state.totalAvg}
-													getMean={(arr) => Mathy.getMean(arr)}
-													totalVelocityAvg={this.state.totalVelocityAvg}
-													totalAvgStatement={this.state.totalAvgStatement}
+													// getTotals={() => this.getTotals()}
+													// loadFilter={(ev, filter) => this.loadFilter(ev, filter)}
+													// detailsAvgs={this.state.restaurantDetailsAvg}
+													// allTotals={this.state.totalAvg}
+													// getMean={(arr) => Mathy.getMean(arr)}
+													// totalVelocityAvg={this.state.totalVelocityAvg}
+													// totalAvgStatement={this.state.totalAvgStatement}
 													// yelpReviews={this.state.yelpReviews}
 													/>
 												</section>
