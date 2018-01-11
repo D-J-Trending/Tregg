@@ -22,6 +22,7 @@ const styles = {
     minHeight : '100vh',
     width: '100%',
     overFlowY: 'scroll',
+    background: '#17181B',
   },
   logo: {
   	width: '50%',
