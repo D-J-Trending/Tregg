@@ -4,6 +4,10 @@
   
 }
 
+.chart-filter-active {
+	background-color: green;
+}
+
 .chart-filter button {
 	margin: 2px;
 	display: block;

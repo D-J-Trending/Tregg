@@ -7,7 +7,12 @@
 	color: green;
 }
 
-.trademark {
+.yelp-trademark {
 	height: 47px;
 	/*background-color: #D32323;*/
+}
+
+.fb-trademark {
+	height:23px;
+	margin-bottom: 3px;
 }
