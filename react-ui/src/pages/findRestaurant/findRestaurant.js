@@ -9,7 +9,8 @@ import API from "../../utils/API.js";
 import { Details } from "../../components/Details";
 import { Restdetails, Restheader } from "../../components/Restdetails";
 import { Stats, Statsection } from "../../components/Stats";
-import ChartFilter from "../../components/chartFilter";
+import ChartFilter from "../../components/ChartFilter";
+import Filter from "../../utils/Filter";
 import "./findRestaurant.css";
 import numjs from 'numjs';
 import Mathy from "../../utils/Mathy.js";
@@ -37,17 +38,17 @@ class findRestaurant extends Component {
 			restaurantInfo: {},
 			coordsIdsArr: [],
 			restaurantDetails: false,
+			restaurantDetailsAvg: {},
 			restaurantId: "",
 			filter: 'price',
 			filterLabel: 'All Restaurants',
 			filteredRestaurants: '',
 			fbAPIResults: {},
 			details: false,
-			filteredTotal: "",
-			allTotal: {},
-			priceTotal: {},
-			categoryTotal: {},
+			allTotalAvgs: {},
 			totalAvg: "",
+			totalVelocityAvg: {},
+			totalAvgStatement: " ",
 			chartData: [],
 			searchedRestaurant: {},
 			onSearchClick: false,
@@ -91,7 +92,7 @@ class findRestaurant extends Component {
 					latitude: position.coords.latitude,
 					longitude: position.coords.longitude
 				};
-				// console.log(res.data)
+        
 				this.setState({
 					filteredRestaurants: avgLine,
 					restaurantInfo: res.data,
@@ -276,9 +277,7 @@ class findRestaurant extends Component {
 				// console.log(res.data[0])
 
 				let checkinsAvg = Mathy.findRoundedDiffMean(res.data[0].checkins, 'checkins')
-				// console.log(checkinsAvg)
 				let reviewsAvg = Mathy.findRoundedDiffMean(res.data[0].reviews, 'review_count')
-				// console.log(reviewsAvg)
 				let ratingsAvg = Mathy.findRoundedDiffMean(res.data[0].rating_count, 'rating_count')
 				// console.log(checkinsAvg)
 				let diff = Mathy.getDiffwithDate(res.data[0].checkins, 'checkins');
@@ -286,12 +285,10 @@ class findRestaurant extends Component {
 				let ratingDiff = Mathy.getDiffwithDate(res.data[0].rating_count, 'rating_count');
 				// console.log(checkinsAvg)
 				let reviewDiff = Mathy.getDiffwithDate(res.data[0].reviews, 'review_count');
-				// let totalAvg = this.findTotalStats(this.state.restaurantInfo)
+				let totalAvg = Mathy.findTotalStats(this.state.restaurantInfo)
+				let totalVelocityAvg = Mathy.findAvgVelocity(this.state.restaurantInfo)
 				let totalWeeklyDiff = this.findTotalWeeklyDiff(res.data[0])
-				
-				// console.log(this.state.chartData)
-				// console.log(this.state.filteredRestaurants.checkins)
-
+        
 				// passes in diff array, skips filterlabel, and passes in avg line data
 				// to create data set
 				const initialChartData = this.createInitialChartDataSet(diff, null, this.state.filteredRestaurants.checkins, res.data[0])
@@ -299,18 +296,20 @@ class findRestaurant extends Component {
 				this.setState({
 					restaurantDetails: res.data[0],
 					details: true,
-					checkinsAvg: checkinsAvg,
-					reviewsAvg: reviewsAvg,
-					ratingsAvg: ratingsAvg,
+					restaurantDetailsAvg: {
+						checkinsAvg: checkinsAvg,
+						reviewsAvg: reviewsAvg,
+						ratingsAvg: ratingsAvg
+					},
 					diffArr: diff,
 					ratingDiff: ratingDiff,
 					reviewDiff: reviewDiff,
 					detailsWeeklyStats: totalWeeklyDiff,
-					chartData: initialChartData
-					// totalAvg: totalAvg
-				},()=> {
-						console.log(this.state) 
-					})
+					chartData: initialChartData,
+					totalAvg: totalAvg,
+					totalVelocityAvg: totalVelocityAvg
+				})
+
 				this.hidesearch();
 				this.setState({
 					restaurantName: "",
@@ -430,22 +429,49 @@ class findRestaurant extends Component {
 		// 	})
 	};
 
-	loadFilter = (ev) => {
-		// console.log(ev.target.value)
-
-		if (ev.target.value === 'price') {
-			this.setState({
-				totalAvg: this.state.priceTotal
-			})
-		} else if (ev.target.value === 'all') {
-			this.setState({
-				totalAvg: this.state.allTotal
-			})
+	loadFilter = (ev, filter) => {
+		let query
+		if (filter) {
+			query = filter
 		} else {
-			this.setState({
-				totalAvg: this.state.categoryTotal
-			})
+			query = ev.target.value
 		}
+		switch(query) {
+			// case 'init':
+			// 	this.setState({
+			// 		totalAvg: this.state.allTotalAvgs.allTotal,
+			// 		totalVelocityAvg: this.state.allTotalAvgVelocitys.allVelocity
+			// 	})
+			// 	break;
+			case 'price':
+				const price = this.state.restaurantDetails.price
+				this.setState({
+					totalAvg: this.state.allTotalAvgs.priceTotal,
+					totalVelocityAvg: this.state.allTotalAvgVelocitys.priceVelocity,
+					totalAvgStatement: "in the same price group, " + price + ", "
+				})
+				break;
+			case 'all':
+				this.setState({
+					totalAvg: this.state.allTotalAvgs.allTotal,
+					totalVelocityAvg: this.state.allTotalAvgVelocitys.allVelocity,
+					totalAvgStatement: " "
+				})
+				break;
+			case 'category':
+				let categories = ""
+				this.state.restaurantDetails.categories.forEach(item=> {
+					categories = categories + item.title + ", "
+				})
+				this.setState({
+					totalAvg: this.state.allTotalAvgs.categoryTotal,
+					totalVelocityAvg: this.state.allTotalAvgVelocitys.categoryVelocity,
+					totalAvgStatement: "in the same categories, " + categories
+				})
+				break;
+		}
+
+
 	};
 
 	getTotals = () => {
@@ -454,17 +480,19 @@ class findRestaurant extends Component {
 		.then(res => {
 			const priceData = res.data
 			let priceTotal = Mathy.findTotalStats(priceData)
-			getAllTotal(priceTotal, getCategoryTotal, priceData)
+			let priceVelocity = Mathy.findAvgVelocity(priceData)
+			getAllTotal(priceTotal, priceData, priceVelocity)
 			
 		})
 		.catch(err => console.log('ERROR: ',err))
 		
-		const getAllTotal = (priceTotal, getCategoryTotal, priceData) => {
+		const getAllTotal = (priceTotal, priceData, priceVelocity) => {
 			const allTotal = Mathy.findTotalStats(this.state.restaurantInfo)
-			getCategoryTotal(priceTotal, allTotal, priceData)
+			const allVelocity = Mathy.findAvgVelocity(this.state.restaurantInfo)
+			getCategoryTotal(priceTotal, allTotal, priceData, priceVelocity, allVelocity)
 		}
 		
-		const getCategoryTotal = (priceTotal, allTotal, priceData, eachDayTotal) => {
+		const getCategoryTotal = (priceTotal, allTotal, priceData, priceVelocity, allVelocity) => {
 			let categoryTotal
 			let categories = this.state.restaurantDetails.categories
 			let arrFirms = []
@@ -487,10 +515,18 @@ class findRestaurant extends Component {
 					}
 				}
 				categoryTotal = Mathy.findTotalStats(arrFirms)
+				const categoryVelocity = Mathy.findAvgVelocity(arrFirms)
 				this.setState({
-					priceTotal: priceTotal,
-					allTotal: allTotal,
-					categoryTotal: categoryTotal
+					allTotalAvgs: {
+						priceTotal: priceTotal,
+						allTotal: allTotal,
+						categoryTotal: categoryTotal
+					},
+					allTotalAvgVelocitys: {
+						priceVelocity: priceVelocity,
+						allVelocity: allVelocity,
+						categoryVelocity: categoryVelocity
+					}
 				})
 				console.log(this.state)
 			})
@@ -539,6 +575,50 @@ class findRestaurant extends Component {
 
 	searchlogo = () => {
 		this.setState({ searchlogo: !this.state.searchlogo});
+	};
+
+	filterClick1 = (ev) => {
+		this.setState({
+			filter1: false,
+			filter2: false,
+			filter3: false,
+			filter4: false
+		})
+		this.setState({ filter1: !this.state.filter1});
+		this.priceFilteredRestaurants(ev)
+	};
+
+	filterClick2 = (ev) => {
+		this.setState({
+			filter1: false,
+			filter2: false,
+			filter3: false,
+			filter4: false
+		})
+		this.setState({ filter2: !this.state.filter2});
+		this.priceFilteredRestaurants(ev)
+	};
+
+	filterClick3 = (ev) => {
+		this.setState({
+			filter1: false,
+			filter2: false,
+			filter3: false,
+			filter4: false
+		})
+		this.setState({ filter3: !this.state.filter3});
+		this.priceFilteredRestaurants(ev)
+	};
+
+	filterClick4 = (ev) => {
+		this.setState({
+			filter1: false,
+			filter2: false,
+			filter3: false,
+			filter4: false
+		})
+		this.setState({ filter4: !this.state.filter4});
+		this.priceFilteredRestaurants(ev)
 	}
 
 	priceFilteredRestaurants = ev => {
@@ -551,7 +631,7 @@ class findRestaurant extends Component {
 	       	const newChartData = this.generateChartData(priceAvg.checkins, value)
 	        this.setState({
 	        	chartData: newChartData
-	        })
+	        }, ()=> console.log(this.state))
 	    })
 	    .catch(err => console.log(err))
 	};
@@ -636,7 +716,7 @@ class findRestaurant extends Component {
 
 	//create daily avg from array of multiple restaurants
 	findDailyDiffAvg = (filtered_arr) => {
-		// console.log(this.state)
+
 		const dailyAvg = Filter.dailyDiffAvg(filtered_arr)
 		// this.setState({
 		// 	dailyCheckinAvgObj: dailyAvg
@@ -738,19 +818,12 @@ class findRestaurant extends Component {
 				</a>
 				</CSSTransitionGroup>
 			: null }
-
-
-						      					<h1> Find A Restaurant </h1>
-
+			
 		      	<div className="data-section columns">
 		      		<div className="column auto">
-
 		      		{this.state.hidesearch ? (
 		      			<div className='columns search-area'>
-		      				<div className="column is-12">
-
-											
-										
+		      				<div className="column is-12">										
 											<div id='search-restaurant'>
 													{this.state.searchedRestaurant.length ? (
 														<CSSTransitionGroup
@@ -823,11 +896,9 @@ class findRestaurant extends Component {
 		      							city={this.state.restaurantDetails.location.city}
 		      							state={this.state.restaurantDetails.location.state}
 		      							yelpURL={this.state.restaurantDetails.yelpURL}
-		      							fb_url={this.state.restaurantDetails.fb_url}
+		      							fb_url={this.state.restaurantDetails.fbURL}
 		      							fbRating={this.state.restaurantDetails.star_rating[0].overall_star_rating}
-		      							yelpRating={this.state.restaurantDetails.rating[0].rating}
-		      							
-
+		      							yelpRating={this.state.restaurantDetails.rating[0].rating}		      					
 		      						/>
 		      					</div>										
 				      			<div className='columns'>		      				
@@ -838,7 +909,10 @@ class findRestaurant extends Component {
 							      	<div className='column is-3 data-navigation'>							      		
 						      			<div className='columns'>
 						      				<ChartFilter 
-						      					checkClick={this.priceFilteredRestaurants}
+						      					checkClick1={this.filterClick1}
+						      					checkClick2={this.filterClick2}
+						      					checkClick3={this.filterClick3}
+						      					checkClick4={this.filterClick4}
 						      				>
 						      					<Dropdown onClick={this.dropdown} className={this.state.dropdown}/>						      		
 						      				</ChartFilter>				      				
@@ -849,12 +923,28 @@ class findRestaurant extends Component {
 										</div>
 										<div className='columns'>
 											<div className='column is-12'>
-												<section className='section'>
+												<section className='stats-section section'>
 													<Statsection
 													weeklyStats={this.state.detailsWeeklyStats}
 													enoughData={this.state.detailsWeeklyStats.enoughData}
 													/>
 													
+												</section>
+											</div>
+										</div>
+										<div className='columns'>
+											<div className='column is-12'>
+												<section className='section'>
+													<Details
+													restaurantDetails={this.state.restaurantDetails}
+													getTotals={() => this.getTotals()}
+													loadFilter={(ev, filter) => this.loadFilter(ev, filter)}
+													detailsAvgs={this.state.restaurantDetailsAvg}
+													allTotals={this.state.totalAvg}
+													getMean={(arr) => Mathy.getMean(arr)}
+													totalVelocityAvg={this.state.totalVelocityAvg}
+													totalAvgStatement={this.state.totalAvgStatement}
+													/>
 												</section>
 											</div>
 										</div>

@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import './Details.css'
 
 export class Details extends Component {
 	constructor(props) {
@@ -6,36 +7,47 @@ export class Details extends Component {
 	};
 
 	componentDidMount() {
-		const getTotals = this.props.getTotals;
-		getTotals()
+		this.props.getTotals();
 	};
+
+	getLastElement = (arr, filter) => {
+		var lastItem = arr.pop();
+		return lastItem[filter]
+	}
 
 	render() {
 		return (
 	
 	<div className="details">
-		<h3>
-		{this.props.name}
-		</h3>
-		{this.props.checkins.map(item => (
 
-			<p>{item.checkins}</p>
-		))}
+		<h4>
+		{this.props.restaurantDetails.name}
+		</h4>
+		<img className="detailsImg"src={this.props.restaurantDetails.yelpImg} />
+		
+		<h3> Total *FBLOGO* Checkins </h3>
+		<p>{this.getLastElement(this.props.restaurantDetails.checkins, 'checkins')}</p>
+		<h3> Total *FBLOGO* Ratings </h3>
+		<p>{this.getLastElement(this.props.restaurantDetails.rating_count, 'rating_count')}</p>
+		<h3> Total *YelpLOGO* Reviews </h3>
+		<p>{this.getLastElement(this.props.restaurantDetails.reviews, 'review_count')}</p>	
+		<h3> Avg Diff </h3>	
 		<h3>
 			Avg Checkins </h3>
-		<p>{this.props.checkinsAvg}</p>
+		<p>{this.props.detailsAvgs.checkinsAvg}</p>
 		<h3>
 			Avg rating count </h3>
-		<p>{this.props.ratingCountAvg}</p>
+		<p>{this.props.detailsAvgs.ratingsAvg}</p>
 		<h3>
 			Avg review count </h3>
-		<p>{this.props.reviewsAvg}</p>
+		<p>{this.props.detailsAvgs.reviewsAvg}</p>
+
 		<h3> Total Checkins Mean</h3>
-			<p>{this.props.totals.checkinsMean}</p>
+			<p>{this.props.allTotals.checkinsMean}</p>
 		<h3> Total Ratings Mean</h3>
-			<p>{this.props.totals.ratingsMean}</p>
+			<p>{this.props.allTotals.ratingsMean}</p>
 		<h3> Total Reviews Mean</h3>
-			<p>{this.props.totals.reviewsMean}</p>
+			<p>{this.props.allTotals.reviewsMean}</p>
 		<select
 		onChange={this.props.loadFilter}
 		>
@@ -43,6 +55,18 @@ export class Details extends Component {
 		  <option value="price">Price</option>
 		  <option value="category">Category</option>
 		</select>
+		<div>
+			<h3> Comparison Statistics </h3>
+			<h4> Weekly</h4>
+			<p>
+				{this.props.restaurantDetails.name + "'s "} trending score is {this.props.restaurantDetails.trending_score['7day']['checkins']}
+				while the average for all the other restaurants {this.props.totalAvgStatement} is {this.props.totalVelocityAvg}.
+			</p>
+			<h4>Daily</h4>
+			<p>
+
+			</p>
+		</div>
 	</div>
 		)
 	}	

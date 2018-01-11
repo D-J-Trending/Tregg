@@ -7,20 +7,15 @@ export class Statsection extends Component {
 	};
 
   arrows = (value) => {
-    console.log('runs')
-    console.log(value)
     const numberWithoutPercent = value.slice(0, -1)
     console.log(numberWithoutPercent)
 
     if(numberWithoutPercent > 0) {
-      console.log('asc')
       return <i className="fa fa-sort-asc"></i>
     } else if(numberWithoutPercent < 0) {
-      console.log('desc')
       return <i className="fa fa-sort-desc"></i>
     } else{
-      console.log('default')
-      return <i className="fa fa-sort-desc"></i>
+      return
     }
   }
 
