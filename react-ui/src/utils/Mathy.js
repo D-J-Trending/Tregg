@@ -90,14 +90,26 @@ export default {
     // ratings = numjs.array(ratings);
     // reviews = numjs.array(reviews);
 
-    const checkinsMean = Round(this.getMean(checkins), -6)
-    const ratingsMean = Round(this.getMean(ratings), -6)
-    const reviewsMean = Round(this.getMean(reviews), -6)
+    const checkinsMean = Round(this.getMean(checkins), -4)
+    const ratingsMean = Round(this.getMean(ratings), -4)
+    const reviewsMean = Round(this.getMean(reviews), -4)
     obj.checkinsMean = checkinsMean
     obj.ratingsMean = ratingsMean
     obj.reviewsMean = reviewsMean
 
     return obj;
+  },
+
+  findAvgVelocity: function(arr) {
+    // sums all trendingscore 7day then averages
+    const values = []
+    arr.forEach(item => {
+      values.push(item.trending_score['7day']['checkins'])
+    })
+    let avgScore = this.getMean(values)
+    Round(avgScore, -2)
+    avgScore = avgScore * 100 + "%"
+    return avgScore
   },
 
   // finds the mean of the rounded difference

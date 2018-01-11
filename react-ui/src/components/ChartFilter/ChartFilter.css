@@ -1,12 +1,16 @@
 .chart-filter {
+
 	padding-top: 90px;
+  
 }
 
 .chart-filter button {
 	margin: 2px;
 	display: block;
+
 }
 
 .prices button {
 	display: inline-block;
 }
+
