@@ -34,7 +34,7 @@ app.get('/api', function (req, res) {
 const googleInfoArr = []
 
 // All remaining requests return the React app, so it can handle routing.
-app.get('*', function(request, response) {
+app.get('/*', function(request, response) {
   response.sendFile(path.resolve(__dirname, '../react-ui/build', 'index.html'));
 });
 
