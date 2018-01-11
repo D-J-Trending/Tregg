@@ -937,6 +937,8 @@ class findRestaurant extends Component {
 											<div className='column is-12'>
 												<section className='stats-section section'>
 													<Statsection
+													restaurantDetails={this.state.restaurantDetails}
+													detailsAvgs={this.state.restaurantDetailsAvg}
 													weeklyStats={this.state.detailsWeeklyStats}
 													enoughData={this.state.detailsWeeklyStats.enoughData}
 													/>

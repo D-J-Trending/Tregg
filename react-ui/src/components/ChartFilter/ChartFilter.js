@@ -19,4 +19,3 @@ export const ChartFilter = props => (
 )
 
 export default ChartFilter;
-
