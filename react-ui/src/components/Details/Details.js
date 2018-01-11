@@ -50,24 +50,6 @@ export class Details extends Component {
 					<p>{this.props.allTotals.ratingsMean}</p>
 				<h3> Total Reviews Mean</h3>
 					<p>{this.props.allTotals.reviewsMean}</p>
-					{this.props.yelpReviews.length ? (
-						<div>
-							{this.props.yelpReviews.map(item=> (
-								<div>
-									<h5>
-										{item.text}
-									</h5>
-									<p> {item.user.name} </p>
-									{Filter.convertDate(item.time_created)}
-								</div>
-							))}
-							</div>
-							) : (
-							<h1>
-							No reviews
-							</h1>
-							)
-					}
 				<select
 				onChange={this.props.loadFilter}
 				>

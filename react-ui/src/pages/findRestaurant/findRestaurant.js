@@ -279,6 +279,9 @@ class findRestaurant extends Component {
 	showDetails = event => {
 		const array = []
 		const id = event.currentTarget.getAttribute('value');
+		console.log(this.state)
+		let totalAvg = Mathy.findTotalStats(this.state.restaurantInfo)
+		let totalVelocityAvg = Mathy.findAvgVelocity(this.state.restaurantInfo)
 		API.returnDetails(id)
 			.then(res => {
 				// console.log(res.data[0])
@@ -292,8 +295,7 @@ class findRestaurant extends Component {
 				let ratingDiff = Mathy.getDiffwithDate(res.data[0].rating_count, 'rating_count');
 				// console.log(checkinsAvg)
 				let reviewDiff = Mathy.getDiffwithDate(res.data[0].reviews, 'review_count');
-				let totalAvg = Mathy.findTotalStats(this.state.restaurantInfo)
-				let totalVelocityAvg = Mathy.findAvgVelocity(this.state.restaurantInfo)
+
 				let totalWeeklyDiff = this.findTotalWeeklyDiff(res.data[0])
 				// passes in diff array, skips filterlabel, and passes in avg line data
 				// to create data set
@@ -315,14 +317,11 @@ class findRestaurant extends Component {
 					totalVelocityAvg: totalVelocityAvg,
 					restaurantName: ""
 				}
-				Yelp.getYelpReviews(res.data[0].yelpId, obj, detailsSetState)
-
+				this.setState(obj)
 			})
 			.catch(err => console.log(err))
-			const detailsSetState = (obj) => {
-				this.setState(obj)
+
 				this.hidesearch();
-			}
 };
 
 	createInitialChartDataSet = (diffDateArr, filterLabel, avgLineDataSet, firmDetails) => {
@@ -961,7 +960,7 @@ class findRestaurant extends Component {
 													getMean={(arr) => Mathy.getMean(arr)}
 													totalVelocityAvg={this.state.totalVelocityAvg}
 													totalAvgStatement={this.state.totalAvgStatement}
-													yelpReviews={this.state.yelpReviews}
+													// yelpReviews={this.state.yelpReviews}
 													/>
 												</section>
 											</div>
