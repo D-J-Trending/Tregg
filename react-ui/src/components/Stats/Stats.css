@@ -30,6 +30,11 @@
 .fa-yelp {
 	color: #F15C4F;
 }
+.facebook{
+	background-color: white;
+	height: 20px;
+	width: 20px;
+}
 
 @media(max-width: 320) {
 	.is-3 {
