@@ -9,7 +9,7 @@ import API from "../../utils/API.js";
 import { Details } from "../../components/Details";
 import { Restdetails, Restheader } from "../../components/Restdetails";
 import { Stats, Statsection } from "../../components/Stats";
-import ChartFilter from "../../components/ChartFilter";
+import ChartFilter from "../../components/chartFilter";
 import Filter from "../../utils/Filter";
 import "./findRestaurant.css";
 import numjs from 'numjs';
@@ -21,11 +21,15 @@ import geolib from 'geolib';
 import PlacesAutocomplete, { geocodeByAddress, getLatLng } from 'react-places-autocomplete';
 import Map from "../../utils/Map.js";
 import Round from '../../utils/Round'
-import ChartDataSet from '../../utils/ChartDataSet'
+import ChartDataSet from '../../utils/ChartDataSet';
 //Need to pass value from input field
 //Style chart and info into one element
 //Allow to click on element to view stats
 //Create separate chart components/arrays for rating, rating count, checkins, review count, star_rating
+
+const style = {
+	backgroundColor: 'green',
+}
 
 class findRestaurant extends Component {
 
@@ -59,7 +63,11 @@ class findRestaurant extends Component {
 			dropdown: '',
 			hidesearch: false,
 			modalIsOpen: false,
-			searchlogo: true
+			searchlogo: true,
+			active1:'button',
+			active2:'button',
+			active3:'button',
+			active4:'button',
 		};
 		this.onChange = (restaurantName) => this.setState({ restaurantName })
 		this.openModal = this.openModal.bind(this);
@@ -578,45 +586,46 @@ class findRestaurant extends Component {
 
 	filterClick1 = (ev) => {
 		this.setState({
-			filter1: false,
-			filter2: false,
-			filter3: false,
-			filter4: false
+			active1:'button',
+			active2:'button',
+			active3:'button',
+			active4:'button'
+
 		})
-		this.setState({ filter1: !this.state.filter1});
+		this.setState({active1: 'button chart-filter-active'});
 		this.priceFilteredRestaurants(ev)
 	};
 
 	filterClick2 = (ev) => {
 		this.setState({
-			filter1: false,
-			filter2: false,
-			filter3: false,
-			filter4: false
+			active1:'button',
+			active2:'button',
+			active3:'button',
+			active4:'button'
 		})
-		this.setState({ filter2: !this.state.filter2});
+		this.setState({active2: 'button chart-filter-active'});
 		this.priceFilteredRestaurants(ev)
 	};
 
 	filterClick3 = (ev) => {
 		this.setState({
-			filter1: false,
-			filter2: false,
-			filter3: false,
-			filter4: false
+			active1:'button',
+			active2:'button',
+			active3:'button',
+			active4:'button'
 		})
-		this.setState({ filter3: !this.state.filter3});
+		this.setState({active3: 'button chart-filter-active'});
 		this.priceFilteredRestaurants(ev)
 	};
 
 	filterClick4 = (ev) => {
 		this.setState({
-			filter1: false,
-			filter2: false,
-			filter3: false,
-			filter4: false
+			active1:'button',
+			active2:'button',
+			active3:'button',
+			active4:'button'
 		})
-		this.setState({ filter4: !this.state.filter4});
+		this.setState({active4: 'button chart-filter-active'});
 		this.priceFilteredRestaurants(ev)
 	}
 
@@ -630,7 +639,7 @@ class findRestaurant extends Component {
 	       	const newChartData = this.generateChartData(priceAvg.checkins, value)
 	        this.setState({
 	        	chartData: newChartData
-	        }, ()=> console.log(this.state))
+	        }, ()=> console.log(this.state.active))
 	    })
 	    .catch(err => console.log(err))
 	};
@@ -795,13 +804,10 @@ class findRestaurant extends Component {
 
 			          <h2 ref={subtitle => this.subtitle = subtitle}>Hello</h2>
 			          <button className="modalClosed" onClick={this.closeModal}>close</button>
-			          <div>I am a modal</div>
+			          <div>SearchField</div>
 			          <form>
 			            <input />
-			            <button>tab navigation</button>
-			            <button>stays</button>
-			            <button>inside</button>
-			            <button>the modal</button>
+			       		<button>Search</button>
 			          </form>
 			        </Modal> 
 
@@ -911,6 +917,10 @@ class findRestaurant extends Component {
 							      	<div className='column is-3 data-navigation'>							      		
 						      			<div className='columns'>
 						      				<ChartFilter 
+						      					green1={this.state.active1}
+						      					green2={this.state.active2}
+						      					green3={this.state.active3}
+						      					green4={this.state.active4}
 						      					checkClick1={this.filterClick1}
 						      					checkClick2={this.filterClick2}
 						      					checkClick3={this.filterClick3}

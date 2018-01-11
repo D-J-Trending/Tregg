@@ -1,17 +1,22 @@
 .chart-filter {
-	padding-top: 90px;  
+	width: 100%;
+	padding-top: 90px;
 }
 
 .chart-filter-active {
-	background-color: green;
+	background-color: #32D065;
+	border:gray 1px solid;
 }
 
 .chart-filter button {
-	margin: 2px;
 	display: block;
+	margin-bottom: 5px;
+}
+.prices {
+	width: 100%;
 }
 
 .prices button {
+	width: 25%;
 	display: inline-block;
 }
-

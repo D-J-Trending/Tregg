@@ -4,7 +4,7 @@ import "./Dropdown.css";
 const Dropdown = props =>
   <div className="dropdown" {...props}>
 	  <div className="dropdown-trigger">
-	    <button className="button" aria-haspopup="true" aria-controls="dropdown-menu">
+	    <button className="button fullWidth" aria-haspopup="true" aria-controls="dropdown-menu">
 	      <span>Days</span>
 	      <span className="icon is-small">
 	        <i className="fa fa-angle-down" aria-hidden="true"></i>
