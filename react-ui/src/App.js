@@ -113,20 +113,18 @@ class App extends React.Component {
 
     return (
       <div>
-            <Router>
-	      <Sidebar {...sidebarProps}>
-	        <MaterialTitlePanel title={contentHeader}>
-	          	<div className ='content' style={styles.content}>
+        <Router>
+  	      <Sidebar {...sidebarProps}>
+  	        <MaterialTitlePanel title={contentHeader}>
+            	<div className='content' style={styles.content}>
                 <Route exact path="/Home" component={Home} />
                 <Route exact path="/Login" component={Login} />
                 <Route exact path="/findRestaurant" component={findRestaurant} />
-                         <Footer />
-            </div>           
-	        </MaterialTitlePanel>
-  
-	      </Sidebar>
-        
-	    </Router>
+                <Footer />
+              </div>           
+  	        </MaterialTitlePanel>
+  	      </Sidebar>        
+  	    </Router>
       </div>
     );
   }

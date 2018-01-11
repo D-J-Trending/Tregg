@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import Modal from "react-modal";
 import { Input, Form, Searchbtn } from "../../components/Form";
 import { Searched, Searcheditems, FbSearchedItems } from "../../components/Searched";
 import Chart from "../../components/Chart";
@@ -9,6 +10,7 @@ import { Details } from "../../components/Details";
 import { Restdetails, Restheader } from "../../components/Restdetails";
 import { Stats, Statsection } from "../../components/Stats";
 import ChartFilter from "../../components/ChartFilter";
+import Filter from "../../utils/Filter";
 import "./findRestaurant.css";
 import numjs from 'numjs';
 import Mathy from "../../utils/Mathy.js";
@@ -18,7 +20,6 @@ import moment from 'moment';
 import geolib from 'geolib';
 import PlacesAutocomplete, { geocodeByAddress, getLatLng } from 'react-places-autocomplete';
 import Map from "../../utils/Map.js";
-import Filter from "../../utils/Filter"
 import Round from '../../utils/Round'
 import ChartDataSet from '../../utils/ChartDataSet'
 //Need to pass value from input field
@@ -49,16 +50,21 @@ class findRestaurant extends Component {
 			totalAvgStatement: " ",
 			chartData: [],
 			searchedRestaurant: {},
+			onSearchClick: false,
 			detailsWeeklyStats: {},
 			showsidenav: true,
-			onSearchClick: true,
 			showline: true,
 			showbar: true,
 			address: "",
 			dropdown: '',
-			hidesearch: true
+			hidesearch: false,
+			modalIsOpen: false,
+			searchlogo: true
 		};
 		this.onChange = (restaurantName) => this.setState({ restaurantName })
+		this.openModal = this.openModal.bind(this);
+    	this.afterOpenModal = this.afterOpenModal.bind(this);
+    	this.closeModal = this.closeModal.bind(this);
 	}
   
   componentWillMount() {
@@ -80,12 +86,12 @@ class findRestaurant extends Component {
 
 		if (navigator.geolocation) {
 			navigator.geolocation.getCurrentPosition(position => {
-				console.log(position)
+				// console.log(position)
 				let userCoordinates = {
 					latitude: position.coords.latitude,
 					longitude: position.coords.longitude
 				};
-		
+        
 				this.setState({
 					filteredRestaurants: avgLine,
 					restaurantInfo: res.data,
@@ -102,13 +108,6 @@ class findRestaurant extends Component {
 				userCoordinates: null
 			})
 		}
-		// 	console.log('Hi')
-
-
-		// 	})
-		// } else {
-
-		// }
 
 		})
 		.catch(err => console.log(err));
@@ -119,7 +118,79 @@ class findRestaurant extends Component {
 
 	handleFormSubmit = (event) => {
     return Map.geoCode(this.state.restaurantName)
-  };
+ 	};
+
+ 	//handle Submit for searchRestaurant//
+ 	pressEnter = (ev) => {
+  	if(ev.keyCode == 13 || ev.hich ==13 ){
+  	  	this.searchRestaurant();
+  		ev.preventDefault();
+  		}
+  	};
+
+
+  	//create labels and data arrays and sets chartData state
+	generateChartData = (res) => {
+		// const differenceArr = res[0].rating_count;		
+		let labels = res.map(checkins => {
+			let queryDate = checkins.query_date.replace(/ .*/,'');
+			return queryDate;
+		})
+		//check if current data set is bigger, otherwise leave label state unchanged
+		if(labels.length <= this.state.chartData.labels.length) {
+			labels = this.state.chartData.labels;
+		}
+		const data = res.map(checkins => {
+			let dataset = {}
+			let queryDate = checkins.query_date.replace(/ .*/,'');
+			let checkinDiff = checkins.difference;
+			dataset = {
+				x: queryDate,
+				y: checkinDiff
+			};
+			return dataset;
+		})
+
+		//generate random color for new dataset
+		const dynamicColors = function() {
+            var r = Math.floor(Math.random() * 255);
+            var g = Math.floor(Math.random() * 255);
+            var b = Math.floor(Math.random() * 255);
+            return "rgba(" + r + "," + g + "," + b + ", 0.2)";
+        };
+
+        let datalabel = '';
+
+    	let index = this.state.chartData.datasets.findIndex( x => x.label === this.state.restaurantDetails.name)
+
+    	if (index === -1) {
+    		datalabel = this.state.restaurantDetails.name
+    	}
+    	else {
+    		datalabel = this.state.restaurantDetails.name + '1'
+    	}
+
+    	const labelArray = this.state.chartData.datasets.map(index => {
+    		return index.label;
+    	})
+
+    	let numberoftimes = labelArray.filter(word => word === this.state.restaurantDetails.name+"1")
+
+		this.setState({
+			chartData: {
+				labels: labels,
+				datasets: this.state.chartData.datasets.concat([
+					{
+						label: datalabel,
+						data: data,
+						backgroundColor: [dynamicColors()]
+					}
+				])
+			}
+		}, () => {
+			console.log(this.state);
+		})
+	};
 
     //update state whenever field input changes
   handleInputChange = event => {
@@ -139,16 +210,8 @@ class findRestaurant extends Component {
     	})
   };
 
- pressEnter = (ev) => {
-  	if(ev.key == 13){
-  		ev.preventDefault();
-  		this.searchRestaurant();
-  		console.log('iwas pressed(enter)')
-  	}
-  };
-
 	searchRestaurant = event => {
-		this.onSearchClick();;
+		this.onSearchClick();
 		this.setState ({
 			hidesearch:true
 		})
@@ -177,7 +240,7 @@ class findRestaurant extends Component {
 						searchedRestaurant: res.data,
 
 					})
-					console.log(this.state);
+					// console.log(this.state);
 					// this.generateChartData(this.state.restaurantInfo)
 				})
 				.catch(err => console.log(err));
@@ -210,12 +273,10 @@ class findRestaurant extends Component {
 		const id = event.currentTarget.getAttribute('value');
 		API.returnDetails(id)
 			.then(res => {
-				console.log(res.data[0])
+				// console.log(res.data[0])
 
 				let checkinsAvg = Mathy.findRoundedDiffMean(res.data[0].checkins, 'checkins')
-
 				let reviewsAvg = Mathy.findRoundedDiffMean(res.data[0].reviews, 'review_count')
-
 				let ratingsAvg = Mathy.findRoundedDiffMean(res.data[0].rating_count, 'rating_count')
 				// console.log(checkinsAvg)
 				let diff = Mathy.getDiffwithDate(res.data[0].checkins, 'checkins');
@@ -226,6 +287,7 @@ class findRestaurant extends Component {
 				let totalAvg = Mathy.findTotalStats(this.state.restaurantInfo)
 				let totalVelocityAvg = Mathy.findAvgVelocity(this.state.restaurantInfo)
 				let totalWeeklyDiff = this.findTotalWeeklyDiff(res.data[0])
+        
 				// passes in diff array, skips filterlabel, and passes in avg line data
 				// to create data set
 				const initialChartData = this.createInitialChartDataSet(diff, null, this.state.filteredRestaurants.checkins, res.data[0])
@@ -246,24 +308,27 @@ class findRestaurant extends Component {
 					totalAvg: totalAvg,
 					totalVelocityAvg: totalVelocityAvg
 				})
-				this.hidesearch();
 
+				this.hidesearch();
+				this.setState({
+					restaurantName: "",
+				})
 
 			})
 			.catch(err => console.log(err))
 	};
 	createInitialChartDataSet = (diffDateArr, filterLabel, avgLineDataSet, firmDetails) => {
 		// creates average line's chart data set
-		const avgLineChartData = ChartDataSet.createDataSet(avgLineDataSet, 'Average')
+		const avgLineChartData = ChartDataSet.createDataSet(avgLineDataSet, 'Average', true)
 		const diffDataChartData = ChartDataSet.createDataSet(diffDateArr, firmDetails.name)
-		console.log(avgLineChartData)
-		console.log(diffDataChartData)
+		// console.log(avgLineChartData)
+		// console.log(diffDataChartData)
 
 		let labels = avgLineDataSet.map(checkins => {
 			let queryDate = checkins.query_date.replace(/ .*/,'');
 			return queryDate;
 		})
-		console.log(labels)
+		// console.log(labels)
 
 		return {
 			labels: labels,
@@ -274,7 +339,7 @@ class findRestaurant extends Component {
 
 	//create labels and data arrays and sets chartData state
 	generateChartData = (res, filterLabel) => {
-		const newChartData = ChartDataSet.createDataSet(res, filterLabel)
+		const newChartData = ChartDataSet.createDataSet(res, filterLabel, true)
 		// Have new chart data, next:
 		// determine which length is longer bw current and new
     let labels = res.map(checkins => {
@@ -285,7 +350,7 @@ class findRestaurant extends Component {
         labels = this.state.chartData.labels;
     }
     // replace array with new
-    console.log(this.state.chartData)
+    // console.log(this.state.chartData)
     let stateDataSet = this.state.chartData.datasets
     stateDataSet.pop()
     stateDataSet.push(newChartData)
@@ -434,18 +499,18 @@ class findRestaurant extends Component {
 			categories.forEach(item => {
 				categoryString += item.alias + ' '
 			})
-			console.log(categoryString)
+			// console.log(categoryString)
 			API.filterSearch('category', categoryString)
 			.then(res => {
 				let categoryData = res.data
-				console.log(categoryData)
+				// console.log(categoryData)
 				for (var i = 0; i < categoryData.length; i++) {
 					var index = arrFirms.findIndex(x => x.name === categoryData[i].name)
 
 					if (index === -1) {
 						arrFirms.push(categoryData[i])
 					}	else {
-						console.log('no push')
+						// console.log('no push')
 					}
 				}
 				categoryTotal = Mathy.findTotalStats(arrFirms)
@@ -467,11 +532,29 @@ class findRestaurant extends Component {
 			.catch(err => console.log(err))
 		}
 	};
+									//**************************************//
+									//********onClick Functions************//
+									//************************************//
+
+	openModal = () => {
+    this.setState({modalIsOpen: true});
+    this.searchlogo();
+  	};
+
+  	afterOpenModal = () => {
+    // references are now sync'd and can be accessed.
+    this.subtitle.style.color = '#f00';
+  	};
+
+  	closeModal = () => {
+    this.setState({modalIsOpen: false});
+    this.setState({searchlogo: true})
+  	};
 
 	onClick = () => {
     		this.setState({ showsidenav: !this.state.showsidenav });
-   };
-
+   	};
+ 
 	onSearchClick = () => {
 		 	this.setState({ searchIcon: !this.state.searchIcon});
 	};
@@ -489,12 +572,16 @@ class findRestaurant extends Component {
 			this.setState({ hidesearch: !this.state.hidesearch });
 	};
 
+	searchlogo = () => {
+		this.setState({ searchlogo: !this.state.searchlogo});
+	}
+
 	priceFilteredRestaurants = ev => {
 		const value = ev.currentTarget.getAttribute('value')
-		console.log(value);
+		// console.log(value);
 	 	API.filterSearch('price', value)
 	    .then(res => {
-	        console.log(res)
+	        // console.log(res)
 	        let priceAvg = this.findDailyDiffAvg(res.data)
 	       	const newChartData = this.generateChartData(priceAvg.checkins, value)
 	        this.setState({
@@ -523,7 +610,7 @@ class findRestaurant extends Component {
 // and send to DB
 
 	getYelpAddToDb = (ev) => {
-		console.log('getYelpAddToDb')
+		// console.log('getYelpAddToDb')
 		const id = ev.currentTarget.getAttribute('value')
 		const name = ev.currentTarget.getAttribute('data-name')
 		const city = ev.currentTarget.getAttribute('data-city')
@@ -579,12 +666,12 @@ class findRestaurant extends Component {
 		this.setState({
 			top10Distance: top10Arr
 		})
-		console.log(this.state)
+		// console.log(this.state)
 	};
 
 	//create daily avg from array of multiple restaurants
 	findDailyDiffAvg = (filtered_arr) => {
-		console.log(filtered_arr)
+
 		const dailyAvg = Filter.dailyDiffAvg(filtered_arr)
 		// this.setState({
 		// 	dailyCheckinAvgObj: dailyAvg
@@ -600,10 +687,10 @@ class findRestaurant extends Component {
 			let lastSlicedSum = Mathy.findSum(lastWeekSliced, 'difference')
 			let previousSlicedSum = Mathy.findSum(previousWeekSliced, 'difference')
 			const percentDiff = lastSlicedSum - previousSlicedSum
-			console.log(lastSlicedSum)
-			console.log(previousSlicedSum)
+			// console.log(lastSlicedSum)
+			// console.log(previousSlicedSum)
 			let finalPercent = percentDiff / previousSlicedSum
-			finalPercent = Round(finalPercent * 100, -2)
+			finalPercent = Round(finalPercent * 100, -1)
 			if (isNaN(finalPercent)) {
 				finalPercent = "N/A"
 			} else {
@@ -651,27 +738,50 @@ class findRestaurant extends Component {
 				<button onClick={this.showbar}>showbar</button> 
 
 				<button onClick={this.findPercentChange}>finddiffall</button>
-				<button onClick={this.hidesearch}>hidesearcharea</button>  
+				<button onClick={this.hidesearch}>hidesearcharea</button>
 
+				<button onClick={this.openModal}>Open Modal</button>
+
+			        <Modal
+			          isOpen={this.state.modalIsOpen}
+			          onAfterOpen={this.afterOpenModal}
+			          onRequestClose={this.closeModal}
+			          contentLabel="Example Modal"
+			        >
+
+			          <h2 ref={subtitle => this.subtitle = subtitle}>Hello</h2>
+			          <button className="modalClosed" onClick={this.closeModal}>close</button>
+			          <div>I am a modal</div>
+			          <form>
+			            <input />
+			            <button>tab navigation</button>
+			            <button>stays</button>
+			            <button>inside</button>
+			            <button>the modal</button>
+			          </form>
+			        </Modal> 
+
+
+			{ this.state.searchlogo ? 
+				<CSSTransitionGroup
+								transitionName="example"
+								transitionAppear={true}
+								transitionAppearTimeout={500}
+								transitionEnter={false}
+								transitionLeave={true}>
 				<a onClick={this.onSearchClick}>
 					<div className="inPut-with-icon">
 						<i className="fa fa-search"></i>
 					</div>
 				</a>
-				
-
-
-						      					<h1> Find A Restaurant </h1>
-
+				</CSSTransitionGroup>
+			: null }
+			
 		      	<div className="data-section columns">
 		      		<div className="column auto">
-
 		      		{this.state.hidesearch ? (
 		      			<div className='columns search-area'>
-		      				<div className="column is-12">
-
-											
-										
+		      				<div className="column is-12">										
 											<div id='search-restaurant'>
 													{this.state.searchedRestaurant.length ? (
 														<CSSTransitionGroup
@@ -745,8 +855,9 @@ class findRestaurant extends Component {
 		      							state={this.state.restaurantDetails.location.state}
 		      							yelpURL={this.state.restaurantDetails.yelpURL}
 		      							fb_url={this.state.restaurantDetails.fb_url}
-		      							yelpRating={this.state.restaurantDetails.star_rating[0].overall_star_rating}
-		      							fbRating={this.state.restaurantDetails.rating[0].rating}
+		      							fbRating={this.state.restaurantDetails.star_rating[0].overall_star_rating}
+		      							yelpRating={this.state.restaurantDetails.rating[0].rating}
+		      							
 
 		      						/>
 		      					</div>										
@@ -769,7 +880,7 @@ class findRestaurant extends Component {
 										</div>
 										<div className='columns'>
 											<div className='column is-12'>
-												<section className='section'>
+												<section className='stats-section section'>
 													<Statsection
 													weeklyStats={this.state.detailsWeeklyStats}
 													enoughData={this.state.detailsWeeklyStats.enoughData}
@@ -810,23 +921,17 @@ class findRestaurant extends Component {
 								transitionEnter={false}
 								transitionLeave={true}>
 								<div className='searchIcon'>
-								<form>
+								<form type="submit">
 				      			<input
+				      				className="searchBar"
 									inputProps={inputProps}
 									value={this.state.restaurantName}
 									onChange={this.handleInputChange}
 									name="restaurantName"
 									placeholder="restaurant"
-									onKeyPress={this.pressEnter}
+									onKeyDown={this.pressEnter}
 
 								/>
-								<button type="submit"
-													disabled={!(this.state.restaurantName)}
-													onClick={this.searchRestaurant}
-
-									>
-												Search Restaurant
-									</button>
 								</form>
 								
 								</div>

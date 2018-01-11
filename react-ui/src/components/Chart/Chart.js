@@ -33,7 +33,7 @@ class Chart extends Component {
 								},
 								legend: {
 									display: this.props.displayLegend,
-									position: this.props.legendPosition
+									position: this.props.legendPosition,
 								}
 							}}
 						/>
