@@ -938,6 +938,7 @@ class findRestaurant extends Component {
 												<section className='stats-section section'>
 													<Statsection
 													restaurantDetails={this.state.restaurantDetails}
+													allTotals={this.state.totalAvg}
 													detailsAvgs={this.state.restaurantDetailsAvg}
 													weeklyStats={this.state.detailsWeeklyStats}
 													enoughData={this.state.detailsWeeklyStats.enoughData}
