@@ -48,10 +48,6 @@ export class Statsection extends Component {
                               <div className='column auto has-text-centered'>Highest Day</div>  
                               <div className='column auto has-text-centered'>Daily Avg</div>
                               <div className='column auto has-text-centered'>All Time Total </div>*/}        			
-
-					<div className='column auto has-text-centered'>This Week</div>
-  				<div className='column auto has-text-centered'>%Change</div>
-  				<div className='column auto has-text-centered'>Last Week</div>
           <div className='column auto has-text-centered'>Daily Avg</div>
           <div className='column auto has-text-centered'>All-Time</div>
                           {/*<div className='column auto has-text-centered'>Lowest Day</div>  
