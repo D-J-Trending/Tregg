@@ -20,10 +20,13 @@ export default {
 		};
 
 		if(dotted) {
+
+			console.log(data);
+
 			return{
 				label: name,
 				fill: false,
-				borderWidth: 4,
+				borderWidth: 3,
 				data: data,
 				borderDash: [10,10],
 				borderColor: ['green']
@@ -32,7 +35,7 @@ export default {
 			return {
 				label: name,
 				fill: false,
-				borderWidth: 4,
+				borderWidth: 3,
 				data: data,
 				borderColor: '#0000ff'
 			}

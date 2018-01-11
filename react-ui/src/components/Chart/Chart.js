@@ -6,10 +6,10 @@ class Chart extends Component {
 
 	constructor (props) {
 		super(props);
-		this.state = {
-			isActive: true,
-			showResults: true
-		}
+		// this.state = {
+		// 	isActive: true,
+		// 	showResults: true
+		// }
 	}
 	static defaultProps = {
 		displayTitle: true,

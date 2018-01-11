@@ -283,8 +283,6 @@ class findRestaurant extends Component {
 
 		API.returnDetails(id)
 			.then(res => {
-				console.log(res.data)
-		
 				// passes in diff array, skips filterlabel, and passes in avg line data
 				// to create data set
 				let diff = Mathy.getDiffwithDate(res.data[0].checkins, 'checkins');
@@ -836,7 +834,7 @@ class findRestaurant extends Component {
 									)}
 								{this.state.details ? (
 		      				<div className='restaurant-info'>	
-		      					<div className='columns'>	      				
+		      					<div className='columns restaurant-component'>	      				
 		      						<Restheader
 		      							rank={this.state.restaurantDetails.rank}		      							
 		      							restaurantName={this.state.restaurantDetails.name}
@@ -849,31 +847,27 @@ class findRestaurant extends Component {
 		      							yelpRating={this.state.restaurantDetails.rating[0].rating}		      					
 		      						/>
 		      					</div>										
-				      			<div className='columns'>		      				
-					      			<div className='column is-9'>			 
+				      			<div className='columns restaurant-component'>		      				
+					      			<div className='column is-9 rest-'>			 
 							      		<Chart className='charts' chartData={this.state.chartData} chartName="Checkins by Date"
 							      		 showline={this.state.showline} showbar={this.state.showbar}legendPosition="top"/>
 							      	</div>
 							      	<div className='column is-3 data-navigation'>							      		
-						      			<div className='columns'>
-						      				<ChartFilter 
-						      					green1={this.state.active1}
-						      					green2={this.state.active2}
-						      					green3={this.state.active3}
-						      					green4={this.state.active4}
-						      					checkClick1={this.filterClick1}
-						      					checkClick2={this.filterClick2}
-						      					checkClick3={this.filterClick3}
-						      					checkClick4={this.filterClick4}
-						      				>
-						      					<Dropdown onClick={this.dropdown} className={this.state.dropdown}/>						      		
-						      				</ChartFilter>				      				
-						      			</div>
-						      			
-						      											
-											</div>
+					      				<ChartFilter 
+					      					green1={this.state.active1}
+					      					green2={this.state.active2}
+					      					green3={this.state.active3}
+					      					green4={this.state.active4}
+					      					checkClick1={this.filterClick1}
+					      					checkClick2={this.filterClick2}
+					      					checkClick3={this.filterClick3}
+					      					checkClick4={this.filterClick4}
+					      				>
+					      					<Dropdown onClick={this.dropdown} className={this.state.dropdown}/>						      		
+					      				</ChartFilter>				      				
+				      				</div>			
 										</div>
-										<div className='columns'>
+										<div className='columns restaurant-component margin-top'>
 											<div className='column is-12'>
 												<section className='stats-section section'>
 													<Statsection
@@ -885,7 +879,7 @@ class findRestaurant extends Component {
 												</section>
 											</div>
 										</div>
-										<div className='columns'>
+										<div className='columns restaurant-component'>
 											<div className='column is-12'>
 												<section className='section'>
 													<Details

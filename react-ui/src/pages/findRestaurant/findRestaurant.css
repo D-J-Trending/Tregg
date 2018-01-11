@@ -3,12 +3,19 @@
 	background-color: #17181B;
 }
 
+.restaurant-component {
+	background: #3a3a3a;
+}
+
 .restaurant-info {
 	padding: 20px;
 	margin: 16px;
 	background-color: #262626;
 	color: white;
-	border-radius: 10px;
+}
+
+.margin-top {
+	margin-top: 10px;
 }
 
 .stats-section {
