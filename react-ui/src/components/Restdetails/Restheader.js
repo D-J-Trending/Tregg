@@ -41,8 +41,8 @@ stars = () => {
 				</div>
 				<div className='column auto'>
 					<span className='rank-section'>Trending Rank: <span className='rank-number'>{this.props.rank}</span></span><br/>
-					<span><a target='blank' href={this.props.yelpURL}> <img className='trademark' src='img/Yelp_trademark_RGB_outline.png' alt='yelp-trademark'/></a>{this.stars()} &#124; </span>
-					<span><a target='blank' href={this.props.fb_url}> FB Rating</a>: {this.props.fbRating}</span>				
+					<span><a target='blank' href={this.props.yelpURL}> <img className='yelp-trademark' src='img/Yelp_trademark_RGB_outline.png' alt='yelp-trademark'/></a>{this.stars()} &#124; </span>
+					<span><a target='blank' href={this.props.fb_url}> <img className='fb-trademark' src='img/FB-f-Logo__blue_29.png' alt='facebook-trademark'/></a> {this.props.fbRating}</span>				
 				</div>		
 				</div>		
 			</div>

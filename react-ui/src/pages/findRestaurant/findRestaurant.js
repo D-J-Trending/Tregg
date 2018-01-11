@@ -21,11 +21,15 @@ import geolib from 'geolib';
 import PlacesAutocomplete, { geocodeByAddress, getLatLng } from 'react-places-autocomplete';
 import Map from "../../utils/Map.js";
 import Round from '../../utils/Round'
-import ChartDataSet from '../../utils/ChartDataSet'
+import ChartDataSet from '../../utils/ChartDataSet';
 //Need to pass value from input field
 //Style chart and info into one element
 //Allow to click on element to view stats
 //Create separate chart components/arrays for rating, rating count, checkins, review count, star_rating
+
+const style = {
+	backgroundColor: 'green',
+}
 
 class findRestaurant extends Component {
 
@@ -59,7 +63,11 @@ class findRestaurant extends Component {
 			dropdown: '',
 			hidesearch: false,
 			modalIsOpen: false,
-			searchlogo: true
+			searchlogo: true,
+			active1:'button',
+			active2:'button',
+			active3:'button',
+			active4:'button',
 		};
 		this.onChange = (restaurantName) => this.setState({ restaurantName })
 		this.openModal = this.openModal.bind(this);
@@ -574,6 +582,51 @@ class findRestaurant extends Component {
 
 	searchlogo = () => {
 		this.setState({ searchlogo: !this.state.searchlogo});
+	};
+
+	filterClick1 = (ev) => {
+		this.setState({
+			active1:'button',
+			active2:'button',
+			active3:'button',
+			active4:'button'
+
+		})
+		this.setState({active1: 'button chart-filter-active'});
+		this.priceFilteredRestaurants(ev)
+	};
+
+	filterClick2 = (ev) => {
+		this.setState({
+			active1:'button',
+			active2:'button',
+			active3:'button',
+			active4:'button'
+		})
+		this.setState({active2: 'button chart-filter-active'});
+		this.priceFilteredRestaurants(ev)
+	};
+
+	filterClick3 = (ev) => {
+		this.setState({
+			active1:'button',
+			active2:'button',
+			active3:'button',
+			active4:'button'
+		})
+		this.setState({active3: 'button chart-filter-active'});
+		this.priceFilteredRestaurants(ev)
+	};
+
+	filterClick4 = (ev) => {
+		this.setState({
+			active1:'button',
+			active2:'button',
+			active3:'button',
+			active4:'button'
+		})
+		this.setState({active4: 'button chart-filter-active'});
+		this.priceFilteredRestaurants(ev)
 	}
 
 	priceFilteredRestaurants = ev => {
@@ -586,7 +639,7 @@ class findRestaurant extends Component {
 	       	const newChartData = this.generateChartData(priceAvg.checkins, value)
 	        this.setState({
 	        	chartData: newChartData
-	        })
+	        }, ()=> console.log(this.state.active))
 	    })
 	    .catch(err => console.log(err))
 	};
@@ -751,13 +804,10 @@ class findRestaurant extends Component {
 
 			          <h2 ref={subtitle => this.subtitle = subtitle}>Hello</h2>
 			          <button className="modalClosed" onClick={this.closeModal}>close</button>
-			          <div>I am a modal</div>
+			          <div>SearchField</div>
 			          <form>
 			            <input />
-			            <button>tab navigation</button>
-			            <button>stays</button>
-			            <button>inside</button>
-			            <button>the modal</button>
+			       		<button>Search</button>
 			          </form>
 			        </Modal> 
 
@@ -854,11 +904,9 @@ class findRestaurant extends Component {
 		      							city={this.state.restaurantDetails.location.city}
 		      							state={this.state.restaurantDetails.location.state}
 		      							yelpURL={this.state.restaurantDetails.yelpURL}
-		      							fb_url={this.state.restaurantDetails.fb_url}
+		      							fb_url={this.state.restaurantDetails.fbURL}
 		      							fbRating={this.state.restaurantDetails.star_rating[0].overall_star_rating}
-		      							yelpRating={this.state.restaurantDetails.rating[0].rating}
-		      							
-
+		      							yelpRating={this.state.restaurantDetails.rating[0].rating}		      					
 		      						/>
 		      					</div>										
 				      			<div className='columns'>		      				
@@ -869,7 +917,14 @@ class findRestaurant extends Component {
 							      	<div className='column is-3 data-navigation'>							      		
 						      			<div className='columns'>
 						      				<ChartFilter 
-						      					checkClick={this.priceFilteredRestaurants}
+						      					green1={this.state.active1}
+						      					green2={this.state.active2}
+						      					green3={this.state.active3}
+						      					green4={this.state.active4}
+						      					checkClick1={this.filterClick1}
+						      					checkClick2={this.filterClick2}
+						      					checkClick3={this.filterClick3}
+						      					checkClick4={this.filterClick4}
 						      				>
 						      					<Dropdown onClick={this.dropdown} className={this.state.dropdown}/>						      		
 						      				</ChartFilter>				      				
@@ -882,6 +937,9 @@ class findRestaurant extends Component {
 											<div className='column is-12'>
 												<section className='stats-section section'>
 													<Statsection
+													restaurantDetails={this.state.restaurantDetails}
+													allTotals={this.state.totalAvg}
+													detailsAvgs={this.state.restaurantDetailsAvg}
 													weeklyStats={this.state.detailsWeeklyStats}
 													enoughData={this.state.detailsWeeklyStats.enoughData}
 													/>
