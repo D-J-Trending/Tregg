@@ -20,7 +20,8 @@ import geolib from 'geolib';
 import PlacesAutocomplete, { geocodeByAddress, getLatLng } from 'react-places-autocomplete';
 import Map from "../../utils/Map.js";
 import Round from '../../utils/Round'
-import ChartDataSet from '../../utils/ChartDataSet'
+import ChartDataSet from '../../utils/ChartDataSet';
+import Filter from "../../utils/Filter";
 //Need to pass value from input field
 //Style chart and info into one element
 //Allow to click on element to view stats
@@ -715,13 +716,10 @@ class findRestaurant extends Component {
 
 			          <h2 ref={subtitle => this.subtitle = subtitle}>Hello</h2>
 			          <button className="modalClosed" onClick={this.closeModal}>close</button>
-			          <div>I am a modal</div>
+			          <div>SearchField</div>
 			          <form>
 			            <input />
-			            <button>tab navigation</button>
-			            <button>stays</button>
-			            <button>inside</button>
-			            <button>the modal</button>
+			       		<button>Search</button>
 			          </form>
 			        </Modal> 
 
