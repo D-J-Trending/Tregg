@@ -22,7 +22,6 @@ import PlacesAutocomplete, { geocodeByAddress, getLatLng } from 'react-places-au
 import Map from "../../utils/Map.js";
 import Round from '../../utils/Round'
 import ChartDataSet from '../../utils/ChartDataSet';
-import ReactTooltip from 'react-tooltip';
 //Need to pass value from input field
 //Style chart and info into one element
 //Allow to click on element to view stats
