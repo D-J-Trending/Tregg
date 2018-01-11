@@ -14,13 +14,14 @@ export class Statsection extends Component {
 
   arrows = (value) => {
     const numberWithoutPercent = value.slice(0, -1)
-    console.log(numberWithoutPercent)
+    
 
     if(numberWithoutPercent > 0) {
       return <i className="fa fa-sort-asc"></i>
     } else if(numberWithoutPercent < 0) {
       return <i className="fa fa-sort-desc"></i>
     } else{
+
       return
     }
   }
