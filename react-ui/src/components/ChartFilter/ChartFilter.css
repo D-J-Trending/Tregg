@@ -1,7 +1,5 @@
 .chart-filter {
-
-	padding-top: 90px;
-  
+	padding-top: 90px;  
 }
 
 .chart-filter-active {
@@ -11,7 +9,6 @@
 .chart-filter button {
 	margin: 2px;
 	display: block;
-
 }
 
 .prices button {
