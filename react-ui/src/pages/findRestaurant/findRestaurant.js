@@ -287,7 +287,7 @@ class findRestaurant extends Component {
 				let totalAvg = Mathy.findTotalStats(this.state.restaurantInfo)
 				let totalVelocityAvg = Mathy.findAvgVelocity(this.state.restaurantInfo)
 				let totalWeeklyDiff = this.findTotalWeeklyDiff(res.data[0])
-        
+        const yelpReviews = Yelp.yelpAPIBusiness(res.data[0].yelpId)
 				// passes in diff array, skips filterlabel, and passes in avg line data
 				// to create data set
 				const initialChartData = this.createInitialChartDataSet(diff, null, this.state.filteredRestaurants.checkins, res.data[0])
@@ -306,13 +306,15 @@ class findRestaurant extends Component {
 					detailsWeeklyStats: totalWeeklyDiff,
 					chartData: initialChartData,
 					totalAvg: totalAvg,
-					totalVelocityAvg: totalVelocityAvg
+					totalVelocityAvg: totalVelocityAvg,
+					restaurantName: "",
+					yelpReviews: yelpReviews
 				})
 
 				this.hidesearch();
-				this.setState({
-					restaurantName: "",
-				})
+				// this.setState({
+				// 	restaurantName: "",
+				// })
 
 			})
 			.catch(err => console.log(err))
@@ -901,6 +903,7 @@ class findRestaurant extends Component {
 													getMean={(arr) => Mathy.getMean(arr)}
 													totalVelocityAvg={this.state.totalVelocityAvg}
 													totalAvgStatement={this.state.totalAvgStatement}
+													yelpReviews={this.state.yelpReviews}
 													/>
 												</section>
 											</div>
