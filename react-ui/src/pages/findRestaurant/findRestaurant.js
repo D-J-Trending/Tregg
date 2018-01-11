@@ -287,12 +287,10 @@ class findRestaurant extends Component {
 				let totalAvg = Mathy.findTotalStats(this.state.restaurantInfo)
 				let totalVelocityAvg = Mathy.findAvgVelocity(this.state.restaurantInfo)
 				let totalWeeklyDiff = this.findTotalWeeklyDiff(res.data[0])
-        const yelpReviews = Yelp.yelpAPIBusiness(res.data[0].yelpId)
 				// passes in diff array, skips filterlabel, and passes in avg line data
 				// to create data set
 				const initialChartData = this.createInitialChartDataSet(diff, null, this.state.filteredRestaurants.checkins, res.data[0])
-
-				this.setState({
+				const obj = {
 					restaurantDetails: res.data[0],
 					details: true,
 					restaurantDetailsAvg: {
@@ -307,18 +305,18 @@ class findRestaurant extends Component {
 					chartData: initialChartData,
 					totalAvg: totalAvg,
 					totalVelocityAvg: totalVelocityAvg,
-					restaurantName: "",
-					yelpReviews: yelpReviews
-				})
-
-				this.hidesearch();
-				// this.setState({
-				// 	restaurantName: "",
-				// })
+					restaurantName: ""
+				}
+				Yelp.getYelpReviews(res.data[0].yelpId, obj, detailsSetState)
 
 			})
 			.catch(err => console.log(err))
-	};
+			const detailsSetState = (obj) => {
+				this.setState(obj)
+				this.hidesearch();
+			}
+};
+
 	createInitialChartDataSet = (diffDateArr, filterLabel, avgLineDataSet, firmDetails) => {
 		// creates average line's chart data set
 		const avgLineChartData = ChartDataSet.createDataSet(avgLineDataSet, 'Average', true)

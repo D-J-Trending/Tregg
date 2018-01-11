@@ -51,20 +51,20 @@ export default {
 			.catch(err=>console.log(err));
 		// this.yelpDetails(yelpIdArr);
 	},
-	yelpAPIBusinesss: function(id) +> {
-		console.log(id)
+
+	getYelpReviews: function(id, obj,callback) {
 		const url = "https://cors-anywhere.herokuapp.com/https://api.yelp.com/v3/businesses/" + id + '/reviews';
 		const headers = {
 			Authorization: "Bearer Dt0X2kf0ef_hQ5Jc_5FNnxheSlXdFX1-svTZE6AJP0J4lBoVuMFRl66QgPFblxpMN-_AHN9OL3mek81qVap7DEtTMK2MrXxXpTxV31SVTbe-qajxmCEGj_nHwuEuWnYx"
 		};
 		API.APIsearch(url, null, headers)
 			.then(res=> {
-				console.log(res)
-
-				return res.reviews
+				obj.yelpReviews = res.data.reviews
+				callback(obj)
 			})
-		
-	}
+			.catch(err => console.log(err))
+	},
+
 	convertPhone: function(phoneNum) {
 		console.log(phoneNum)
 		var pn = new phoneNumber(phoneNum, 'US');

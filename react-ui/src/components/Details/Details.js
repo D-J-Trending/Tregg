@@ -1,21 +1,23 @@
 import React, {Component} from 'react';
 import './Details.css'
+import API from '../../utils/API';
+import Filter from '../../utils/Filter';
 
 export class Details extends Component {
 	constructor(props) {
 		super(props)
 	};
-
 	componentDidMount() {
 		this.props.getTotals();
-	};
+	}
 
 	getLastElement = (arr, filter) => {
 		var lastItem = arr.pop();
 		return lastItem[filter]
-	}
+	};
 
 	render() {
+		console.log(this.props)
 		return (
 	
 			<div className="details">
@@ -23,7 +25,7 @@ export class Details extends Component {
 				<h4>
 				{this.props.restaurantDetails.name}
 				</h4>
-				<img className="detailsImg"src={this.props.restaurantDetails.yelpImg} />
+				<img alt="Firm" className="detailsImg"src={this.props.restaurantDetails.yelpImg} />
 				
 				<h3> Total *FBLOGO* Checkins </h3>
 				<p>{this.getLastElement(this.props.restaurantDetails.checkins, 'checkins')}</p>
@@ -48,13 +50,24 @@ export class Details extends Component {
 					<p>{this.props.allTotals.ratingsMean}</p>
 				<h3> Total Reviews Mean</h3>
 					<p>{this.props.allTotals.reviewsMean}</p>
-					{this.props.yelpReviews.map(item=> {
-						<h5>
-							item.text
-						</h5>
-						<p> item.user.name </p>
-						item.time_created
-					})}
+					{this.props.yelpReviews.length ? (
+						<div>
+							{this.props.yelpReviews.map(item=> (
+								<div>
+									<h5>
+										{item.text}
+									</h5>
+									<p> {item.user.name} </p>
+									{Filter.convertDate(item.time_created)}
+								</div>
+							))}
+							</div>
+							) : (
+							<h1>
+							No reviews
+							</h1>
+							)
+					}
 				<select
 				onChange={this.props.loadFilter}
 				>
