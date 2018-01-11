@@ -40,9 +40,9 @@ class Stats extends Component {
 		      <div className='column auto has-text-centered'><i className="fa fa-yelp"></i> Reviews</div>             
 		    </div>
 		    <div className='columns call-restaurant-numbers'>
-		      <div className='column auto has-text-centered'>{this.props.allTotals}</div>
-		      <div className='column auto has-text-centered'>{this.props.allTotals}</div>
-		      <div className='column auto has-text-centered'>{this.props.allTotals}</div>                
+		      <div className='column auto has-text-centered'>{this.props.totalAvg.checkinsMean}</div>
+		      <div className='column auto has-text-centered'>{this.props.totalAvg.ratingsMean}</div>
+		      <div className='column auto has-text-centered'>{this.props.totalAvg.reviewsMean}</div>                
 		    </div>
 		  </div>
 		)
