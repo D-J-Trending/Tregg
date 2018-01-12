@@ -567,15 +567,23 @@ class findRestaurant extends Component {
 		Yelp.yelpAPI(id, name, address, phone, city)
 	};
 
-  geoCode = (address) => {
-  	geocodeByAddress(address)
-    	.then(results => getLatLng(results[0]))
-    	.then(latLng => {
-    		// this.setState({
-    		// 	geoCodeAddress: latLng
-    		// })
-    		return latLng
-    	})
+ 	//handle Submit for searchRestaurant//
+ 	// pressEnter = (ev) => {
+  // 	if(ev.keyCode === 13 || ev.which === 13 ){
+  // 	  	this.searchRestaurant();
+  // 		ev.preventDefault();
+  // 		}
+  // 	};
+  searchSubmit = (event) => {
+    event.preventDefault()
+    if (this.state.restaurantLoc) {
+    geocodeByAddress(this.state.restaurantLoc)
+      .then(results => getLatLng(results[0]))
+      .then(latLng => this.searchRestaurant(latLng))
+      .catch(error => console.error('Error', error))
+    } else {
+    	this.setState({placeholder: "Please input a location"})
+    }
   };
 
 	searchRestaurant = event => {
