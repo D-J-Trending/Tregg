@@ -472,11 +472,14 @@ class findRestaurant extends Component {
 		this.setState({active6: 'button fullwidth is-success'});
 		this.averageFilteredRestaurants(ev)
 	};
+
 	removeSecondLine = ev => {
 		let newChartData = this.state.chartData.datasets
 		let labels = this.state.chartData.labels
 
-		newChartData.pop()
+		if(newChartData.length === 2) {
+			newChartData.pop()
+		}
 
 		this.setState({
 			chartData: {
