@@ -69,6 +69,8 @@ class findRestaurant extends Component {
 			active2:'button',
 			active3:'button',
 			active4:'button',
+			active5:'button fullwidth',
+			active6:'button fullwidth is-success'
 		};
 		this.onChange = (restaurantName) => this.setState({ restaurantName })
 		this.openModal = this.openModal.bind(this);
@@ -471,8 +473,9 @@ class findRestaurant extends Component {
 			active1:'button',
 			active2:'button',
 			active3:'button',
-			active4:'button'
-
+			active4:'button',
+			active5:'button fullWidth',
+			active6:'button fullWidth'
 		})
 		this.setState({active1: 'button is-success'});
 		this.priceFilteredRestaurants(ev)
@@ -483,7 +486,9 @@ class findRestaurant extends Component {
 			active1:'button',
 			active2:'button',
 			active3:'button',
-			active4:'button'
+			active4:'button',
+			active5:'button fullWidth',
+			active6:'button fullWidth'
 		})
 		this.setState({active2: 'button is-success'});
 		this.priceFilteredRestaurants(ev)
@@ -494,7 +499,9 @@ class findRestaurant extends Component {
 			active1:'button',
 			active2:'button',
 			active3:'button',
-			active4:'button'
+			active4:'button',
+			active5:'button fullWidth',
+			active6:'button fullWidth'
 		})
 		this.setState({active3: 'button is-success'});
 		this.priceFilteredRestaurants(ev)
@@ -505,10 +512,38 @@ class findRestaurant extends Component {
 			active1:'button',
 			active2:'button',
 			active3:'button',
-			active4:'button'
+			active4:'button',
+			active5:'button fullWidth',
+			active6:'button fullWidth'
 		})
 		this.setState({active4: 'button is-success'});
 		this.priceFilteredRestaurants(ev)
+	};
+
+	filterClick5 = (ev) => {
+		this.setState({
+			active1:'button',
+			active2:'button',
+			active3:'button',
+			active4:'button',
+			active5:'button fullWidth',
+			active6:'button fullWidth'
+		})
+		this.setState({active5: 'button fullwidth is-success'});
+		this.categoryFilteredRestaurants(ev)
+	};
+
+	filterClick6 = (ev) => {
+		this.setState({
+			active1:'button',
+			active2:'button',
+			active3:'button',
+			active4:'button',
+			active5:'button fullWidth',
+			active6:'button fullWidth'
+		})
+		this.setState({active6: 'button fullwidth is-success'});
+		this.averageFilteredRestaurants(ev)
 	};
 
 	priceFilteredRestaurants = ev => {
@@ -860,23 +895,21 @@ class findRestaurant extends Component {
 							      	<div className='column is-3 data-navigation'>							      		
 						      			<div className='columns'>
 						      				<ChartFilter 
-						      					categoryClick={this.categoryFilteredRestaurants}
+						      					categoryClick={this.filterClick5}
 						      					green1={this.state.active1}
 						      					green2={this.state.active2}
 						      					green3={this.state.active3}
 						      					green4={this.state.active4}
+						      					green5={this.state.active5}
+						      					green6={this.state.active6}
 						      					checkClick1={this.filterClick1}
 						      					checkClick2={this.filterClick2}
 						      					checkClick3={this.filterClick3}
-						      					checkClick4={this.filterClick4}
+						      					checkClick4={this.filterClick4}						      				
 						      					averageArr={this.state.filteredRestaurants}
-						      					averageClick={this.averageFilteredRestaurants}
-						      				>
-						      					<Dropdown onClick={this.dropdown} className={this.state.dropdown}/>						      		
-						      				</ChartFilter>				      				
-						      			</div>
-						      			
-						      											
+						      					averageClick={this.filterClick6}
+						      				/>				      					
+						      			</div>					      											
 											</div>
 										</div>
 										<div className='columns restaurant-component margin-top'>
@@ -932,7 +965,6 @@ class findRestaurant extends Component {
 										name="restaurantName"
 										placeholder="restaurant"
 										onKeyDown={this.pressEnter}
-
 									/>
 									<PlacesAutocomplete
 										inputProps2={inputProps2}
@@ -942,8 +974,7 @@ class findRestaurant extends Component {
 										placeholder="location"
 										onKeyDown={this.pressEnter}
 									/>
-								</form>
-								
+								</form>							
 								</div>
 				      		</CSSTransitionGroup>
 			      		</div>  		
