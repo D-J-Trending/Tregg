@@ -27,19 +27,19 @@ class Home extends Component {
 				})
 			})
 			.catch(err => console.log(err))
-	}
+	};
 	componentDidUpdate(prevProps, prevState) {
 		if (!prevState.showList) {
 			this.setState({
 				showList: true
 			})
-		}
+		};
+	}
 
 	showRestaurants = () => {
-
+		console.log()
 	}
 
-	}
    // gets top 5 sorted by score
 	render() {
 		return (
@@ -64,8 +64,7 @@ class Home extends Component {
 					      <ul className='centered'>
 					      	{this.state.showList ?
 					      		this.state.top10.map(item => (
-					      			<li onClick={(ev) =>this.props.clickList(ev)} value={item._id}> {item.name} </li>
-					      			<Link to='/findRestaurants'><a href='#'></a></Link>
+					      			<li onClick={this.props.clickList} value={item._id}> {item.name} </li>
 					      		))
 					      		:
 					      		null

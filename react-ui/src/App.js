@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter as Router, Route } from "react-router-dom";
+import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 import "./App.css";
 import logo from "./logo.png"
 import Home from "./pages/Home";
@@ -10,6 +10,7 @@ import MaterialTitlePanel from './material_title_panel';
 import SidebarContent from './sidebar_content';
 import Footer from "./components/Footer";
 import Trending from './components/Trending';
+
 
 const styles = {
   contentHeaderMenuLink: {
@@ -43,6 +44,8 @@ class App extends React.Component {
       touch: true,
       shadow: true,
       pullRight: false,
+      detailsId: false,
+      showDetails: false
     };
 
     this.renderPropCheckbox = this.renderPropCheckbox.bind(this);
@@ -87,13 +90,19 @@ class App extends React.Component {
       <p key={prop}>
          {prop} <input type="number" onChange={setMethod} value={this.state[prop]} />
       </p>);
-  }
+  };
 
   clickList = ev => {
     let value = ev.currentTarget.getAttribute('value')
     console.log(value)
+    this.setState({
+      detailsId: value,
+      showDetails: false,
+    })
   }
-
+  findRestaurantPage =ev => {
+    this.clickList();
+  }
 
   render() {
     const sidebar = <SidebarContent />;
@@ -127,7 +136,8 @@ class App extends React.Component {
             	<div className='content' style={styles.content}>
                 <Route exact path="/Home" render={(props) => <Home clickList={this.clickList} />} />
                 <Route exact path="/Login" component={Login} />
-                <Route exact path="/findRestaurant" component={findRestaurant} />
+                <Route exact path="/findRestaurant" component={findRestaurant} render={(props) => <findRestaurant detailsId={this.state.detailsId} />} />
+                <button onClick=""><Link to="/findRestaurant"><a href="#">hi</a></Link></button>
                 <Footer />
               </div>           
   	        </MaterialTitlePanel>
