@@ -615,9 +615,9 @@ class findRestaurant extends Component {
 		let location = '37.82306519999999,-122.24868090000001';
 		if (this.state.restaurantName) {
 			if (this.state.restaurantLoc) {
-				console.log(this.state.restaurantLoc)
+
 				let latLng = this.geoCode(this.state.restaurantLoc)
-				console.log(latLng)
+
 				location = latLng
 			}
 			this.geoCode(this.state.restaurantName)
@@ -625,7 +625,6 @@ class findRestaurant extends Component {
 			const nameQue = (data) => {
 				API.nameQuery(this.state.restaurantName)
 				.then(res => {
-					console.log(this.state)
 					// if no result found, start add new firm functions
 					// indexof, if data matches res.data, then take out
 					let fbResults = []

@@ -22,8 +22,6 @@ export class Statsection extends Component {
     }
 	};
 
-
-
   componentDidMount() {
     // const getTotals = this.props.getTotals;
     // getTotals()
@@ -49,8 +47,33 @@ export class Statsection extends Component {
       totalAvg: totalAvg,
       totalVelocityAvg: totalVelocityAvg,
       restaurantDetails: this.props.restaurantDetails
-    },()=>console.log(this.state))
+    })
 
+  }
+
+  componentWillReceiveProps(nextProps) {
+    const checkinsAvg = Mathy.findRoundedDiffMean(nextProps.restaurantDetails.checkins, 'checkins')
+    const reviewsAvg = Mathy.findRoundedDiffMean(nextProps.restaurantDetails.reviews, 'review_count')
+    const ratingsAvg = Mathy.findRoundedDiffMean(nextProps.restaurantDetails.rating_count, 'rating_count')
+    
+    const ratingDiff = Mathy.getDiffwithDate(nextProps.restaurantDetails.rating_count, 'rating_count');
+    const reviewDiff = Mathy.getDiffwithDate(nextProps.restaurantDetails.reviews, 'review_count');
+
+    const totalWeeklyDiff = Mathy.findTotalWeeklyDiff(nextProps.restaurantDetails)
+
+    const totalAvg = Mathy.findTotalStats(nextProps.restaurantInfo)
+    const totalVelocityAvg = Mathy.findAvgVelocity(nextProps.restaurantInfo)
+    this.setState({
+      checkinsAvg: checkinsAvg,
+      reviewsAvg: reviewsAvg,
+      ratingsAvg: ratingsAvg,
+      ratingDiff: ratingDiff,
+      reviewDiff: reviewDiff,
+      weeklyStats: totalWeeklyDiff,
+      totalAvg: totalAvg,
+      totalVelocityAvg: totalVelocityAvg,
+      restaurantDetails: nextProps.restaurantDetails
+    })
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -82,6 +105,7 @@ export class Statsection extends Component {
   }
 
 	render() {
+    console.log(this.props)
 		return (
 			<div className="stats">
         <p className="stat-header has-text-centered">{this.props.restaurantDetails.name} Statistics</p>	
