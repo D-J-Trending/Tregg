@@ -85,7 +85,6 @@ class findRestaurant extends Component {
 		.then(res => {
 			const coordsArr = []
 			res.data.forEach(item => {
-				console.log(item.trending_score)
 				coordsArr.push({
 					yelpId: item.yelpId,
 					coordinates: item.coordinates,
@@ -186,8 +185,12 @@ class findRestaurant extends Component {
     }
     // replace array with new
     let stateDataSet = this.state.chartData.datasets
-    stateDataSet.pop()
+    if (this.state.chartData.datasets.length === 2) {
+    	stateDataSet.pop()
+    }
+
     stateDataSet.push(newChartData)
+
     return {
 			labels: labels,
 			datasets: stateDataSet
@@ -468,6 +471,19 @@ class findRestaurant extends Component {
 		this.setState({active6: 'button fullwidth is-success'});
 		this.averageFilteredRestaurants(ev)
 	};
+	removeSecondLine = ev => {
+		let newChartData = this.state.chartData.datasets
+		let labels = this.state.chartData.labels
+
+		newChartData.pop()
+
+		this.setState({
+			chartData: {
+				datasets: newChartData,
+				labels: labels
+			} 
+		})
+	}
 
 	priceFilteredRestaurants = ev => {
 		const value = ev.currentTarget.getAttribute('value')
@@ -476,7 +492,6 @@ class findRestaurant extends Component {
 	    .then(res => {
 	        let priceAvg = this.findDailyDiffAvg(res.data)
 	       	const newChartData = this.generateChartData(priceAvg.checkins, value)
-	        console.log(newChartData)
 	        this.setState({
 	        	chartData: newChartData
 	        })
@@ -491,11 +506,9 @@ class findRestaurant extends Component {
 		categories.forEach(item => {
 			categoryString += item.alias + ' '
 		})
-		// console.log(categoryString)
 		API.filterSearch('category', categoryString)
 		.then(res => {
 			let categoryData = res.data
-			// console.log(categoryData)
 			for (var i = 0; i < categoryData.length; i++) {
 				var index = catArr.findIndex(x => x.name === categoryData[i].name)
 
@@ -573,32 +586,35 @@ class findRestaurant extends Component {
     	this.setState({placeholder: "Please input a location"})
     }
   };
- 	//handle Submit for searchRestaurant//
- 	pressEnter = (ev) => {
-  	if(ev.keyCode === 13 || ev.which === 13 ){
-  	  	this.searchRestaurant();
-  		ev.preventDefault();
-  		}
-  	};
+ 	//handle pressing enter to Submit for searchRestaurant//
+ 	// pressEnter = (ev) => {
+  // 	if(ev.keyCode === 13 || ev.which === 13 ){
+  // 	  	this.searchRestaurant();
+  // 		ev.preventDefault();
+  // 		}
+  // 	};
   searchSubmit = (event) => {
     event.preventDefault()
     if (this.state.restaurantLoc) {
     geocodeByAddress(this.state.restaurantLoc)
       .then(results => getLatLng(results[0]))
-      .then(latLng => this.searchRestaurant(latLng))
+      .then(latLng => this.searchRestaurant(latLng, true))
       .catch(error => console.error('Error', error))
     } else {
-    	this.setState({placeholder: "Please input a location"})
+    	let location= '37.82306519999999,-122.24868090000001'
+    	this.searchRestaurant(location, false)
     }
   };
 
-	searchRestaurant = address => {
+	searchRestaurant = (address, boolean) => {
 		this.onSearchClick();
 		this.setState ({
 			hidesearch:true
 		})
-		let location = address.lat.toString() + "," + address.lng.toString();
-		console.log(location)
+		let location = address
+		if (boolean) {
+			let location = address.lat.toString() + "," + address.lng.toString();
+		}
 		if (this.state.restaurantName) {
 			const nameQue = (data) => {
 				API.nameQuery(this.state.restaurantName)
@@ -621,7 +637,6 @@ class findRestaurant extends Component {
 						searchedRestaurant: res.data,
 
 					})
-					// console.log(this.state);
 					// this.generateChartData(this.state.restaurantInfo)
 				})
 				.catch(err => console.log(err));
@@ -854,6 +869,7 @@ class findRestaurant extends Component {
 						      					checkClick4={this.filterClick4}						      				
 						      					averageArr={this.state.filteredRestaurants}
 						      					averageClick={this.filterClick6}
+						      					removeSecondLine={this.removeSecondLine}
 						      				/>				      					
 						      			</div>					      											
 											</div>
