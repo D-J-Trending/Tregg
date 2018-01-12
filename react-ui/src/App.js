@@ -134,10 +134,9 @@ class App extends React.Component {
   	      <Sidebar {...sidebarProps}>
   	        <MaterialTitlePanel title={contentHeader}>
             	<div className='content' style={styles.content}>
-                <Route exact path="/Home" render={(props) => <Home clickList={this.clickList} />} />
+                <button onClick=""><Link to="/findRestaurant"><a href="#"><Route exact path="/Home" render={(props) => <Home clickList={this.clickList} />} /></a></Link></button>
                 <Route exact path="/Login" component={Login} />
                 <Route exact path="/findRestaurant" component={findRestaurant} render={(props) => <findRestaurant detailsId={this.state.detailsId} />} />
-                <button onClick=""><Link to="/findRestaurant"><a href="#">hi</a></Link></button>
                 <Footer />
               </div>           
   	        </MaterialTitlePanel>
