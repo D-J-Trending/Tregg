@@ -85,7 +85,6 @@ class findRestaurant extends Component {
 		.then(res => {
 			const coordsArr = []
 			res.data.forEach(item => {
-				console.log(item.trending_score)
 				coordsArr.push({
 					yelpId: item.yelpId,
 					coordinates: item.coordinates,
@@ -174,7 +173,6 @@ class findRestaurant extends Component {
 
 	//create labels and data arrays and sets chartData state
 	generateChartData = (res, filterLabel) => {
-		console.log(this.state)
 		const newChartData = ChartDataSet.createDataSet(res, filterLabel, true)
 		// Have new chart data, next:
 		// determine which length is longer bw current and new
@@ -182,8 +180,6 @@ class findRestaurant extends Component {
         let queryDate = checkins.query_date.replace(/ .*/,'');
         return queryDate;
     })
-    console.log(labels)
-    console.log(this.state.chartData.labels)
     if(labels.length <= this.state.chartData.labels.length) {
         labels = this.state.chartData.labels;
     }
@@ -476,7 +472,6 @@ class findRestaurant extends Component {
 		this.averageFilteredRestaurants(ev)
 	};
 	removeSecondLine = ev => {
-		console.log(this.state.chartData)
 		let newChartData = this.state.chartData.datasets
 		let labels = this.state.chartData.labels
 
@@ -497,7 +492,6 @@ class findRestaurant extends Component {
 	    .then(res => {
 	        let priceAvg = this.findDailyDiffAvg(res.data)
 	       	const newChartData = this.generateChartData(priceAvg.checkins, value)
-	        console.log(newChartData)
 	        this.setState({
 	        	chartData: newChartData
 	        })
@@ -512,11 +506,9 @@ class findRestaurant extends Component {
 		categories.forEach(item => {
 			categoryString += item.alias + ' '
 		})
-		// console.log(categoryString)
 		API.filterSearch('category', categoryString)
 		.then(res => {
 			let categoryData = res.data
-			// console.log(categoryData)
 			for (var i = 0; i < categoryData.length; i++) {
 				var index = catArr.findIndex(x => x.name === categoryData[i].name)
 
@@ -594,32 +586,35 @@ class findRestaurant extends Component {
     	this.setState({placeholder: "Please input a location"})
     }
   };
- 	//handle Submit for searchRestaurant//
- 	pressEnter = (ev) => {
-  	if(ev.keyCode === 13 || ev.which === 13 ){
-  	  	this.searchRestaurant();
-  		ev.preventDefault();
-  		}
-  	};
+ 	//handle pressing enter to Submit for searchRestaurant//
+ 	// pressEnter = (ev) => {
+  // 	if(ev.keyCode === 13 || ev.which === 13 ){
+  // 	  	this.searchRestaurant();
+  // 		ev.preventDefault();
+  // 		}
+  // 	};
   searchSubmit = (event) => {
     event.preventDefault()
     if (this.state.restaurantLoc) {
     geocodeByAddress(this.state.restaurantLoc)
       .then(results => getLatLng(results[0]))
-      .then(latLng => this.searchRestaurant(latLng))
+      .then(latLng => this.searchRestaurant(latLng, true))
       .catch(error => console.error('Error', error))
     } else {
-    	this.setState({placeholder: "Please input a location"})
+    	let location= '37.82306519999999,-122.24868090000001'
+    	this.searchRestaurant(location, false)
     }
   };
 
-	searchRestaurant = address => {
+	searchRestaurant = (address, boolean) => {
 		this.onSearchClick();
 		this.setState ({
 			hidesearch:true
 		})
-		let location = address.lat.toString() + "," + address.lng.toString();
-		console.log(location)
+		let location = address
+		if (boolean) {
+			let location = address.lat.toString() + "," + address.lng.toString();
+		}
 		if (this.state.restaurantName) {
 			const nameQue = (data) => {
 				API.nameQuery(this.state.restaurantName)
@@ -642,7 +637,6 @@ class findRestaurant extends Component {
 						searchedRestaurant: res.data,
 
 					})
-					// console.log(this.state);
 					// this.generateChartData(this.state.restaurantInfo)
 				})
 				.catch(err => console.log(err));
