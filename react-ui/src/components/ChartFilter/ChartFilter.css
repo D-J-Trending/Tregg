@@ -6,11 +6,6 @@
 	border-radius: 10px;
 }
 
-.chart-filter-active {
-	background-color: #32D065;
-	border:gray 1px solid;
-}
-
 .chart-filter button {
 	display: block;
 	margin-bottom: 5px;
