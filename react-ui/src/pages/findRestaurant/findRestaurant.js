@@ -77,6 +77,7 @@ class findRestaurant extends Component {
 	}
   
   componentWillMount() {
+  	console.log(this.props)
 		API.AllReviews()
 		.then(res => {
 			const coordsArr = []
@@ -124,6 +125,9 @@ class findRestaurant extends Component {
 
   }
 
+  componentWillReceiveProps(nextProps) {
+  	// console.log(nextProps)
+  }
 	//handle Submit for Geolocation
 
 	handleFormSubmit = (event) => {
