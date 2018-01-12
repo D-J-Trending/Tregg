@@ -7,8 +7,8 @@ import Sidenav from "../../components/Sidenav";
 import Dropdown from "../../components/Dropdown";
 import API from "../../utils/API.js";
 import { Details } from "../../components/Details";
-import { Restdetails, Restheader } from "../../components/Restdetails";
-import { Stats, Statsection } from "../../components/Stats";
+import { Restheader } from "../../components/Restdetails";
+import { Statsection } from "../../components/Stats";
 import ChartFilter from "../../components/ChartFilter";
 import Filter from "../../utils/Filter";
 import "./findRestaurant.css";
@@ -507,9 +507,9 @@ class findRestaurant extends Component {
 		 	this.setState({ searchIcon: !this.state.searchIcon});
 	};
 
-	showline = () => {
-			this.setState({ showline: !this.state.showline });
-	};
+	// showline = () => {
+	// 		this.setState({ showline: !this.state.showline });
+	// };
 
 	showbar = () => {
 			this.setState({ showbar: !this.state.showbar });
@@ -680,16 +680,7 @@ class findRestaurant extends Component {
 		return (
 		<div>
 			<div className="wrapper">	
-			{/*Main section*/}
-
-				<button onClick={this.showline}>showline</button> 
-				<button onClick={this.showbar}>showbar</button> 
-
-				<button onClick={this.findPercentChange}>finddiffall</button>
-				<button onClick={this.hidesearch}>hidesearcharea</button>
-
-				<button onClick={this.openModal}>Open Modal</button>
-
+							{/*
 			        <Modal
 			          isOpen={this.state.modalIsOpen}
 			          onAfterOpen={this.afterOpenModal}
@@ -704,8 +695,7 @@ class findRestaurant extends Component {
 			            <input />
 			       		<button>Search</button>
 			          </form>
-			        </Modal> 
-
+			        </Modal> */}
 
 			{ this.state.searchlogo ? 
 				<CSSTransitionGroup
@@ -819,9 +809,7 @@ class findRestaurant extends Component {
 					      					checkClick2={this.filterClick2}
 					      					checkClick3={this.filterClick3}
 					      					checkClick4={this.filterClick4}
-					      				>
-					      					<Dropdown onClick={this.dropdown} className={this.state.dropdown}/>						      		
-					      				</ChartFilter>				      				
+					      				/>					      								      				
 				      				</div>			
 										</div>
 										<div className='columns restaurant-component margin-top'>
@@ -869,8 +857,8 @@ class findRestaurant extends Component {
 								transitionLeave={true}>
 								<div className='searchIcon'>
 								<form type="submit">
-				      			<input
-				      				className="searchBar"
+		      			<input
+		      				className="searchBar"
 									inputProps={inputProps}
 									value={this.state.restaurantName}
 									onChange={this.handleInputChange}

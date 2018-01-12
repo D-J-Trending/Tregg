@@ -49,7 +49,7 @@ export class Statsection extends Component {
       totalAvg: totalAvg,
       totalVelocityAvg: totalVelocityAvg,
       restaurantDetails: this.props.restaurantDetails
-    })
+    },()=>console.log(this.state))
 
   }
 
@@ -77,7 +77,6 @@ export class Statsection extends Component {
     } else if(numberWithoutPercent < 0) {
       return <i className="fa fa-sort-desc"></i>
     } else{
-
       return
     }
   }
@@ -85,7 +84,7 @@ export class Statsection extends Component {
 	render() {
 		return (
 			<div className="stats">
-        <p className="stat-header has-text-centered">Statistics</p>	
+        <p className="stat-header has-text-centered">{this.props.restaurantDetails.name} Statistics</p>	
 				<div className='columns'>
 					<div className='column auto stat-title'>Source</div>
   					<div data-tip="React-tooltip" data-for='currentWeek' className='column auto has-text-centered stat-title'>Current Week</div>
@@ -123,7 +122,6 @@ export class Statsection extends Component {
             totalVelocityAvg={this.state.totalVelocityAvg}
             getLastElement={(arr, filter) =>this.getLastElement(arr, filter)}
             arrows={(value) => this.arrows(value)}
-            allTotals= {this.prop}
           />
           :
           null
