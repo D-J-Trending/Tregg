@@ -65,7 +65,7 @@ class Home extends Component {
 						      				trendingScore={item.trending_score['7day']['checkins']}
 						      				mainColumnClass={'column is-12 top-trending'}
 						      				columnClass={'column is-6'}
-						      				rank={item.rank}
+						      				rank={item.new_rank}
 						      				restaurantName={item.name}
 			      							address={item.location.address}
 			      							city={item.location.city}
