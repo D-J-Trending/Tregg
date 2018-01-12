@@ -38,6 +38,7 @@ class findRestaurant extends Component {
 		this.state = {
 			restaurantArr: [],
 			restaurantName: "Homeroom",
+			restaurantLoc: "",
 			restaurantInfo: {},
 			coordsIdsArr: [],
 			restaurantDetails: false,
@@ -92,29 +93,31 @@ class findRestaurant extends Component {
 		console.log('BEFORE GEOLOCATE')
 		const avgLine = this.findDailyDiffAvg(res.data)
 
-		if (navigator.geolocation) {
-			navigator.geolocation.getCurrentPosition(position => {
-				let userCoordinates = {
-					latitude: position.coords.latitude,
-					longitude: position.coords.longitude
-				};
-        
-				this.setState({
-					filteredRestaurants: avgLine,
-					restaurantInfo: res.data,
-					coordsIdsArr: coordsArr,
-					userCoordinates: userCoordinates
-				})
-			})
+		// if (navigator.geolocation) {
+		// 	navigator.geolocation.getCurrentPosition(position => {
+		// 		// console.log(position)
+		// 		let userCoordinates = {
+		// 			latitude: position.coords.latitude,
+		// 			longitude: position.coords.longitude
+		// 		};
 
-		} else {
+        
+		// 		this.setState({
+		// 			filteredRestaurants: avgLine,
+		// 			restaurantInfo: res.data,
+		// 			coordsIdsArr: coordsArr,
+		// 			userCoordinates: userCoordinates
+		// 		})
+		// 	})
+
+		// } else {
 			this.setState({
 				filteredRestaurants: avgLine,
 				restaurantInfo: res.data,
 				coordsIdsArr: coordsArr,
 				userCoordinates: null
 			})
-		}
+		// }
 
 		})
 		.catch(err => console.log(err));
@@ -204,68 +207,6 @@ class findRestaurant extends Component {
 		  [name]: value
 		});
 	};
-
-  geoCode = (address) => {
-  	geocodeByAddress(address)
-    	.then(results => getLatLng(results[0]))
-    	.then(latLng => {
-    		this.setState({
-    			geoCodeAddress: latLng
-    		})
-    	})
-  };
-
-	searchRestaurant = event => {
-		this.onSearchClick();
-		this.setState ({
-			hidesearch:true
-		})
-		if (this.state.restaurantName) {
-
-			this.geoCode(this.state.restaurantName)
-
-			const nameQue = (data) => {
-				API.nameQuery(this.state.restaurantName)
-				.then(res => {
-					// if no result found, start add new firm functions
-					// indexof, if data matches res.data, then take out
-					let fbResults = []
-					if (res.data[0]) {
-						data.forEach(item => {
-
-							if (item.id !== res.data[0].fbId) {
-								fbResults.push(item)
-							}
-						})
-					} else {
-						fbResults = data
-					}
-					this.setState({
-						fbAPIResults: fbResults,
-						searchedRestaurant: res.data,
-					})
-				})
-				.catch(err => console.log(err));				
-			}
-			// searches through fb api before sending it through db api
-			const access = 'EAAG0XCqokvMBAPYkq18AYZCRVI1QaWb9HU9ti4PpFL5lZAL32p53Ql1zREzbBi9ikoXwdwgsyZB6Cjv9YjghpfQmWPZCBBtWMnGaqknAecNhQzpBNWKCZCFYM36P0IRP8QSnOlzHdxod6y8mZA3cOpdxlu7XZAtqIv9AhZBXdPyPsAZDZD'
-			let url = 'https://graph.facebook.com/v2.7/search'
-			let params = {
-				type: 'place',
-				q: this.state.restaurantName,
-				center: '37.8044,-122.2711',
-				distance: 10000,
-				limit: 100,
-				fields: 'name,single_line_address,phone, location,is_permanently_closed',
-				access_token: access
-			}
-			API.APIsearch(url, params)
-				.then(res => {
-					nameQue(res.data.data)
-				})
-				.catch(err => console.log(err))
-		}
-  };
 
 	showDetails = (event, callback) => {
 		const array = []
@@ -465,6 +406,7 @@ class findRestaurant extends Component {
 				categoryTotal = Mathy.findTotalStats(arrFirms)
 				const categoryVelocity = Mathy.findAvgVelocity(arrFirms)
 				this.setState({
+					detailsCategories: arrFirms,
 					allTotalAvgs: {
 						priceTotal: priceTotal,
 						allTotal: allTotal,
@@ -583,6 +525,43 @@ class findRestaurant extends Component {
 	    .catch(err => console.log(err))
 	};
 
+	categoryFilteredRestaurants = ev => {
+		const catArr = []
+		let categories = this.state.restaurantDetails.categories
+		let categoryString = ''
+		categories.forEach(item => {
+			categoryString += item.alias + ' '
+		})
+		// console.log(categoryString)
+		API.filterSearch('category', categoryString)
+		.then(res => {
+			let categoryData = res.data
+			// console.log(categoryData)
+			for (var i = 0; i < categoryData.length; i++) {
+				var index = catArr.findIndex(x => x.name === categoryData[i].name)
+
+				if (index === -1) {
+					catArr.push(categoryData[i])
+				}	else {
+					// console.log('no push')
+				}
+			}
+			let categoriesAvg = this.findDailyDiffAvg(catArr)
+			const newChartData = this.generateChartData(categoriesAvg.checkins, 'All Categories')
+			this.setState({
+				chartData: newChartData
+			})
+		})
+		.catch(err=> console.log(err))
+	}
+
+	averageFilteredRestaurants = (ev) => {
+   	let newChartData = this.generateChartData(this.state.filteredRestaurants.checkins, 'All Restaurant Avg')
+    this.setState({
+    	chartData: newChartData
+    })
+	}
+
 	dropdown = () => {
 		if(this.state.dropdown === "dropdown is-active") {
 			this.setState({
@@ -616,6 +595,81 @@ class findRestaurant extends Component {
 		
 		Yelp.yelpAPI(id, name, address, phone, city)
 	};
+
+  geoCode = (address) => {
+  	geocodeByAddress(address)
+    	.then(results => getLatLng(results[0]))
+    	.then(latLng => {
+    		// this.setState({
+    		// 	geoCodeAddress: latLng
+    		// })
+    		return latLng
+    	})
+  };
+
+	searchRestaurant = event => {
+		this.onSearchClick();
+		this.setState ({
+			hidesearch:true
+		})
+		let location = '37.82306519999999,-122.24868090000001';
+		if (this.state.restaurantName) {
+			if (this.state.restaurantLoc) {
+				console.log(this.state.restaurantLoc)
+				let latLng = this.geoCode(this.state.restaurantLoc)
+				console.log(latLng)
+				location = latLng
+			}
+			this.geoCode(this.state.restaurantName)
+
+			const nameQue = (data) => {
+				API.nameQuery(this.state.restaurantName)
+				.then(res => {
+					console.log(this.state)
+					// if no result found, start add new firm functions
+					// indexof, if data matches res.data, then take out
+					let fbResults = []
+					if (res.data[0]) {
+						data.forEach(item => {
+
+							if (item.id !== res.data[0].fbId) {
+								fbResults.push(item)
+							}
+						})
+					} else {
+						fbResults = data
+					}
+					this.setState({
+						fbAPIResults: fbResults,
+						searchedRestaurant: res.data,
+
+					})
+					// console.log(this.state);
+					// this.generateChartData(this.state.restaurantInfo)
+				})
+				.catch(err => console.log(err));
+			}
+
+			// searches through fb api before sending it through db api
+			const access = 'EAAG0XCqokvMBAPYkq18AYZCRVI1QaWb9HU9ti4PpFL5lZAL32p53Ql1zREzbBi9ikoXwdwgsyZB6Cjv9YjghpfQmWPZCBBtWMnGaqknAecNhQzpBNWKCZCFYM36P0IRP8QSnOlzHdxod6y8mZA3cOpdxlu7XZAtqIv9AhZBXdPyPsAZDZD'
+			let url = 'https://graph.facebook.com/v2.7/search'
+			let params = {
+				type: 'place',
+				q: this.state.restaurantName,
+				center: location,
+				distance: 10000,
+				limit: 100,
+				fields: 'name,single_line_address,phone, location,is_permanently_closed',
+				access_token: access
+			}
+			API.APIsearch(url, params)
+				.then(res => {
+					nameQue(res.data.data)
+				})
+				.catch(err => console.log(err))
+
+		}
+  };
 
 	findClosestRestaurants = (query) => {
 		var geo
@@ -676,6 +730,10 @@ class findRestaurant extends Component {
 	      value: this.state.restaurantName,
 	      onChange: this.onChange,
 	    }
+	  const inputProps2 = {
+      value: this.state.restaurantLoc,
+      onChange: this.onChange,
+	  }
 
 		return (
 		<div>
@@ -692,6 +750,7 @@ class findRestaurant extends Component {
 			          <button className="modalClosed" onClick={this.closeModal}>close</button>
 			          <div>SearchField</div>
 			          <form>
+			            <input />
 			            <input />
 			       		<button>Search</button>
 			          </form>
@@ -800,17 +859,26 @@ class findRestaurant extends Component {
 							      		 showline={this.state.showline} showbar={this.state.showbar}legendPosition="top"/>
 							      	</div>
 							      	<div className='column is-3 data-navigation'>							      		
-					      				<ChartFilter 
-					      					green1={this.state.active1}
-					      					green2={this.state.active2}
-					      					green3={this.state.active3}
-					      					green4={this.state.active4}
-					      					checkClick1={this.filterClick1}
-					      					checkClick2={this.filterClick2}
-					      					checkClick3={this.filterClick3}
-					      					checkClick4={this.filterClick4}
-					      				/>					      								      				
-				      				</div>			
+						      			<div className='columns'>
+						      				<ChartFilter 
+						      					categoryClick={this.categoryFilteredRestaurants}
+						      					green1={this.state.active1}
+						      					green2={this.state.active2}
+						      					green3={this.state.active3}
+						      					green4={this.state.active4}
+						      					checkClick1={this.filterClick1}
+						      					checkClick2={this.filterClick2}
+						      					checkClick3={this.filterClick3}
+						      					checkClick4={this.filterClick4}
+						      					averageArr={this.state.filteredRestaurants}
+						      					averageClick={this.averageFilteredRestaurants}
+						      				>
+						      					<Dropdown onClick={this.dropdown} className={this.state.dropdown}/>						      		
+						      				</ChartFilter>				      				
+						      			</div>
+						      			
+						      											
+											</div>
 										</div>
 										<div className='columns restaurant-component margin-top'>
 											<div className='column is-12'>
@@ -857,15 +925,24 @@ class findRestaurant extends Component {
 								transitionLeave={true}>
 								<div className='searchIcon'>
 								<form type="submit">
-		      			<input
-		      				className="searchBar"
-									inputProps={inputProps}
-									value={this.state.restaurantName}
-									onChange={this.handleInputChange}
-									name="restaurantName"
-									placeholder="restaurant"
-									onKeyDown={this.pressEnter}
-								/>
+				      		<input
+				      			className="searchBar"
+										inputProps={inputProps}
+										value={this.state.restaurantName}
+										onChange={this.handleInputChange}
+										name="restaurantName"
+										placeholder="restaurant"
+										onKeyDown={this.pressEnter}
+
+									/>
+									<PlacesAutocomplete
+										inputProps2={inputProps2}
+										value={this.state.restaurantLoc}
+										onChange={this.handleInputChange}
+										name="restaurantLoc"
+										placeholder="location"
+										onKeyDown={this.pressEnter}
+									/>
 								</form>
 								
 								</div>
