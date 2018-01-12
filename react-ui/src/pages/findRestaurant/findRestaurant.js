@@ -12,7 +12,6 @@ import { Statsection } from "../../components/Stats";
 import ChartFilter from "../../components/ChartFilter";
 import Filter from "../../utils/Filter";
 import "./findRestaurant.css";
-import numjs from 'numjs';
 import Mathy from "../../utils/Mathy.js";
 import Yelp from "../../utils/Yelp.js";
 import { CSSTransitionGroup } from 'react-transition-group' // ES6
@@ -79,7 +78,7 @@ class findRestaurant extends Component {
 	}
   
   componentWillMount() {
-  	console.log(this.props)
+
 		API.AllReviews()
 		.then(res => {
 			const coordsArr = []
@@ -90,10 +89,6 @@ class findRestaurant extends Component {
 					score: item.trending_score
 				})
 			})
-			// this.findPercentChange(res.data,'checkins', 'checkins')
-			// this.findPercentChange(res.data,'rating_count', 'rating_count')
-			// this.findPercentChange(res.data,'reviews', 'review_count')
-		console.log('BEFORE GEOLOCATE')
 		const avgLine = this.findDailyDiffAvg(res.data)
 
 		// if (navigator.geolocation) {
@@ -284,7 +279,7 @@ class findRestaurant extends Component {
 		//array to hold the daily increase in ratings, reviews, checkins
 		const allDifferences = []
 		//create array with differences for all restaurnts in restaurant info
-		resData.map(item => {
+		resData.forEach(item => {
 			let obj = {}
 			let diff = Mathy.getDiffwithDate(item[arraytocheck], arrayvariable)
 			obj.yelpId = item.yelpId
@@ -293,7 +288,7 @@ class findRestaurant extends Component {
 		})
 		const compareAll = []
 		// find difference week over week
-		allDifferences.map(item => {
+		allDifferences.forEach(item => {
 			//object to hold yelpId and weeklyChange
 			let compare = {}
 			let percentChange1 = 0
