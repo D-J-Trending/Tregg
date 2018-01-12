@@ -567,7 +567,7 @@ class findRestaurant extends Component {
 		})
 		this.setState({active4: 'button is-success'});
 		this.priceFilteredRestaurants(ev)
-	}
+	};
 
 	priceFilteredRestaurants = ev => {
 		const value = ev.currentTarget.getAttribute('value')
