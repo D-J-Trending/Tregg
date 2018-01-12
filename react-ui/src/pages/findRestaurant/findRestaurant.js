@@ -69,12 +69,13 @@ class findRestaurant extends Component {
 			active3:'button',
 			active4:'button',
 			active5:'button fullwidth',
-			active6:'button fullwidth is-success'
+			active6:'button fullwidth is-success',
 		};
 		this.onChange = (restaurantName) => this.setState({ restaurantName })
 		this.openModal = this.openModal.bind(this);
     	this.afterOpenModal = this.afterOpenModal.bind(this);
     	this.closeModal = this.closeModal.bind(this);
+    	this.onChange2 = (restaurantLoc) => this.setState({ restaurantLoc })
 	}
   
   componentWillMount() {
@@ -357,6 +358,10 @@ class findRestaurant extends Component {
 									//********onClick Functions************//
 									//************************************//
 
+	  handleFormSubmit = (event) => {
+    event.preventDefault()
+};
+
 	openModal = () => {
     this.setState({modalIsOpen: true});
     this.searchlogo();
@@ -580,7 +585,7 @@ class findRestaurant extends Component {
 		let location = '37.82306519999999,-122.24868090000001';
 		if (this.state.restaurantName) {
 			if (this.state.restaurantLoc) {
-
+				console.log(this.this.state.restaurantName)
 				let latLng = this.geoCode(this.state.restaurantLoc)
 
 				location = latLng
@@ -696,7 +701,7 @@ class findRestaurant extends Component {
 	    }
 	  const inputProps2 = {
       value: this.state.restaurantLoc,
-      onChange: this.onChange,
+      onChange: this.onChange2,
 	  }
 
 		return (
@@ -786,7 +791,7 @@ class findRestaurant extends Component {
 																	dataCity={restaurant.location.city}
 																	dataPhone={restaurant.phone}
 																>
-																	<img alt="Firm" src={restaurant.yelpImg}>
+																	<img alt="Firm" src={restaurant.yelpImg} />
 																	<p> Name of Restaurant: {restaurant.name} </p>
 																	<p> Address: {restaurant.single_line_address} </p>
 																	<p> Phone: {restaurant.phone} </p>
@@ -887,7 +892,7 @@ class findRestaurant extends Component {
 								transitionEnter={false}
 								transitionLeave={true}>
 								<div className='searchIcon'>
-								<form type="submit">
+								<form onSubmit={this.handleFormSubmit}>
 				      		<input
 				      			className="searchBar"
 										inputProps={inputProps}
@@ -897,10 +902,7 @@ class findRestaurant extends Component {
 										placeholder="restaurant"
 										onKeyDown={this.pressEnter}
 									/>
-									<PlacesAutocomplete
-										inputProps2={inputProps2}
-										name="restaurantLoc"
-										placeholder="location"
+									<PlacesAutocomplete inputProps={inputProps2} 
 										onKeyDown={this.pressEnter}
 									/>
 								</form>							
