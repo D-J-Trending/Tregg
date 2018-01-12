@@ -85,10 +85,11 @@ class findRestaurant extends Component {
 		.then(res => {
 			const coordsArr = []
 			res.data.forEach(item => {
+				console.log(item.trending_score)
 				coordsArr.push({
 					yelpId: item.yelpId,
 					coordinates: item.coordinates,
-					score: item.trending_score
+					score: Round(item.trending_score)
 				})
 			})
 		const avgLine = this.findDailyDiffAvg(res.data)
@@ -554,16 +555,23 @@ class findRestaurant extends Component {
 		Yelp.yelpAPI(id, name, address, phone, city)
 	};
 
-  geoCode = (address) => {
-  	geocodeByAddress(address)
-    	.then(results => {
-    		getLatLng(results[0])})
-    	.then(latLng => {
-    		console.log(latLng)
-    		// this.setState({
-    		// 	locGeoCodeAddress: latLng
-    		// })
-    	})
+ 	//handle Submit for searchRestaurant//
+ 	// pressEnter = (ev) => {
+  // 	if(ev.keyCode === 13 || ev.which === 13 ){
+  // 	  	this.searchRestaurant();
+  // 		ev.preventDefault();
+  // 		}
+  // 	};
+  searchSubmit = (event) => {
+    event.preventDefault()
+    if (this.state.restaurantLoc) {
+    geocodeByAddress(this.state.restaurantLoc)
+      .then(results => getLatLng(results[0]))
+      .then(latLng => this.searchRestaurant(latLng))
+      .catch(error => console.error('Error', error))
+    } else {
+    	this.setState({placeholder: "Please input a location"})
+    }
   };
  	//handle Submit for searchRestaurant//
  	pressEnter = (ev) => {
@@ -812,6 +820,8 @@ class findRestaurant extends Component {
 		      				<div className='restaurant-info'>	
 		      					<div className='columns restaurant-component'>	      				
 		      						<Restheader
+		      							mainColumnClass={'column is-12'}
+		      							columnClass={'column is-3'}
 		      							rank={this.state.restaurantDetails.rank}		      							
 		      							restaurantName={this.state.restaurantDetails.name}
 		      							address={this.state.restaurantDetails.location.address}
