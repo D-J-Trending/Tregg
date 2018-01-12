@@ -174,6 +174,7 @@ class findRestaurant extends Component {
 
 	//create labels and data arrays and sets chartData state
 	generateChartData = (res, filterLabel) => {
+		console.log(this.state)
 		const newChartData = ChartDataSet.createDataSet(res, filterLabel, true)
 		// Have new chart data, next:
 		// determine which length is longer bw current and new
@@ -181,13 +182,19 @@ class findRestaurant extends Component {
         let queryDate = checkins.query_date.replace(/ .*/,'');
         return queryDate;
     })
+    console.log(labels)
+    console.log(this.state.chartData.labels)
     if(labels.length <= this.state.chartData.labels.length) {
         labels = this.state.chartData.labels;
     }
     // replace array with new
     let stateDataSet = this.state.chartData.datasets
-    stateDataSet.pop()
+    if (this.state.chartData.datasets.length === 2) {
+    	stateDataSet.pop()
+    }
+
     stateDataSet.push(newChartData)
+
     return {
 			labels: labels,
 			datasets: stateDataSet
@@ -468,6 +475,20 @@ class findRestaurant extends Component {
 		this.setState({active6: 'button fullwidth is-success'});
 		this.averageFilteredRestaurants(ev)
 	};
+	removeSecondLine = ev => {
+		console.log(this.state.chartData)
+		let newChartData = this.state.chartData.datasets
+		let labels = this.state.chartData.labels
+
+		newChartData.pop()
+
+		this.setState({
+			chartData: {
+				datasets: newChartData,
+				labels: labels
+			} 
+		})
+	}
 
 	priceFilteredRestaurants = ev => {
 		const value = ev.currentTarget.getAttribute('value')
@@ -854,6 +875,7 @@ class findRestaurant extends Component {
 						      					checkClick4={this.filterClick4}						      				
 						      					averageArr={this.state.filteredRestaurants}
 						      					averageClick={this.filterClick6}
+						      					removeSecondLine={this.removeSecondLine}
 						      				/>				      					
 						      			</div>					      											
 											</div>
