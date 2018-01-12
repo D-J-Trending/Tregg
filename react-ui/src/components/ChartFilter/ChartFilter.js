@@ -11,13 +11,13 @@ export const ChartFilter = props => (
       <p className="has-text-centered">Filter</p>
     </div>
   	{props.children}
-  	<button className='button fullWidth' onClick={props.categoryClick}> Similar Categories</button>
+    <button className={props.green6} onClick={props.averageClick}>All Restaurants Avg</button>
+  	<button className={props.green5} onClick={props.categoryClick}> Similar Categories</button>
   	<div className="prices">
 	  	<button className={props.green1} style={props.filter1} value='$' onClick={props.checkClick1}> $ </button>
 	  	<button className={props.green2} style={props.filter2} value='$$' onClick={props.checkClick2}> $$ </button>
 	  	<button className={props.green3} style={props.filter3} value='$$$' onClick={props.checkClick3}> $$$ </button>
-	  	<button className={props.green4} style={props.filter4} value='$$$$' onClick={props.checkClick4}> $$$$ </button>
-      <button onClick={props.averageClick}>Average</button>
+	  	<button className={props.green4} style={props.filter4} value='$$$$' onClick={props.checkClick4}> $$$$ </button>      
   	</div>
   </div>
 )
