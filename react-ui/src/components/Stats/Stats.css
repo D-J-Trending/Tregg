@@ -1,6 +1,22 @@
+.stats img {
+	height:19px;
+	margin-bottom: 3px;
+}
+
+.stat-header {
+	font-weight: bold;
+	font-size: 20px;
+}
+
 .all-restaurant-averages {
 	margin-top: 20px;
 }
+
+.all-restaurant-numbers {
+	margin-top: 0px;
+	padding-top: 0px
+}
+
 
 .stats {
 	padding: 0px;
@@ -18,13 +34,8 @@
 	color: red;
 }
 
-.stat-header, .stats-title {
+.stat-header, .stat-title {
 	text-decoration: underline;
-}
-
-.stats-title {
-	font-weight: bold;
-	font-size: 20px;
 }
 
 .fa-facebook-square {

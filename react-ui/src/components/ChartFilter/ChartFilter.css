@@ -1,22 +1,35 @@
 .chart-filter {
 	width: 100%;
-	padding-top: 90px;
-}
-
-.chart-filter-active {
-	background-color: #32D065;
-	border:gray 1px solid;
+	height: 100%;
+	padding: 12px;
+	background-color: #191919;
+	border-radius: 10px;
 }
 
 .chart-filter button {
 	display: block;
 	margin-bottom: 5px;
+	width:100%;
 }
 .prices {
-	width: 100%;
+	/*width: 100%;*/
 }
 
 .prices button {
 	width: 25%;
 	display: inline-block;
+}
+
+.filter-header {
+	font-weight: bold;
+	font-size: 24px;
+	margin: 10px;
+}
+
+button:focus {
+    outline-style: none;
+}
+
+.chart-filter button:hover {
+	background-color:#d0d0d0;
 }
