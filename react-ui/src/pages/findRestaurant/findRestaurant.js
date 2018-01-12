@@ -21,6 +21,7 @@ import PlacesAutocomplete, { geocodeByAddress, getLatLng } from 'react-places-au
 import Map from "../../utils/Map.js";
 import Round from '../../utils/Round'
 import ChartDataSet from '../../utils/ChartDataSet';
+import Waypoint from 'react-waypoint';
 //Need to pass value from input field
 //Style chart and info into one element
 //Allow to click on element to view stats
@@ -724,6 +725,10 @@ class findRestaurant extends Component {
 			       		<button>Search</button>
 			          </form>
 			        </Modal> */}
+			        <Waypoint
+  key={this.cursor}
+  onLeave={this.state.searchlogo}
+/>
 
 			{ this.state.searchlogo ? 
 				<CSSTransitionGroup
@@ -750,7 +755,7 @@ class findRestaurant extends Component {
 														<CSSTransitionGroup
 													transitionName="example"
 													transitionAppear={true}
-													transitionAppearTimeout={1500}
+													transitionAppearTimeout={4000}
 													transitionEnter={false}
 													transitionLeave={true}>
 															<Searched>

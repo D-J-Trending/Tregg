@@ -19,7 +19,9 @@
     "react-places-autocomplete": "^5.4.3",
     "react-router-dom": "^4.2.2",
     "react-tooltip": "^3.4.0",
-    "react-transition-group": "1.x"
+    "react-transition-group": "^1.2.1",
+    "react-waypoint": "^8.0.0",
+    "waypoints": "^4.0.1"
   },
   "scripts": {
     "start": "react-scripts start",

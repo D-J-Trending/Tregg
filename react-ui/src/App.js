@@ -102,7 +102,7 @@ class App extends React.Component {
       <span>
         {!this.state.open &&
          <a onClick={this.menuButtonClick} href="#" style={styles.contentHeaderMenuLink}>=</a>}
-        <span> <img src={logo} className="logo_page" alt="logo_page" style={styles.logo}/> </span>
+        <span> <img src={logo} id="myLogo" className="logo_page" alt="logo_page" style={styles.logo}/> </span>
       </span>);
 
     const sidebarProps = {
@@ -125,9 +125,9 @@ class App extends React.Component {
   	      <Sidebar {...sidebarProps}>
   	        <MaterialTitlePanel title={contentHeader}>
             	<div className='content' style={styles.content}>
-                <Route exact path="/Home" render={(props) => <Home clickList={this.clickList} />} />
+                <Route exact path="/Ranking" render={(props) => <Home clickList={this.clickList} />} />
                 <Route exact path="/Login" component={Login} />
-                <Route exact path="/findRestaurant" component={findRestaurant} />
+                <Route exact path="/" component={findRestaurant} />
                 <Footer />
               </div>           
   	        </MaterialTitlePanel>

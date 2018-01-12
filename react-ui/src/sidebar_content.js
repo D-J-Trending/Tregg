@@ -55,8 +55,8 @@ const SidebarContent = (props) => {
     <MaterialTitlePanel title="Menu" style={style}>
       <div style={styles.content}>
         <img alt='profile pic' src='https://media1.popsugar-assets.com/files/thumbor/DDLEMrJEXIVZE1yEqjgGkaV4A_o/fit-in/2048xorig/filters:format_auto-!!-:strip_icc-!!-/2017/11/20/331/n/38922823/tmp_K8R88E_9dbe2b2dc2476118_food.jpg' style={styles.image}/>
-        <a href="/Home" style={styles.sidebarLink}>Home</a>
-        <a href="/findRestaurant" style={styles.sidebarLink}>Find A Restaurant</a>
+        <a href="/" style={styles.sidebarLink}>Home</a>
+         <a href="/Ranking" style={styles.sidebarLink}>Ranking</a>
         <a href="/Login" style={styles.sidebarLink}>Login</a>
         <div style={styles.divider} />
         <h2>
