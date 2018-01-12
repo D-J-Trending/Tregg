@@ -1,0 +1,1 @@
+DetailsPage.js

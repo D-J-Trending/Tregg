@@ -70,6 +70,7 @@ class findRestaurant extends Component {
 			active4:'button',
 			active5:'button fullwidth',
 			active6:'button fullwidth is-success',
+			placeholder: 'Location'
 		};
 		this.onChange = (restaurantName) => this.setState({ restaurantName })
 		this.openModal = this.openModal.bind(this);
@@ -122,19 +123,6 @@ class findRestaurant extends Component {
 		.catch(err => console.log(err));
 
   }
-
-	//handle Submit for Geolocation
-	handleFormSubmit = (event) => {
-    return Map.geoCode(this.state.restaurantName)
- 	};
-
- 	//handle Submit for searchRestaurant//
- 	pressEnter = (ev) => {
-  	if(ev.keyCode == 13 || ev.hich ==13 ){
-  	  	this.searchRestaurant();
-  		ev.preventDefault();
-  		}
-  	};
 
     //update state whenever field input changes
   handleInputChange = event => {
@@ -568,30 +556,42 @@ class findRestaurant extends Component {
 
   geoCode = (address) => {
   	geocodeByAddress(address)
-    	.then(results => getLatLng(results[0]))
+    	.then(results => {
+    		getLatLng(results[0])})
     	.then(latLng => {
+    		console.log(latLng)
     		// this.setState({
-    		// 	geoCodeAddress: latLng
+    		// 	locGeoCodeAddress: latLng
     		// })
-    		return latLng
     	})
   };
+ 	//handle Submit for searchRestaurant//
+ 	pressEnter = (ev) => {
+  	if(ev.keyCode === 13 || ev.which === 13 ){
+  	  	this.searchRestaurant();
+  		ev.preventDefault();
+  		}
+  	};
+  searchSubmit = (event) => {
+    event.preventDefault()
+    if (this.state.restaurantLoc) {
+    geocodeByAddress(this.state.restaurantLoc)
+      .then(results => getLatLng(results[0]))
+      .then(latLng => this.searchRestaurant(latLng))
+      .catch(error => console.error('Error', error))
+    } else {
+    	this.setState({placeholder: "Please input a location"})
+    }
+  };
 
-	searchRestaurant = event => {
+	searchRestaurant = address => {
 		this.onSearchClick();
 		this.setState ({
 			hidesearch:true
 		})
-		let location = '37.82306519999999,-122.24868090000001';
+		let location = address.lat.toString() + "," + address.lng.toString();
+		console.log(location)
 		if (this.state.restaurantName) {
-			if (this.state.restaurantLoc) {
-				console.log(this.this.state.restaurantName)
-				let latLng = this.geoCode(this.state.restaurantLoc)
-
-				location = latLng
-			}
-			this.geoCode(this.state.restaurantName)
-
 			const nameQue = (data) => {
 				API.nameQuery(this.state.restaurantName)
 				.then(res => {
@@ -626,8 +626,8 @@ class findRestaurant extends Component {
 				type: 'place',
 				q: this.state.restaurantName,
 				center: location,
-				distance: 10000,
-				limit: 100,
+				distance: 15000,
+				limit: 20,
 				fields: 'name,single_line_address,phone, location,is_permanently_closed',
 				access_token: access
 			}
@@ -748,16 +748,17 @@ class findRestaurant extends Component {
 											<div id='search-restaurant'>
 													{this.state.searchedRestaurant.length ? (
 														<CSSTransitionGroup
-													transitionName="example"
-													transitionAppear={true}
-													transitionAppearTimeout={1500}
-													transitionEnter={false}
-													transitionLeave={true}>
+															transitionName="example"
+															transitionAppear={true}
+															transitionAppearTimeout={1500}
+															transitionEnter={false}
+															transitionLeave={true}>
 															<Searched>
 																{this.state.searchedRestaurant.map(restaurant => (
 																	<Searcheditems className='searcheditems' key={restaurant._id} showDetails={(ev) => this.showDetails(ev, this.callback)}
 																		value={restaurant._id}
-																	>              
+																	>
+																		<img alt="Firm" src={restaurant.yelpImg} />
 																		<p> Name of Restaurant: {restaurant.name} </p>
 																		<p> Address: {restaurant.location.address}, {restaurant.location.city}, {restaurant.location.state} </p>
 																		<p> Data Summary: 
@@ -791,7 +792,6 @@ class findRestaurant extends Component {
 																	dataCity={restaurant.location.city}
 																	dataPhone={restaurant.phone}
 																>
-																	<img alt="Firm" src={restaurant.yelpImg} />
 																	<p> Name of Restaurant: {restaurant.name} </p>
 																	<p> Address: {restaurant.single_line_address} </p>
 																	<p> Phone: {restaurant.phone} </p>
@@ -892,7 +892,7 @@ class findRestaurant extends Component {
 								transitionEnter={false}
 								transitionLeave={true}>
 								<div className='searchIcon'>
-								<form onSubmit={this.handleFormSubmit}>
+								<form onSubmit={this.searchSubmit}>
 				      		<input
 				      			className="searchBar"
 										inputProps={inputProps}
@@ -900,11 +900,13 @@ class findRestaurant extends Component {
 										onChange={this.handleInputChange}
 										name="restaurantName"
 										placeholder="restaurant"
-										onKeyDown={this.pressEnter}
+										// onKeyDown={(ev) => this.handleSearchForm(ev)}
 									/>
-									<PlacesAutocomplete inputProps={inputProps2} 
-										onKeyDown={this.pressEnter}
+									<PlacesAutocomplete 
+										inputProps={inputProps2}
+										placeholder={this.state.placeholder}
 									/>
+									<button type='submit' on>Submit</button>
 								</form>							
 								</div>
 				      		</CSSTransitionGroup>
