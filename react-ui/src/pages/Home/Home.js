@@ -4,6 +4,7 @@ import "./Home.css";
 import Filter from '../../utils/Filter';
 import Trending from '../../components/Trending';
 //Need to pass value from input field
+import { Link } from 'react-router-dom';
 
 class Home extends Component {
 	constructor(props) {
@@ -34,16 +35,18 @@ class Home extends Component {
 			})
 		}
 
+	showRestaurants = () => {
+
+	}
+
 	}
    // gets top 5 sorted by score
-
 	render() {
 		return (
 		<div>
 			<h1>
 				Home Home Home
 			</h1>
-
 			<div className="wrapper home">
 				<div className="main container-fluid">
 					<h1>Main Content Goes Here</h1>
@@ -62,6 +65,7 @@ class Home extends Component {
 					      	{this.state.showList ?
 					      		this.state.top10.map(item => (
 					      			<li onClick={(ev) =>this.props.clickList(ev)} value={item._id}> {item.name} </li>
+					      			<Link to='/findRestaurants'><a href='#'></a></Link>
 					      		))
 					      		:
 					      		null
@@ -73,7 +77,6 @@ class Home extends Component {
 				</div>
 			</div>	
 		</div>
-
 		)
 	}
 }

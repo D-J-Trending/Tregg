@@ -786,7 +786,7 @@ class findRestaurant extends Component {
 																	dataCity={restaurant.location.city}
 																	dataPhone={restaurant.phone}
 																>
-																	<img alt="Firm" src={restaurant.yelpImg}>
+																	<img alt="Firm" src={restaurant.yelpImg}/>
 																	<p> Name of Restaurant: {restaurant.name} </p>
 																	<p> Address: {restaurant.single_line_address} </p>
 																	<p> Phone: {restaurant.phone} </p>
