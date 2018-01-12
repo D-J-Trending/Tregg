@@ -1,7 +1,17 @@
-.list li {
+.home li {
   list-style-type: none;
+  border: 1px white solid;
+  border-radius: 10px
+}
+
+.home ul {
+	margin-bottom: 10px;
 }
 
 .home {
 	text-align: center;
+}
+
+.content-list {
+	margin: auto;
 }

@@ -84,10 +84,11 @@ class findRestaurant extends Component {
 		.then(res => {
 			const coordsArr = []
 			res.data.forEach(item => {
+				console.log(item.trending_score)
 				coordsArr.push({
 					yelpId: item.yelpId,
 					coordinates: item.coordinates,
-					score: item.trending_score
+					score: Round(item.trending_score)
 				})
 			})
 		const avgLine = this.findDailyDiffAvg(res.data)
@@ -812,6 +813,8 @@ class findRestaurant extends Component {
 		      				<div className='restaurant-info'>	
 		      					<div className='columns restaurant-component'>	      				
 		      						<Restheader
+		      							mainColumnClass={'column is-12'}
+		      							columnClass={'column is-3'}
 		      							rank={this.state.restaurantDetails.rank}		      							
 		      							restaurantName={this.state.restaurantDetails.name}
 		      							address={this.state.restaurantDetails.location.address}
