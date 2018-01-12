@@ -7,8 +7,8 @@ import Sidenav from "../../components/Sidenav";
 import Dropdown from "../../components/Dropdown";
 import API from "../../utils/API.js";
 import { Details } from "../../components/Details";
-import { Restdetails, Restheader } from "../../components/Restdetails";
-import { Stats, Statsection } from "../../components/Stats";
+import { Restheader } from "../../components/Restdetails";
+import { Statsection } from "../../components/Stats";
 import ChartFilter from "../../components/ChartFilter";
 import Filter from "../../utils/Filter";
 import "./findRestaurant.css";
@@ -100,6 +100,7 @@ class findRestaurant extends Component {
 		// 			latitude: position.coords.latitude,
 		// 			longitude: position.coords.longitude
 		// 		};
+
         
 		// 		this.setState({
 		// 			filteredRestaurants: avgLine,
@@ -196,8 +197,6 @@ class findRestaurant extends Component {
 					}
 				])
 			}
-		}, () => {
-			console.log(this.state);
 		})
 	};
 
@@ -212,12 +211,9 @@ class findRestaurant extends Component {
 	showDetails = (event, callback) => {
 		const array = []
 		const id = event.currentTarget.getAttribute('value');
-		console.log(this.state)
 
 		API.returnDetails(id)
 			.then(res => {
-				console.log(res.data)
-		
 				// passes in diff array, skips filterlabel, and passes in avg line data
 				// to create data set
 				let diff = Mathy.getDiffwithDate(res.data[0].checkins, 'checkins');
@@ -243,14 +239,10 @@ class findRestaurant extends Component {
 		// creates average line's chart data set
 		const avgLineChartData = ChartDataSet.createDataSet(avgLineDataSet, 'Average', true)
 		const diffDataChartData = ChartDataSet.createDataSet(diffDateArr, firmDetails.name)
-		// console.log(avgLineChartData)
-		// console.log(diffDataChartData)
-
 		let labels = avgLineDataSet.map(checkins => {
 			let queryDate = checkins.query_date.replace(/ .*/,'');
 			return queryDate;
 		})
-		// console.log(labels)
 
 		return {
 			labels: labels,
@@ -272,7 +264,6 @@ class findRestaurant extends Component {
         labels = this.state.chartData.labels;
     }
     // replace array with new
-    // console.log(this.state.chartData)
     let stateDataSet = this.state.chartData.datasets
     stateDataSet.pop()
     stateDataSet.push(newChartData)
@@ -288,14 +279,12 @@ class findRestaurant extends Component {
 		const allDifferences = []
 		//create array with differences for all restaurnts in restaurant info
 		resData.map(item => {
-			// console.log(item)
 			let obj = {}
 			let diff = Mathy.getDiffwithDate(item[arraytocheck], arrayvariable)
 			obj.yelpId = item.yelpId
 			obj.diff = diff
 			allDifferences.push(obj)
 		})
-		// console.log(allDifferences)
 		const compareAll = []
 		// find difference week over week
 		allDifferences.map(item => {
@@ -330,24 +319,7 @@ class findRestaurant extends Component {
 				})
 				this.setState({
 					[stateParam]: sortedCompare
-				}, ()=> {
 				})
-		// this.setState({
-		// 	[stateParam]: compareAll
-		// }, () => {
-		// 		console.log(this.state)
-		// 		let sortedCompare = compareAll.sort(function (a, b) {
-		// 		  return b.weeklyChangePercent - a.weeklyChangePercent
-		// 		})
-
-		// 		this.setState({
-		// 			[stateParam]: sortedCompare
-		// 		}, ()=> {
-		// 			console.log(this.state)
-		// 		})
-
-		// 		console.log(sortedCompare)
-		// 	})
 	};
 
 	loadFilter = (ev, filter) => {
@@ -421,18 +393,14 @@ class findRestaurant extends Component {
 			categories.forEach(item => {
 				categoryString += item.alias + ' '
 			})
-			// console.log(categoryString)
 			API.filterSearch('category', categoryString)
 			.then(res => {
 				let categoryData = res.data
-				// console.log(categoryData)
 				for (var i = 0; i < categoryData.length; i++) {
 					var index = arrFirms.findIndex(x => x.name === categoryData[i].name)
 
 					if (index === -1) {
 						arrFirms.push(categoryData[i])
-					}	else {
-						// console.log('no push')
 					}
 				}
 				categoryTotal = Mathy.findTotalStats(arrFirms)
@@ -450,7 +418,6 @@ class findRestaurant extends Component {
 						categoryVelocity: categoryVelocity
 					}
 				})
-				console.log(this.state)
 			})
 			.catch(err => console.log(err))
 		}
@@ -482,9 +449,9 @@ class findRestaurant extends Component {
 		 	this.setState({ searchIcon: !this.state.searchIcon});
 	};
 
-	showline = () => {
-			this.setState({ showline: !this.state.showline });
-	};
+	// showline = () => {
+	// 		this.setState({ showline: !this.state.showline });
+	// };
 
 	showbar = () => {
 			this.setState({ showbar: !this.state.showbar });
@@ -507,7 +474,7 @@ class findRestaurant extends Component {
 			active4:'button'
 
 		})
-		this.setState({active1: 'button chart-filter-active'});
+		this.setState({active1: 'button is-success'});
 		this.priceFilteredRestaurants(ev)
 	};
 
@@ -518,7 +485,7 @@ class findRestaurant extends Component {
 			active3:'button',
 			active4:'button'
 		})
-		this.setState({active2: 'button chart-filter-active'});
+		this.setState({active2: 'button is-success'});
 		this.priceFilteredRestaurants(ev)
 	};
 
@@ -529,7 +496,7 @@ class findRestaurant extends Component {
 			active3:'button',
 			active4:'button'
 		})
-		this.setState({active3: 'button chart-filter-active'});
+		this.setState({active3: 'button is-success'});
 		this.priceFilteredRestaurants(ev)
 	};
 
@@ -540,21 +507,20 @@ class findRestaurant extends Component {
 			active3:'button',
 			active4:'button'
 		})
-		this.setState({active4: 'button chart-filter-active'});
+		this.setState({active4: 'button is-success'});
 		this.priceFilteredRestaurants(ev)
 	};
 
 	priceFilteredRestaurants = ev => {
 		const value = ev.currentTarget.getAttribute('value')
-		// console.log(value);
+		
 	 	API.filterSearch('price', value)
 	    .then(res => {
-	        // console.log(res)
 	        let priceAvg = this.findDailyDiffAvg(res.data)
 	       	const newChartData = this.generateChartData(priceAvg.checkins, value)
 	        this.setState({
 	        	chartData: newChartData
-	        }, ()=> console.log(this.state.active))
+	        })
 	    })
 	    .catch(err => console.log(err))
 	};
@@ -615,7 +581,6 @@ class findRestaurant extends Component {
 // and send to DB
 
 	getYelpAddToDb = (ev) => {
-		// console.log('getYelpAddToDb')
 		const id = ev.currentTarget.getAttribute('value')
 		const name = ev.currentTarget.getAttribute('data-name')
 		const city = ev.currentTarget.getAttribute('data-city')
@@ -628,7 +593,6 @@ class findRestaurant extends Component {
 			phone = null
 		}
 		
-		// console.log(phone)
 		Yelp.yelpAPI(id, name, address, phone, city)
 	};
 
@@ -746,7 +710,6 @@ class findRestaurant extends Component {
 		this.setState({
 			top10Distance: top10Arr
 		})
-		// console.log(this.state)
 	};
 
 	//create daily avg from array of multiple restaurants
@@ -775,16 +738,7 @@ class findRestaurant extends Component {
 		return (
 		<div>
 			<div className="wrapper">	
-			{/*Main section*/}
-
-				<button onClick={this.showline}>showline</button> 
-				<button onClick={this.showbar}>showbar</button> 
-
-				<button onClick={this.findPercentChange}>finddiffall</button>
-				<button onClick={this.hidesearch}>hidesearcharea</button>
-
-				<button onClick={this.openModal}>Open Modal</button>
-
+							{/*
 			        <Modal
 			          isOpen={this.state.modalIsOpen}
 			          onAfterOpen={this.afterOpenModal}
@@ -800,8 +754,7 @@ class findRestaurant extends Component {
 			            <input />
 			       		<button>Search</button>
 			          </form>
-			        </Modal> 
-
+			        </Modal> */}
 
 			{ this.state.searchlogo ? 
 				<CSSTransitionGroup
@@ -887,7 +840,7 @@ class findRestaurant extends Component {
 									)}
 								{this.state.details ? (
 		      				<div className='restaurant-info'>	
-		      					<div className='columns'>	      				
+		      					<div className='columns restaurant-component'>	      				
 		      						<Restheader
 		      							rank={this.state.restaurantDetails.rank}		      							
 		      							restaurantName={this.state.restaurantDetails.name}
@@ -900,8 +853,8 @@ class findRestaurant extends Component {
 		      							yelpRating={this.state.restaurantDetails.rating[0].rating}		      					
 		      						/>
 		      					</div>										
-				      			<div className='columns'>		      				
-					      			<div className='column is-9'>			 
+				      			<div className='columns restaurant-component'>		      				
+					      			<div className='column is-9 rest-'>			 
 							      		<Chart className='charts' chartData={this.state.chartData} chartName="Checkins by Date"
 							      		 showline={this.state.showline} showbar={this.state.showbar}legendPosition="top"/>
 							      	</div>
@@ -927,7 +880,7 @@ class findRestaurant extends Component {
 						      											
 											</div>
 										</div>
-										<div className='columns'>
+										<div className='columns restaurant-component margin-top'>
 											<div className='column is-12'>
 												<section className='stats-section section'>
 													<Statsection
@@ -939,7 +892,7 @@ class findRestaurant extends Component {
 												</section>
 											</div>
 										</div>
-										<div className='columns'>
+										<div className='columns restaurant-component'>
 											<div className='column is-12'>
 												<section className='section'>
 													<Details
@@ -962,7 +915,6 @@ class findRestaurant extends Component {
 									)}
 			    		</div>
 			    	</div>
-
 			    	{ this.state.searchIcon ? 
 		      			<div className="side-nav column is-12">
 			      			<CSSTransitionGroup
@@ -991,7 +943,6 @@ class findRestaurant extends Component {
 										placeholder="location"
 										onKeyDown={this.pressEnter}
 									/>
-
 								</form>
 								
 								</div>
@@ -999,30 +950,7 @@ class findRestaurant extends Component {
 			      		</div>  		
 		      		: null }
 
-		      	{/*<div id='restaurants'>
-			      	{this.state.restaurantInfo.length ? (
-			        	<Searched>
-			          	{this.state.restaurantInfo.map(restaurant => (
-				            <Searcheditems key={restaurant._id} showDetails={(ev) => this.showDetails(ev)}
-				            	value={restaurant._id}
-				            >              
-											<p> Name of Restaurant: {restaurant.name} </p>
-											<p> Address: {restaurant.location.address}, {restaurant.location.city}, {restaurant.location.state} </p>
-											<p> Data Summary: 
-												<ul>
-													<li>Yelp Rating: {restaurant.rating[0].rating} </li>
-													<li>Yelp URL: <a href={restaurant.yelpURL} target='blank'>{restaurant.name}</a></li>
-												</ul>
-											</p>
-				            </Searcheditems>
-				          	))}
-			       		</Searched>
-						) : (
-						<h3>No Results to Display</h3>
-						)}
-			    </div>*/}
-				</div>
-			
+				</div>			
 		</div>
 	)
 };
