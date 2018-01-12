@@ -90,9 +90,9 @@ export default {
     // ratings = numjs.array(ratings);
     // reviews = numjs.array(reviews);
 
-    const checkinsMean = Round(this.getMean(checkins), -4)
-    const ratingsMean = Round(this.getMean(ratings), -4)
-    const reviewsMean = Round(this.getMean(reviews), -4)
+    const checkinsMean = Round(this.getMean(checkins), -2)
+    const ratingsMean = Round(this.getMean(ratings), -2)
+    const reviewsMean = Round(this.getMean(reviews), -2)
     obj.checkinsMean = checkinsMean
     obj.ratingsMean = ratingsMean
     obj.reviewsMean = reviewsMean
@@ -114,9 +114,10 @@ export default {
 
   // finds the mean of the rounded difference
   findRoundedDiffMean: function(arr,name) {
-    const diff = this.findDifference(arr, name)
-    const mean = this.getMean(diff)
-    return Round(mean, -2)
+    let diff = this.findDifference(arr, name)
+    let mean = this.getMean(diff)
+    let roundedMean = Round(mean, -2)
+    return roundedMean
   },
 
   findTotalWeeklyDiff: function(restaurantDetails) {
