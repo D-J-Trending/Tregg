@@ -12,7 +12,6 @@ import { Statsection } from "../../components/Stats";
 import ChartFilter from "../../components/ChartFilter";
 import Filter from "../../utils/Filter";
 import "./findRestaurant.css";
-import numjs from 'numjs';
 import Mathy from "../../utils/Mathy.js";
 import Yelp from "../../utils/Yelp.js";
 import { CSSTransitionGroup } from 'react-transition-group' // ES6
@@ -79,7 +78,7 @@ class findRestaurant extends Component {
 	}
   
   componentWillMount() {
-  	console.log(this.props)
+
 		API.AllReviews()
 		.then(res => {
 			const coordsArr = []
@@ -90,10 +89,6 @@ class findRestaurant extends Component {
 					score: item.trending_score
 				})
 			})
-			// this.findPercentChange(res.data,'checkins', 'checkins')
-			// this.findPercentChange(res.data,'rating_count', 'rating_count')
-			// this.findPercentChange(res.data,'reviews', 'review_count')
-		console.log('BEFORE GEOLOCATE')
 		const avgLine = this.findDailyDiffAvg(res.data)
 
 		// if (navigator.geolocation) {
@@ -127,11 +122,7 @@ class findRestaurant extends Component {
 
   }
 
-  componentWillReceiveProps(nextProps) {
-  	// console.log(nextProps)
-  }
 	//handle Submit for Geolocation
-
 	handleFormSubmit = (event) => {
     return Map.geoCode(this.state.restaurantName)
  	};
@@ -143,68 +134,6 @@ class findRestaurant extends Component {
   		ev.preventDefault();
   		}
   	};
-
-
-  	//create labels and data arrays and sets chartData state
-	generateChartData = (res) => {
-		// const differenceArr = res[0].rating_count;		
-		let labels = res.map(checkins => {
-			let queryDate = checkins.query_date.replace(/ .*/,'');
-			return queryDate;
-		})
-		//check if current data set is bigger, otherwise leave label state unchanged
-		if(labels.length <= this.state.chartData.labels.length) {
-			labels = this.state.chartData.labels;
-		}
-		const data = res.map(checkins => {
-			let dataset = {}
-			let queryDate = checkins.query_date.replace(/ .*/,'');
-			let checkinDiff = checkins.difference;
-			dataset = {
-				x: queryDate,
-				y: checkinDiff
-			};
-			return dataset;
-		})
-
-		//generate random color for new dataset
-		const dynamicColors = function() {
-            var r = Math.floor(Math.random() * 255);
-            var g = Math.floor(Math.random() * 255);
-            var b = Math.floor(Math.random() * 255);
-            return "rgba(" + r + "," + g + "," + b + ", 0.2)";
-        };
-
-        let datalabel = '';
-
-    	let index = this.state.chartData.datasets.findIndex( x => x.label === this.state.restaurantDetails.name)
-
-    	if (index === -1) {
-    		datalabel = this.state.restaurantDetails.name
-    	}
-    	else {
-    		datalabel = this.state.restaurantDetails.name + '1'
-    	}
-
-    	const labelArray = this.state.chartData.datasets.map(index => {
-    		return index.label;
-    	})
-
-    	let numberoftimes = labelArray.filter(word => word === this.state.restaurantDetails.name+"1")
-
-		this.setState({
-			chartData: {
-				labels: labels,
-				datasets: this.state.chartData.datasets.concat([
-					{
-						label: datalabel,
-						data: data,
-						backgroundColor: [dynamicColors()]
-					}
-				])
-			}
-		})
-	};
 
     //update state whenever field input changes
   handleInputChange = event => {
@@ -231,15 +160,12 @@ class findRestaurant extends Component {
 					chartData: initialChartData,
 					restaurantName: ""					
 				}
-				callback(obj)
+				this.setState(obj)
 				
 			})
 			.catch(err => console.log(err))
 				this.hidesearch();
-};
-	callback = (obj) => {
-		this.setState(obj)
-	}
+	};
 
 	createInitialChartDataSet = (diffDateArr, filterLabel, avgLineDataSet, firmDetails) => {
 		// creates average line's chart data set
@@ -255,7 +181,6 @@ class findRestaurant extends Component {
 			datasets: [diffDataChartData, avgLineChartData]
 		}
 	};
-
 
 	//create labels and data arrays and sets chartData state
 	generateChartData = (res, filterLabel) => {
@@ -284,7 +209,7 @@ class findRestaurant extends Component {
 		//array to hold the daily increase in ratings, reviews, checkins
 		const allDifferences = []
 		//create array with differences for all restaurnts in restaurant info
-		resData.map(item => {
+		resData.forEach(item => {
 			let obj = {}
 			let diff = Mathy.getDiffwithDate(item[arraytocheck], arrayvariable)
 			obj.yelpId = item.yelpId
@@ -293,7 +218,7 @@ class findRestaurant extends Component {
 		})
 		const compareAll = []
 		// find difference week over week
-		allDifferences.map(item => {
+		allDifferences.forEach(item => {
 			//object to hold yelpId and weeklyChange
 			let compare = {}
 			let percentChange1 = 0
@@ -557,6 +482,7 @@ class findRestaurant extends Component {
 	    .then(res => {
 	        let priceAvg = this.findDailyDiffAvg(res.data)
 	       	const newChartData = this.generateChartData(priceAvg.checkins, value)
+	        console.log(newChartData)
 	        this.setState({
 	        	chartData: newChartData
 	        })
@@ -860,6 +786,7 @@ class findRestaurant extends Component {
 																	dataCity={restaurant.location.city}
 																	dataPhone={restaurant.phone}
 																>
+																	<img alt="Firm" src={restaurant.yelpImg}>
 																	<p> Name of Restaurant: {restaurant.name} </p>
 																	<p> Address: {restaurant.single_line_address} </p>
 																	<p> Phone: {restaurant.phone} </p>
@@ -972,8 +899,6 @@ class findRestaurant extends Component {
 									/>
 									<PlacesAutocomplete
 										inputProps2={inputProps2}
-										value={this.state.restaurantLoc}
-										onChange={this.handleInputChange}
 										name="restaurantLoc"
 										placeholder="location"
 										onKeyDown={this.pressEnter}
