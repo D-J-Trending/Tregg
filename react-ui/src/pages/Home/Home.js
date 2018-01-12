@@ -1,15 +1,41 @@
 import React, {Component} from 'react';
 import API from "../../utils/API.js";
 import "./Home.css";
-
+import Filter from '../../utils/Filter';
+import Trending from '../../components/Trending';
 //Need to pass value from input field
 
 class Home extends Component {
 
 	state = {
 		restaurantArr: [],
-		restaurantName: "Homeroom"
+		restaurantName: "Homeroom",
+		top10: [],
+		showList: false
 	};
+	componentWillMount() {
+  	API.AllReviews()
+			.then(res => {
+				const data = res.data
+				const top10Arr = Filter.getTop10ByScore(data)
+				console.log(top10Arr)
+				this.setState({
+					top10: top10Arr,
+					restaurantArr: res.data
+				})
+			})
+			.catch(err => console.log(err))
+	}
+	componentDidUpdate(prevProps, prevState) {
+		console.log(prevProps)
+		console.log(prevState)
+		if (!prevState.showList) {
+			this.setState({
+				showList: true
+			})
+		}
+
+	}
 
 	loadRestaurants = () => {
     	API.AllReviews()
@@ -53,16 +79,10 @@ class Home extends Component {
     	})
     	.catch(err => console.log(err));
     };
-
-    testQuery = name => {
-    	API.testQuery(name)
-    	.then(res => {
-			console.log(res)
-    	})
-    	.catch(err => console.log(err));
-    };
+   // gets top 5 sorted by score
 
 	render() {
+		console.log(this.state)
 		return (
 		<div>
 			<h1>
@@ -97,31 +117,13 @@ class Home extends Component {
 					  <div className="card-content">
 					    <div className="content list">
 					      <ul className='centered'>
-					      	<li>1. Restaurant 1</li>
-					      	<li>2. Restaurant 2</li>
-					      	<li>3. Restaurant 3</li>
-					      	<li>4. Restaurant 4</li>
-					      	<li>5. Restaurant 5</li>
-					      </ul>
-					    </div>
-					  </div>
-					</div>
-					<div className="card restaurant-list">
-						<header className="card-header">
-							<p className="card-header-title is-centered">
-							  Review Percentages
-							</p>
-							<a href="#" className="card-header-icon" aria-label="more options">   
-							</a>
-						</header>
-					 <div className="card-content">
-					    <div className="content list">
-					      <ul className='centered'>
-					      	<li>1. Restaurant 1</li>
-					      	<li>2. Restaurant 2</li>
-					      	<li>3. Restaurant 3</li>
-					      	<li>4. Restaurant 4</li>
-					      	<li>5. Restaurant 5</li>
+					      	{this.state.showList ?
+					      		this.state.top10.map(item => (
+					      			<li> {item.name} </li>
+					      		))
+					      		:
+					      		null
+					      	}
 					      </ul>
 					    </div>
 					  </div>

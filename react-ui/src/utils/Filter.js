@@ -2,16 +2,39 @@ import axios from "axios";
 import Mathy from './Mathy.js'
 import Round from './Round.js'
 
+var invalidEntries = 0;
+
+function isNumber(obj) {
+	return obj!== undefined && typeof(obj) === 'number' && !isNaN(obj);
+}
+
+function filterByID(item) {
+	if (isNumber(item.new_rank)) {
+		return true;
+	} 
+	invalidEntries++;
+		return false; 
+}
+
 export default {
+
+
+
 	getTop10ByScore: function(sortArr) {
-		const top10 = []
-		sortArr.sort((a,b) => {
-			return a.score - b.score
+
+		let top10 = sortArr.filter(filterByID)
+		console.log(top10)
+		top10.sort((a,b) => {
+			return a['new_rank'] - b['new_rank']
 		})
-		for (var i = 0; i < 10; i++) {
-			let a = sortArr.pop()
-			top10.push(a)
+		console.log(top10)
+		length = 10 - top10.length
+		length = length * -1
+		for (var i = 0; i < length; i++) {
+			top10.pop()
 		}
+		console.log(top10)
+		
 		return top10
 	},
 

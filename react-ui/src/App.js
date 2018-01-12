@@ -9,6 +9,7 @@ import Sidebar from "./components/Sidebar";
 import MaterialTitlePanel from './material_title_panel';
 import SidebarContent from './sidebar_content';
 import Footer from "./components/Footer";
+import Trending from './components/Trending';
 
 const styles = {
   contentHeaderMenuLink: {
