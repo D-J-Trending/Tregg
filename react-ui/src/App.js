@@ -43,7 +43,6 @@ class App extends React.Component {
       touch: true,
       shadow: true,
       pullRight: false,
-      clickedTrendingDetail: false
     };
 
     this.renderPropCheckbox = this.renderPropCheckbox.bind(this);
@@ -52,11 +51,7 @@ class App extends React.Component {
     this.menuButtonClick = this.menuButtonClick.bind(this);
 
   }
-  componentWillMount() {
-    this.setState({
-      clickedTrendingDetail: false
-    })
-  }
+ 
 
   onSetOpen(docked) {
     this.setState({docked: docked});
@@ -97,9 +92,6 @@ class App extends React.Component {
   clickList = ev => {
     let value = ev.currentTarget.getAttribute('value')
     console.log(value)
-    this.setState({
-      clickedTrendingDetail: value
-    })
   }
 
 
@@ -135,7 +127,7 @@ class App extends React.Component {
             	<div className='content' style={styles.content}>
                 <Route exact path="/Home" render={(props) => <Home clickList={this.clickList} />} />
                 <Route exact path="/Login" component={Login} />
-                <Route exact path="/findRestaurant" render={(props) => <findRestaurant clickedTrendingDetail={this.state.clickedTrendingDetail} />} />
+                <Route exact path="/findRestaurant" component={findRestaurant} />
                 <Footer />
               </div>           
   	        </MaterialTitlePanel>
