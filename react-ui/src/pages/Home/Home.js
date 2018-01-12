@@ -6,7 +6,9 @@ import Trending from '../../components/Trending';
 //Need to pass value from input field
 
 class Home extends Component {
-
+	constructor(props) {
+		super(props)
+	}
 	state = {
 		restaurantArr: [],
 		restaurantName: "Homeroom",
@@ -27,8 +29,6 @@ class Home extends Component {
 			.catch(err => console.log(err))
 	}
 	componentDidUpdate(prevProps, prevState) {
-		console.log(prevProps)
-		console.log(prevState)
 		if (!prevState.showList) {
 			this.setState({
 				showList: true
@@ -82,7 +82,6 @@ class Home extends Component {
    // gets top 5 sorted by score
 
 	render() {
-		console.log(this.state)
 		return (
 		<div>
 			<h1>
@@ -119,7 +118,7 @@ class Home extends Component {
 					      <ul className='centered'>
 					      	{this.state.showList ?
 					      		this.state.top10.map(item => (
-					      			<li> {item.name} </li>
+					      			<li onClick={(ev) =>this.props.clickList(ev)} value={item._id}> {item.name} </li>
 					      		))
 					      		:
 					      		null
