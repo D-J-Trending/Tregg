@@ -7,6 +7,9 @@ export const ChartFilter = props => (
 
 
   <div className="chart-filter" {...props}>
+    <div className="filter-header">
+      <p className="has-text-centered">Filter</p>
+    </div>
   	{props.children}
   	<button className='button fullWidth'{...props}> Similar Categories</button>
   	<div className="prices">
