@@ -26,6 +26,7 @@ export default {
 		top10.sort((a,b) => {
 			return a['new_rank'] - b['new_rank']
 		})
+		console.log(top10)
 		length = 10 - top10.length
 		length = length * -1
 		for (var i = 0; i < length; i++) {

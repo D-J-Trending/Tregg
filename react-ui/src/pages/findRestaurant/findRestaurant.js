@@ -71,6 +71,7 @@ class findRestaurant extends Component {
 			active4:'button',
 			active5:'button fullwidth',
 			active6:'button fullwidth is-success',
+			placeholder: 'Location'
 		};
 		this.onChange = (restaurantName) => this.setState({ restaurantName })
 		this.openModal = this.openModal.bind(this);
@@ -88,7 +89,7 @@ class findRestaurant extends Component {
 				coordsArr.push({
 					yelpId: item.yelpId,
 					coordinates: item.coordinates,
-					score: item.trending_score
+					score: Round(item.trending_score)
 				})
 			})
 		const avgLine = this.findDailyDiffAvg(res.data)
@@ -123,19 +124,6 @@ class findRestaurant extends Component {
 		.catch(err => console.log(err));
 
   }
-
-	//handle Submit for Geolocation
-	handleFormSubmit = (event) => {
-    return Map.geoCode(this.state.restaurantName)
- 	};
-
- 	//handle Submit for searchRestaurant//
- 	pressEnter = (ev) => {
-  	if(ev.keyCode == 13 || ev.hich ==13 ){
-  	  	this.searchRestaurant();
-  		ev.preventDefault();
-  		}
-  	};
 
     //update state whenever field input changes
   handleInputChange = event => {
@@ -198,8 +186,12 @@ class findRestaurant extends Component {
     }
     // replace array with new
     let stateDataSet = this.state.chartData.datasets
-    stateDataSet.pop()
+    if (this.state.chartData.datasets.length === 2) {
+    	stateDataSet.pop()
+    }
+
     stateDataSet.push(newChartData)
+
     return {
 			labels: labels,
 			datasets: stateDataSet
@@ -480,6 +472,19 @@ class findRestaurant extends Component {
 		this.setState({active6: 'button fullwidth is-success'});
 		this.averageFilteredRestaurants(ev)
 	};
+	removeSecondLine = ev => {
+		let newChartData = this.state.chartData.datasets
+		let labels = this.state.chartData.labels
+
+		newChartData.pop()
+
+		this.setState({
+			chartData: {
+				datasets: newChartData,
+				labels: labels
+			} 
+		})
+	}
 
 	priceFilteredRestaurants = ev => {
 		const value = ev.currentTarget.getAttribute('value')
@@ -488,7 +493,6 @@ class findRestaurant extends Component {
 	    .then(res => {
 	        let priceAvg = this.findDailyDiffAvg(res.data)
 	       	const newChartData = this.generateChartData(priceAvg.checkins, value)
-	        console.log(newChartData)
 	        this.setState({
 	        	chartData: newChartData
 	        })
@@ -503,11 +507,9 @@ class findRestaurant extends Component {
 		categories.forEach(item => {
 			categoryString += item.alias + ' '
 		})
-		// console.log(categoryString)
 		API.filterSearch('category', categoryString)
 		.then(res => {
 			let categoryData = res.data
-			// console.log(categoryData)
 			for (var i = 0; i < categoryData.length; i++) {
 				var index = catArr.findIndex(x => x.name === categoryData[i].name)
 
@@ -567,32 +569,54 @@ class findRestaurant extends Component {
 		Yelp.yelpAPI(id, name, address, phone, city)
 	};
 
-  geoCode = (address) => {
-  	geocodeByAddress(address)
-    	.then(results => getLatLng(results[0]))
-    	.then(latLng => {
-    		// this.setState({
-    		// 	geoCodeAddress: latLng
-    		// })
-    		return latLng
-    	})
+ 	//handle Submit for searchRestaurant//
+ 	// pressEnter = (ev) => {
+  // 	if(ev.keyCode === 13 || ev.which === 13 ){
+  // 	  	this.searchRestaurant();
+  // 		ev.preventDefault();
+  // 		}
+  // 	};
+  searchSubmit = (event) => {
+    event.preventDefault()
+    if (this.state.restaurantLoc) {
+    geocodeByAddress(this.state.restaurantLoc)
+      .then(results => getLatLng(results[0]))
+      .then(latLng => this.searchRestaurant(latLng))
+      .catch(error => console.error('Error', error))
+    } else {
+    	this.setState({placeholder: "Please input a location"})
+    }
+  };
+ 	//handle pressing enter to Submit for searchRestaurant//
+ 	// pressEnter = (ev) => {
+  // 	if(ev.keyCode === 13 || ev.which === 13 ){
+  // 	  	this.searchRestaurant();
+  // 		ev.preventDefault();
+  // 		}
+  // 	};
+  searchSubmit = (event) => {
+    event.preventDefault()
+    if (this.state.restaurantLoc) {
+    geocodeByAddress(this.state.restaurantLoc)
+      .then(results => getLatLng(results[0]))
+      .then(latLng => this.searchRestaurant(latLng, true))
+      .catch(error => console.error('Error', error))
+    } else {
+    	let location= '37.82306519999999,-122.24868090000001'
+    	this.searchRestaurant(location, false)
+    }
   };
 
-	searchRestaurant = event => {
+	searchRestaurant = (address, boolean) => {
 		this.onSearchClick();
 		this.setState ({
 			hidesearch:true
 		})
-		let location = '37.82306519999999,-122.24868090000001';
+		let location = address
+		if (boolean) {
+			let location = address.lat.toString() + "," + address.lng.toString();
+		}
 		if (this.state.restaurantName) {
-			if (this.state.restaurantLoc) {
-				console.log(this.this.state.restaurantName)
-				let latLng = this.geoCode(this.state.restaurantLoc)
-
-				location = latLng
-			}
-			this.geoCode(this.state.restaurantName)
-
 			const nameQue = (data) => {
 				API.nameQuery(this.state.restaurantName)
 				.then(res => {
@@ -614,7 +638,6 @@ class findRestaurant extends Component {
 						searchedRestaurant: res.data,
 
 					})
-					// console.log(this.state);
 					// this.generateChartData(this.state.restaurantInfo)
 				})
 				.catch(err => console.log(err));
@@ -627,8 +650,8 @@ class findRestaurant extends Component {
 				type: 'place',
 				q: this.state.restaurantName,
 				center: location,
-				distance: 10000,
-				limit: 100,
+				distance: 15000,
+				limit: 20,
 				fields: 'name,single_line_address,phone, location,is_permanently_closed',
 				access_token: access
 			}
@@ -753,16 +776,17 @@ class findRestaurant extends Component {
 											<div id='search-restaurant'>
 													{this.state.searchedRestaurant.length ? (
 														<CSSTransitionGroup
-													transitionName="example"
-													transitionAppear={true}
-													transitionAppearTimeout={4000}
-													transitionEnter={false}
-													transitionLeave={true}>
+															transitionName="example"
+															transitionAppear={true}
+															transitionAppearTimeout={1500}
+															transitionEnter={false}
+															transitionLeave={true}>
 															<Searched>
 																{this.state.searchedRestaurant.map(restaurant => (
 																	<Searcheditems className='searcheditems' key={restaurant._id} showDetails={(ev) => this.showDetails(ev, this.callback)}
 																		value={restaurant._id}
-																	>              
+																	>
+																		<img alt="Firm" src={restaurant.yelpImg} />
 																		<p> Name of Restaurant: {restaurant.name} </p>
 																		<p> Address: {restaurant.location.address}, {restaurant.location.city}, {restaurant.location.state} </p>
 																		<p> Data Summary: 
@@ -796,7 +820,6 @@ class findRestaurant extends Component {
 																	dataCity={restaurant.location.city}
 																	dataPhone={restaurant.phone}
 																>
-																	<img alt="Firm" src={restaurant.yelpImg} />
 																	<p> Name of Restaurant: {restaurant.name} </p>
 																	<p> Address: {restaurant.single_line_address} </p>
 																	<p> Phone: {restaurant.phone} </p>
@@ -817,6 +840,8 @@ class findRestaurant extends Component {
 		      				<div className='restaurant-info'>	
 		      					<div className='columns restaurant-component'>	      				
 		      						<Restheader
+		      							mainColumnClass={'column is-12'}
+		      							columnClass={'column is-3'}
 		      							rank={this.state.restaurantDetails.rank}		      							
 		      							restaurantName={this.state.restaurantDetails.name}
 		      							address={this.state.restaurantDetails.location.address}
@@ -849,6 +874,7 @@ class findRestaurant extends Component {
 						      					checkClick4={this.filterClick4}						      				
 						      					averageArr={this.state.filteredRestaurants}
 						      					averageClick={this.filterClick6}
+						      					removeSecondLine={this.removeSecondLine}
 						      				/>				      					
 						      			</div>					      											
 											</div>
@@ -897,7 +923,7 @@ class findRestaurant extends Component {
 								transitionEnter={false}
 								transitionLeave={true}>
 								<div className='searchIcon'>
-								<form onSubmit={this.handleFormSubmit}>
+								<form onSubmit={this.searchSubmit}>
 				      		<input
 				      			className="searchBar"
 										inputProps={inputProps}
@@ -905,11 +931,13 @@ class findRestaurant extends Component {
 										onChange={this.handleInputChange}
 										name="restaurantName"
 										placeholder="restaurant"
-										onKeyDown={this.pressEnter}
+										// onKeyDown={(ev) => this.handleSearchForm(ev)}
 									/>
-									<PlacesAutocomplete inputProps={inputProps2} 
-										onKeyDown={this.pressEnter}
+									<PlacesAutocomplete 
+										inputProps={inputProps2}
+										placeholder={this.state.placeholder}
 									/>
+									<button type='submit' on>Submit</button>
 								</form>							
 								</div>
 				      		</CSSTransitionGroup>
