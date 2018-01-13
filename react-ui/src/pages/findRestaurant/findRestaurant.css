@@ -1,6 +1,36 @@
+<<<<<<< HEAD
 section {
   min-height: 100vh;
 }
+=======
+.restaurant-info, .fb-search-header {
+  color: white;
+}
+
+.home-search-section {
+  background-color: white;
+}
+
+.restaurant-search li {
+  list-style-type: none;
+  border: 1px white solid;
+  border-radius: 10px
+}
+
+.restaurant-search ul {
+  margin-bottom: 10px;
+}
+
+.restaurant-search {
+  text-align: center;
+}
+
+.content-list {
+  margin: auto;
+}
+
+
+>>>>>>> 079610e585695a62bfdecad6061e6d9acf5b4c4b
 .wrapper{
 	margin-bottom: 50px;
 	background-color: #17181B;
@@ -14,7 +44,6 @@ section {
 	padding: 20px;
 	margin: 16px;
 	background-color: #262626;
-	color: white;
 }
 
 .margin-top {

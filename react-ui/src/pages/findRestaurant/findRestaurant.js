@@ -73,7 +73,8 @@ class findRestaurant extends Component {
 			active4:'button',
 			active5:'button fullwidth',
 			active6:'button fullwidth is-success',
-			placeholder: 'Location'
+			placeholder: 'Location',
+			actualYelpReviews: false
 		};
 		this.onChange = (restaurantName) => this.setState({ restaurantName })
 		this.openModal = this.openModal.bind(this);
@@ -733,7 +734,20 @@ class findRestaurant extends Component {
 		return dailyAvg
 	};
 
-
+	yelpReviews = () => {
+		const id = this.state.restaurantDetails.yelpId
+		const url = "https://cors-anywhere.herokuapp.com/https://api.yelp.com/v3/businesses/" + id + '/reviews';
+		const headers = {
+			Authorization: "Bearer Dt0X2kf0ef_hQ5Jc_5FNnxheSlXdFX1-svTZE6AJP0J4lBoVuMFRl66QgPFblxpMN-_AHN9OL3mek81qVap7DEtTMK2MrXxXpTxV31SVTbe-qajxmCEGj_nHwuEuWnYx"
+		}
+		API.APIsearch(url, null, headers)
+			.then(res=> {
+				console.log(res)
+				this.setState({
+					actualYelpReviews: res.data
+				})
+			})
+	}
 	
 	render() {
 
@@ -832,29 +846,47 @@ class findRestaurant extends Component {
 															transitionAppear={true}
 															transitionAppearTimeout={1500}
 															transitionEnter={false}
-															transitionLeave={true}>
-															<Searched>
-																{this.state.searchedRestaurant.map(restaurant => (
-																	<Searcheditems className='searcheditems' key={restaurant._id} showDetails={(ev) => this.showDetails(ev, this.callback)}
-																		value={restaurant._id}
-																	>
-																		<img alt="Firm" src={restaurant.yelpImg} />
-																		<p> Name of Restaurant: {restaurant.name} </p>
-																		<p> Address: {restaurant.location.address}, {restaurant.location.city}, {restaurant.location.state} </p>
-																		<p> Data Summary: 
-																			<ul>
-																				<li>Yelp Rating: {restaurant.rating[0].rating} </li>
-																				<li>Yelp URL: <a href={restaurant.yelpURL} target='blank'>{restaurant.name}</a></li>
-																			</ul>
-																		</p>
-																	</Searcheditems>
-																	))}
-															</Searched>
+															transitionLeave={true}>														
+															<div className='search-section'>
+																<div className="wrapper restaurant-search">
+																	<div className="main container-fluid">				
+																	  <div className='centered restaurant-info'>																				  	
+												    					<div className='columns restaurant-component'>	      				
+												    						<div className="content-list">
+																				{this.state.searchedRestaurant.map(restaurant => (								      			
+																			    <ul className='centered'>																		      		      	
+																	      		<li>
+																	      			<Restheader
+																	      				value={restaurant._id}
+																	      				key={restaurant._id}
+																	      				onClick={(ev) => this.showDetails(ev, this.callback)}
+																	      				trendingScore={restaurant.trending_score['7day']['checkins']}
+																	      				mainColumnClass={'column is-12 top-trending'}
+																	      				columnClass={'column is-6'}
+																	      				rank={restaurant.new_rank}
+																	      				restaurantName={restaurant.name}
+														      							address={restaurant.location.address}
+														      							city={restaurant.location.city}
+														      							state={restaurant.location.state}
+														      							yelpURL={restaurant.yelpURL}
+														      							fb_url={restaurant.fbURL}
+														      							fbRating={restaurant.star_rating[0].overall_star_rating}
+														      							yelpRating={restaurant.rating[0].rating}		      									      							
+																	      			/>	
+																	      		</li>																																							      	
+																		      </ul>  									      						      		
+																				))}
+																				</div>
+																	    </div>
+														      	</div>		
+																	</div>
+																</div>
+															</div>															
 														</CSSTransitionGroup>
 												) : (
 												<h3>No Results to Display</h3>
 												)}
-												<h4> FB API Search results </h4>
+												<p className='has-text-centered fb-search-header'> FB API Search results </p>
 												{this.state.fbAPIResults.length ? (
 													<CSSTransitionGroup
 														transitionName="example"
@@ -955,7 +987,8 @@ class findRestaurant extends Component {
 													// getMean={(arr) => Mathy.getMean(arr)}
 													// totalVelocityAvg={this.state.totalVelocityAvg}
 													// totalAvgStatement={this.state.totalAvgStatement}
-													// yelpReviews={this.state.yelpReviews}
+													actualYelpReviews={this.state.actualYelpReviews}
+													yelpReviews={this.yelpReviews}
 													/>
 												</section>
 											</div>
