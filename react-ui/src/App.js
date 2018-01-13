@@ -23,6 +23,7 @@ const styles = {
     minHeight : '100vh',
     width: '100%',
     overFlowY: 'scroll',
+    overflowX: 'hidden',
     background: '#17181B',
   },
   logo: {
@@ -102,7 +103,6 @@ class App extends React.Component {
       <span>
         {!this.state.open &&
          <a onClick={this.menuButtonClick} href="#" style={styles.contentHeaderMenuLink}>=</a>}
-        <span> <img src={logo} id="myLogo" className="logo_page" alt="logo_page" style={styles.logo}/> </span>
       </span>);
 
     const sidebarProps = {

@@ -33,7 +33,7 @@ stars = () => {
 
 	render() {
 		return (
-			<div className={this.props.mainColumnClass}>
+			<div className={this.props.mainColumnClass} value={this.props.value} onClick={this.props.onClick}>
 			  	<div className='columns'>
 				<div className={this.props.columnClass}>
 					<span className='restaurant-header'>{this.props.restaurantName}</span>		

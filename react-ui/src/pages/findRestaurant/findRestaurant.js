@@ -37,7 +37,7 @@ class findRestaurant extends Component {
 		super(props);
 		this.state = {
 			restaurantArr: [],
-			restaurantName: "Homeroom",
+			restaurantName: "",
 			restaurantLoc: "",
 			restaurantInfo: {},
 			coordsIdsArr: [],
@@ -64,7 +64,9 @@ class findRestaurant extends Component {
 			dropdown: '',
 			hidesearch: false,
 			modalIsOpen: false,
-			searchlogo: true,
+			searchlogo: false,
+			searchHeader:true,
+			searchIcon:false,
 			active1:'button',
 			active2:'button',
 			active3:'button',
@@ -375,6 +377,7 @@ class findRestaurant extends Component {
     		this.setState({ showsidenav: !this.state.showsidenav });
    	};
  
+
 	onSearchClick = () => {
 		 	this.setState({ searchIcon: !this.state.searchIcon});
 	};
@@ -617,7 +620,16 @@ class findRestaurant extends Component {
 			hidesearch:true
 		})
 		this.setState ({
+			searchIcon:false
+		})
+		this.setState ({
 			details:false
+		})
+		this.setState ({
+			searchHeader:false
+		})
+		this.setState ({
+			searchlogo:true
 		})
 		let location = address
 		if (boolean) {
@@ -746,10 +758,50 @@ class findRestaurant extends Component {
 	  const inputProps2 = {
       value: this.state.restaurantLoc,
       onChange: this.onChange2,
+      placeholder:"Location"
 	  }
 
 		return (
 		<div>
+		{ this.state.searchHeader ? (
+				<CSSTransitionGroup
+								transitionName="example"
+								transitionAppear={true}
+								transitionAppearTimeout={500}
+								transitionEnter={false}
+								transitionLeave={true}>
+			<section>
+			<div className="HeaderTitle">
+				<h1>TREGG</h1>
+			</div>
+			<form onSubmit={this.searchSubmit}>
+									<div className="HeaderSearch">
+										<div className='columns'>
+											<div className="column is-5">
+							      				<input
+							      					className="searchBar"
+													inputProps={inputProps}
+													value={this.state.restaurantName}
+													onChange={this.handleInputChange}
+													name="restaurantName"
+													placeholder="Restaurant Name"
+													// onKeyDown={(ev) => this.handleSearchForm(ev)}
+												/>
+											</div>
+											<div className="column is-5">
+												<PlacesAutocomplete 
+													inputProps={inputProps2}
+												/>
+											</div>
+											<div className="column is-2">
+												<button type='submit'>Submit</button>
+											</div>
+										</div>
+									</div>
+								</form>
+			</section>
+			</CSSTransitionGroup>
+			) : null }
 			<div className="wrapper">	
 							{/*
 			        <Modal
@@ -767,8 +819,7 @@ class findRestaurant extends Component {
 			       		<button>Search</button>
 			          </form>
 			        </Modal> */}
-
-			{ this.state.searchlogo ? 
+			{ this.state.searchlogo ? (
 				<CSSTransitionGroup
 								transitionName="example"
 								transitionAppear={true}
@@ -781,7 +832,7 @@ class findRestaurant extends Component {
 					</div>
 				</a>
 				</CSSTransitionGroup>
-			: null }
+			) : null }
 			
 		      	<div className="data-section columns">
 		      		<div className="column auto">
@@ -795,29 +846,47 @@ class findRestaurant extends Component {
 															transitionAppear={true}
 															transitionAppearTimeout={1500}
 															transitionEnter={false}
-															transitionLeave={true}>
-															<Searched>
-																{this.state.searchedRestaurant.map(restaurant => (
-																	<Searcheditems className='searcheditems' key={restaurant._id} showDetails={(ev) => this.showDetails(ev, this.callback)}
-																		value={restaurant._id}
-																	>
-																		<img alt="Firm" src={restaurant.yelpImg} />
-																		<p> Name of Restaurant: {restaurant.name} </p>
-																		<p> Address: {restaurant.location.address}, {restaurant.location.city}, {restaurant.location.state} </p>
-																		<p> Data Summary: 
-																			<ul>
-																				<li>Yelp Rating: {restaurant.rating[0].rating} </li>
-																				<li>Yelp URL: <a href={restaurant.yelpURL} target='blank'>{restaurant.name}</a></li>
-																			</ul>
-																		</p>
-																	</Searcheditems>
-																	))}
-															</Searched>
+															transitionLeave={true}>														
+															<div className='search-section'>
+																<div className="wrapper restaurant-search">
+																	<div className="main container-fluid">				
+																	  <div className='centered restaurant-info'>																				  	
+												    					<div className='columns restaurant-component'>	      				
+												    						<div className="content-list">
+																				{this.state.searchedRestaurant.map(restaurant => (								      			
+																			    <ul className='centered'>																		      		      	
+																	      		<li>
+																	      			<Restheader
+																	      				value={restaurant._id}
+																	      				key={restaurant._id}
+																	      				onClick={(ev) => this.showDetails(ev, this.callback)}
+																	      				trendingScore={restaurant.trending_score['7day']['checkins']}
+																	      				mainColumnClass={'column is-12 top-trending'}
+																	      				columnClass={'column is-6'}
+																	      				rank={restaurant.new_rank}
+																	      				restaurantName={restaurant.name}
+														      							address={restaurant.location.address}
+														      							city={restaurant.location.city}
+														      							state={restaurant.location.state}
+														      							yelpURL={restaurant.yelpURL}
+														      							fb_url={restaurant.fbURL}
+														      							fbRating={restaurant.star_rating[0].overall_star_rating}
+														      							yelpRating={restaurant.rating[0].rating}		      									      							
+																	      			/>	
+																	      		</li>																																							      	
+																		      </ul>  									      						      		
+																				))}
+																				</div>
+																	    </div>
+														      	</div>		
+																	</div>
+																</div>
+															</div>															
 														</CSSTransitionGroup>
 												) : (
 												<h3>No Results to Display</h3>
 												)}
-												<h4> FB API Search results </h4>
+												<p className='has-text-centered fb-search-header'> FB API Search results </p>
 												{this.state.fbAPIResults.length ? (
 													<CSSTransitionGroup
 														transitionName="example"
@@ -940,20 +1009,29 @@ class findRestaurant extends Component {
 								transitionLeave={true}>
 								<div className='searchIcon'>
 								<form onSubmit={this.searchSubmit}>
-				      		<input
-				      			className="searchBar"
-										inputProps={inputProps}
-										value={this.state.restaurantName}
-										onChange={this.handleInputChange}
-										name="restaurantName"
-										placeholder="restaurant"
-										// onKeyDown={(ev) => this.handleSearchForm(ev)}
-									/>
-									<PlacesAutocomplete 
-										inputProps={inputProps2}
-										placeholder={this.state.placeholder}
-									/>
-									<button type='submit' on>Submit</button>
+									<div className="searchField">
+										<div className='columns'>
+											<div className="column is-5">
+							      				<input
+							      					className="searchBar"
+													inputProps={inputProps}
+													value={this.state.restaurantName}
+													onChange={this.handleInputChange}
+													name="restaurantName"
+													placeholder="Restaurant Name"
+													// onKeyDown={(ev) => this.handleSearchForm(ev)}
+												/>
+											</div>
+											<div className="column is-5">
+												<PlacesAutocomplete 
+													inputProps={inputProps2}
+												/>
+											</div>
+											<div className="column is-2">
+												<button type='submit'>Submit</button>
+											</div>
+										</div>
+									</div>
 								</form>							
 								</div>
 				      		</CSSTransitionGroup>
