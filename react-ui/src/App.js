@@ -24,7 +24,9 @@ const styles = {
     width: '100%',
     overFlowY: 'scroll',
     overflowX: 'hidden',
-    background: '#17181B',
+    background: 'Url(https://media.architecturaldigest.com/photos/5696dc42a7d16cbd6b658acf/master/pass/stylish-new-york-restaurants-07.jpg)',
+    animation: 'animatedBackground 40s linear infinite',
+    backgroundRepeat: 'repeat-y',
   },
   logo: {
   	width: '50%',
@@ -125,9 +127,9 @@ class App extends React.Component {
   	      <Sidebar {...sidebarProps}>
   	        <MaterialTitlePanel title={contentHeader}>
             	<div className='content' style={styles.content}>
-                <Route exact path="/Ranking" render={(props) => <Home clickList={this.clickList} />} />
-                <Route exact path="/Login" component={Login} />
                 <Route exact path="/" component={findRestaurant} />
+                <Route exact path="/Ranking" component={Home} />
+                <Route exact path="/Login" component={Login} />
                 <Footer />
               </div>           
   	        </MaterialTitlePanel>

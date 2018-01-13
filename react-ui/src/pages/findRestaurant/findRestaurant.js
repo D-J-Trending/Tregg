@@ -14,14 +14,13 @@ import Filter from "../../utils/Filter";
 import "./findRestaurant.css";
 import Mathy from "../../utils/Mathy.js";
 import Yelp from "../../utils/Yelp.js";
-import { CSSTransitionGroup } from 'react-transition-group' // ES6
+import { CSSTransitionGroup } from 'react-transition-group'; // ES6
 import moment from 'moment';
 import geolib from 'geolib';
 import PlacesAutocomplete, { geocodeByAddress, getLatLng } from 'react-places-autocomplete';
 import Map from "../../utils/Map.js";
 import Round from '../../utils/Round'
 import ChartDataSet from '../../utils/ChartDataSet';
-import Waypoint from 'react-waypoint';
 //Need to pass value from input field
 //Style chart and info into one element
 //Allow to click on element to view stats
@@ -617,18 +616,10 @@ class findRestaurant extends Component {
 	searchRestaurant = (address, boolean) => {
 		this.onSearchClick();
 		this.setState ({
-			hidesearch:true
-		})
-		this.setState ({
-			searchIcon:false
-		})
-		this.setState ({
-			details:false
-		})
-		this.setState ({
-			searchHeader:false
-		})
-		this.setState ({
+			hidesearch:true,
+			searchIcon:false,
+			details:false,
+			searchHeader:false,
 			searchlogo:true
 		})
 		let location = address
@@ -748,7 +739,6 @@ class findRestaurant extends Component {
 				})
 			})
 	}
-	
 	render() {
 
 		const inputProps = {
@@ -769,10 +759,12 @@ class findRestaurant extends Component {
 								transitionAppear={true}
 								transitionAppearTimeout={500}
 								transitionEnter={false}
-								transitionLeave={true}>
+								transitionLeave={false}>
+									<div id="animate-area">
 			<section>
-			<div className="HeaderTitle">
+			<div className="HeaderTitle"> 
 				<h1>TREGG</h1>
+			}
 			</div>
 			<form onSubmit={this.searchSubmit}>
 									<div className="HeaderSearch">
@@ -799,7 +791,9 @@ class findRestaurant extends Component {
 										</div>
 									</div>
 								</form>
-			</section>
+						</section>
+						</div>
+
 			</CSSTransitionGroup>
 			) : null }
 			<div className="wrapper">	
@@ -825,7 +819,7 @@ class findRestaurant extends Component {
 								transitionAppear={true}
 								transitionAppearTimeout={500}
 								transitionEnter={false}
-								transitionLeave={true}>
+								transitionLeave={false}>
 				<a onClick={this.onSearchClick}>
 					<div className="inPut-with-icon">
 						<i className="fa fa-search"></i>
@@ -844,9 +838,10 @@ class findRestaurant extends Component {
 														<CSSTransitionGroup
 															transitionName="example"
 															transitionAppear={true}
-															transitionAppearTimeout={1500}
+															transitionAppearTimeout={500}
 															transitionEnter={false}
-															transitionLeave={true}>														
+															transitionLeave={false}
+															>														
 															<div className='search-section'>
 																<div className="wrapper restaurant-search">
 																	<div className="main container-fluid">				
@@ -893,8 +888,9 @@ class findRestaurant extends Component {
 														transitionAppear={true}
 														transitionAppearTimeout={500}
 														transitionEnter={false}
-														transitionLeave={true}
+														transitionLeave={false}
 													>
+													<div className='blackPage'>
 														<Searched>
 															{this.state.fbAPIResults.map(restaurant => (
 																<FbSearchedItems className='searcheditems' key={restaurant.id} getYelpAddToDb={(ev) => this.getYelpAddToDb(ev)}
@@ -910,6 +906,7 @@ class findRestaurant extends Component {
 																</FbSearchedItems>
 															))}
 														</Searched>
+													</div>
 													</CSSTransitionGroup>
 												) : (
 													<h4>No results from Facebook API </h4>
@@ -1006,7 +1003,7 @@ class findRestaurant extends Component {
 								transitionAppear={true}
 								transitionAppearTimeout={500}
 								transitionEnter={false}
-								transitionLeave={true}>
+								transitionLeave={false}>
 								<div className='searchIcon'>
 								<form onSubmit={this.searchSubmit}>
 									<div className="searchField">

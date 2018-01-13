@@ -25,6 +25,7 @@
     "react-places-autocomplete": "^5.4.3",
     "react-router": "^4.2.0",
     "react-router-dom": "^4.2.2",
+    "react-scrolling-carousel": "^1.0.2",
     "react-transition-group": "^1.2.1",
     "react-waypoint": "^8.0.0",
     "save": "^2.3.2",

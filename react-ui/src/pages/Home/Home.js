@@ -3,8 +3,6 @@ import API from "../../utils/API.js";
 import "./Home.css";
 import Filter from '../../utils/Filter';
 import Trending from '../../components/Trending';
-//Need to pass value from input field
-import { Link } from 'react-router-dom';
 import { Restheader } from "../../components/Restdetails";
 import Round from '../../utils/Round'
 
@@ -51,7 +49,6 @@ class Home extends Component {
 	render() {
 		return (
 		<div className='homepage'>
-			<button onClick={this.showState}>showState</button>
 			<div className="wrapper home">
 				<div className="main container-fluid">				
 					  <div className='centered restaurant-info'>	
