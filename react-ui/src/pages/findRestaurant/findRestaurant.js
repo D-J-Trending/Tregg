@@ -633,8 +633,10 @@ class findRestaurant extends Component {
 		})
 		let location = address
 		if (boolean) {
-			let location = address.lat.toString() + "," + address.lng.toString();
+			console.log('boolean works')
+			location = address.lat.toString() + "," + address.lng.toString();
 		}
+		console.log(location)
 		if (this.state.restaurantName) {
 			const nameQue = (data) => {
 				API.nameQuery(this.state.restaurantName)
@@ -661,7 +663,7 @@ class findRestaurant extends Component {
 				})
 				.catch(err => console.log(err));
 			}
-
+			console.log(location)
 			// searches through fb api before sending it through db api
 			const access = 'EAAG0XCqokvMBAPYkq18AYZCRVI1QaWb9HU9ti4PpFL5lZAL32p53Ql1zREzbBi9ikoXwdwgsyZB6Cjv9YjghpfQmWPZCBBtWMnGaqknAecNhQzpBNWKCZCFYM36P0IRP8QSnOlzHdxod6y8mZA3cOpdxlu7XZAtqIv9AhZBXdPyPsAZDZD'
 			let url = 'https://graph.facebook.com/v2.7/search'
