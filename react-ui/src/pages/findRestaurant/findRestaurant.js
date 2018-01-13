@@ -73,6 +73,7 @@ class findRestaurant extends Component {
 			active4:'button',
 			active5:'button fullwidth',
 			active6:'button fullwidth is-success',
+			active7:'button fullwidth',
 			placeholder: 'Location',
 			actualYelpReviews: false
 		};
@@ -406,7 +407,8 @@ class findRestaurant extends Component {
 			active3:'button',
 			active4:'button',
 			active5:'button fullWidth',
-			active6:'button fullWidth'
+			active6:'button fullWidth',
+			active7:'button fullWidth'
 		})
 		this.setState({active1: 'button is-success'});
 		this.priceFilteredRestaurants(ev)
@@ -419,7 +421,8 @@ class findRestaurant extends Component {
 			active3:'button',
 			active4:'button',
 			active5:'button fullWidth',
-			active6:'button fullWidth'
+			active6:'button fullWidth',
+			active7:'button fullWidth'
 		})
 		this.setState({active2: 'button is-success'});
 		this.priceFilteredRestaurants(ev)
@@ -432,7 +435,8 @@ class findRestaurant extends Component {
 			active3:'button',
 			active4:'button',
 			active5:'button fullWidth',
-			active6:'button fullWidth'
+			active6:'button fullWidth',
+			active7:'button fullWidth'
 		})
 		this.setState({active3: 'button is-success'});
 		this.priceFilteredRestaurants(ev)
@@ -445,7 +449,8 @@ class findRestaurant extends Component {
 			active3:'button',
 			active4:'button',
 			active5:'button fullWidth',
-			active6:'button fullWidth'
+			active6:'button fullWidth',
+			active7:'button fullWidth'
 		})
 		this.setState({active4: 'button is-success'});
 		this.priceFilteredRestaurants(ev)
@@ -458,7 +463,8 @@ class findRestaurant extends Component {
 			active3:'button',
 			active4:'button',
 			active5:'button fullWidth',
-			active6:'button fullWidth'
+			active6:'button fullWidth',
+			active7:'button fullWidth'
 		})
 		this.setState({active5: 'button fullwidth is-success'});
 		this.categoryFilteredRestaurants(ev)
@@ -471,10 +477,25 @@ class findRestaurant extends Component {
 			active3:'button',
 			active4:'button',
 			active5:'button fullWidth',
-			active6:'button fullWidth'
+			active6:'button fullWidth',
+			active7:'button fullWidth'
 		})
 		this.setState({active6: 'button fullwidth is-success'});
 		this.averageFilteredRestaurants(ev)
+	};
+
+	filterClick7 = (ev) => {
+		this.setState({
+			active1:'button',
+			active2:'button',
+			active3:'button',
+			active4:'button',
+			active5:'button fullWidth',
+			active6:'button fullWidth',
+			active7:'button fullWidth'
+		})
+		this.setState({active7: 'button fullwidth is-success'});
+		this.removeSecondLine(ev)
 	};
 
 	removeSecondLine = ev => {
@@ -954,13 +975,15 @@ class findRestaurant extends Component {
 						      					green4={this.state.active4}
 						      					green5={this.state.active5}
 						      					green6={this.state.active6}
+						      					green7={this.state.active7}
 						      					checkClick1={this.filterClick1}
 						      					checkClick2={this.filterClick2}
 						      					checkClick3={this.filterClick3}
-						      					checkClick4={this.filterClick4}						      				
+						      					checkClick4={this.filterClick4}
+						      					checkClick7={this.filterClick7}						      				
 						      					averageArr={this.state.filteredRestaurants}
 						      					averageClick={this.filterClick6}
-						      					removeSecondLine={this.removeSecondLine}
+						      					removeSecondLine={this.filterClick7}
 						      				/>				      					
 						      			</div>					      											
 											</div>
