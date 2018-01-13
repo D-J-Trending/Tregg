@@ -767,10 +767,6 @@ class findRestaurant extends Component {
 			       		<button>Search</button>
 			          </form>
 			        </Modal> */}
-			        <Waypoint
-  key={this.cursor}
-  onLeave={this.state.searchlogo}
-/>
 
 			{ this.state.searchlogo ? 
 				<CSSTransitionGroup
