@@ -1,3 +1,6 @@
+section {
+  min-height: 100vh;
+}
 .wrapper{
 	margin-bottom: 50px;
 	background-color: #17181B;
@@ -44,7 +47,7 @@
   position: fixed;
   background-color: red;
   text-align: center;
-  padding: 40px;
+  padding: 30px;
   width:99%;
   top: 0px;
   left: 0px;
@@ -52,14 +55,43 @@
 
 }
 .searchField input {
+  text-align: center;
+  border: 2px black solid;
   margin:20px;
   height: 50px;
   width: 100%;
 }
 .searchField button{
+  border: 1px solid black;
     height: auto;
     margin-top: 15%;
     padding: auto;
+}
+.HeaderTitle {
+  margin-top: 200px;
+}
+.HeaderTitle h1{
+ font-family: 'Bungee Shade', cursive;
+      text-align: center;
+    font-size: 200px;
+    margin-top: 20px;
+    color: aqua;
+
+}
+.HeaderSearch {
+  margin-top: 40px;
+}
+.HeaderSearch input{
+  text-align: center;
+  height: 70px;
+  width: 100%;
+  margin: auto;
+  margin-left: 40px;
+}
+.HeaderSearch button{
+  height: 70px;
+  margin-left: 40px;
+  border: 1px solid white;
 }
 
 

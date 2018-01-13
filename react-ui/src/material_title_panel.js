@@ -10,6 +10,7 @@ const styles = {
     backgroundColor: 'rgb(23, 24, 27)',
     color: 'white',
     fontSize: '1.5em',
+    padding: '16px',
   },
 };
 

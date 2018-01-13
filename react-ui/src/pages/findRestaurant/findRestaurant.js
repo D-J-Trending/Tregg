@@ -37,7 +37,7 @@ class findRestaurant extends Component {
 		super(props);
 		this.state = {
 			restaurantArr: [],
-			restaurantName: "Homeroom",
+			restaurantName: "",
 			restaurantLoc: "",
 			restaurantInfo: {},
 			coordsIdsArr: [],
@@ -64,7 +64,9 @@ class findRestaurant extends Component {
 			dropdown: '',
 			hidesearch: false,
 			modalIsOpen: false,
-			searchlogo: true,
+			searchlogo: false,
+			searchHeader:true,
+			searchIcon:false,
 			active1:'button',
 			active2:'button',
 			active3:'button',
@@ -374,6 +376,7 @@ class findRestaurant extends Component {
     		this.setState({ showsidenav: !this.state.showsidenav });
    	};
  
+
 	onSearchClick = () => {
 		 	this.setState({ searchIcon: !this.state.searchIcon});
 	};
@@ -616,7 +619,16 @@ class findRestaurant extends Component {
 			hidesearch:true
 		})
 		this.setState ({
+			searchIcon:false
+		})
+		this.setState ({
 			details:false
+		})
+		this.setState ({
+			searchHeader:false
+		})
+		this.setState ({
+			searchlogo:true
 		})
 		let location = address
 		if (boolean) {
@@ -732,10 +744,50 @@ class findRestaurant extends Component {
 	  const inputProps2 = {
       value: this.state.restaurantLoc,
       onChange: this.onChange2,
+      placeholder:"Location"
 	  }
 
 		return (
 		<div>
+		{ this.state.searchHeader ? (
+				<CSSTransitionGroup
+								transitionName="example"
+								transitionAppear={true}
+								transitionAppearTimeout={500}
+								transitionEnter={false}
+								transitionLeave={true}>
+			<section>
+			<div className="HeaderTitle">
+				<h1>TREGG</h1>
+			</div>
+			<form onSubmit={this.searchSubmit}>
+									<div className="HeaderSearch">
+										<div className='columns'>
+											<div className="column is-5">
+							      				<input
+							      					className="searchBar"
+													inputProps={inputProps}
+													value={this.state.restaurantName}
+													onChange={this.handleInputChange}
+													name="restaurantName"
+													placeholder="Restaurant Name"
+													// onKeyDown={(ev) => this.handleSearchForm(ev)}
+												/>
+											</div>
+											<div className="column is-5">
+												<PlacesAutocomplete 
+													inputProps={inputProps2}
+												/>
+											</div>
+											<div className="column is-2">
+												<button type='submit'>Submit</button>
+											</div>
+										</div>
+									</div>
+								</form>
+			</section>
+			</CSSTransitionGroup>
+			) : null }
 			<div className="wrapper">	
 							{/*
 			        <Modal
@@ -753,12 +805,7 @@ class findRestaurant extends Component {
 			       		<button>Search</button>
 			          </form>
 			        </Modal> */}
-			        <Waypoint
-  key={this.cursor}
-  onLeave={this.state.searchlogo}
-/>
-
-			{ this.state.searchlogo ? 
+			{ this.state.searchlogo ? (
 				<CSSTransitionGroup
 								transitionName="example"
 								transitionAppear={true}
@@ -771,7 +818,7 @@ class findRestaurant extends Component {
 					</div>
 				</a>
 				</CSSTransitionGroup>
-			: null }
+			) : null }
 			
 		      	<div className="data-section columns">
 		      		<div className="column auto">
@@ -938,18 +985,17 @@ class findRestaurant extends Component {
 													value={this.state.restaurantName}
 													onChange={this.handleInputChange}
 													name="restaurantName"
-													placeholder="restaurant"
+													placeholder="Restaurant Name"
 													// onKeyDown={(ev) => this.handleSearchForm(ev)}
 												/>
 											</div>
 											<div className="column is-5">
 												<PlacesAutocomplete 
 													inputProps={inputProps2}
-													placeholder={this.state.placeholder}
 												/>
 											</div>
 											<div className="column is-2">
-												<button type='submit' on>Submit</button>
+												<button type='submit'>Submit</button>
 											</div>
 										</div>
 									</div>
