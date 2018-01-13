@@ -7,6 +7,32 @@ constructor(props) {
 		super(props)
 	};
 
+arrows = (value) => {
+  const numberWithoutPercent = value.slice(0, -1)
+  
+  if(numberWithoutPercent > 0) {
+    return <i className="fa fa-sort-asc"></i>
+  } else if(numberWithoutPercent < 0) {
+    return <i className="fa fa-sort-desc"></i>
+  } else{
+    return
+  }
+};	
+
+colors = (value) => {
+  const numberWithoutPercent = value.slice(0, -1)
+  
+  if(numberWithoutPercent > 0) {
+    return <span className='green-up'> Trending Score: {this.props.trendingScore}{this.arrows(this.props.trendingScore)}</span>
+  } else if(numberWithoutPercent < 0) {
+    return <span className='red-down'> Trending Score: {this.props.trendingScore}{this.arrows(this.props.trendingScore)}</span>
+  } else{
+    return
+  }
+};	
+
+
+
 stars = () => {
 	// console.log(this.props.yelpRating)
 	switch (this.props.yelpRating) {
@@ -40,7 +66,7 @@ stars = () => {
 						<p className='restaurant-address'>{this.props.address}, {this.props.city}, {this.props.state}</p>		      						
 					</div>
 					<div className='column auto'>
-						<span className='rank-section'>Rank: {this.props.rank}<span className='rank-number'> Trending Score: {this.props.trendingScore}</span></span><br/>
+						<span className='rank-section'>Rank: {this.props.rank}<span className='rank-number'></span>{this.colors(this.props.trendingScore)}</span><br/>
 						<span><a target='blank' href={this.props.yelpURL}> <img className='yelp-trademark' src='img/Yelp_trademark_RGB_outline.png' alt='yelp-trademark'/></a>{this.stars()} &#124; </span>
 						<span><a target='blank' href={this.props.fb_url}> <img className='fb-trademark' src='img/FB-f-Logo__blue_29.png' alt='facebook-trademark'/></a> {this.props.fbRating}</span>				
 					</div>
