@@ -929,20 +929,30 @@ class findRestaurant extends Component {
 								transitionLeave={true}>
 								<div className='searchIcon'>
 								<form onSubmit={this.searchSubmit}>
-				      		<input
-				      			className="searchBar"
-										inputProps={inputProps}
-										value={this.state.restaurantName}
-										onChange={this.handleInputChange}
-										name="restaurantName"
-										placeholder="restaurant"
-										// onKeyDown={(ev) => this.handleSearchForm(ev)}
-									/>
-									<PlacesAutocomplete 
-										inputProps={inputProps2}
-										placeholder={this.state.placeholder}
-									/>
-									<button type='submit' on>Submit</button>
+									<div className="searchField">
+										<div className='columns'>
+											<div className="column is-5">
+							      				<input
+							      					className="searchBar"
+													inputProps={inputProps}
+													value={this.state.restaurantName}
+													onChange={this.handleInputChange}
+													name="restaurantName"
+													placeholder="restaurant"
+													// onKeyDown={(ev) => this.handleSearchForm(ev)}
+												/>
+											</div>
+											<div className="column is-5">
+												<PlacesAutocomplete 
+													inputProps={inputProps2}
+													placeholder={this.state.placeholder}
+												/>
+											</div>
+											<div className="column is-2">
+												<button type='submit' on>Submit</button>
+											</div>
+										</div>
+									</div>
 								</form>							
 								</div>
 				      		</CSSTransitionGroup>
