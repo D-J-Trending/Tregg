@@ -62,7 +62,6 @@ class findRestaurant extends Component {
 			address: "",
 			dropdown: '',
 			hidesearch: false,
-			modalIsOpen: false,
 			searchlogo: false,
 			searchHeader:true,
 			searchIcon:false,
@@ -74,12 +73,9 @@ class findRestaurant extends Component {
 			active6:'button fullwidth is-success',
 			active7:'button fullwidth',
 			placeholder: 'Location',
-			actualYelpReviews: false
+			actualYelpReviews: false,
 		};
 		this.onChange = (restaurantName) => this.setState({ restaurantName })
-		this.openModal = this.openModal.bind(this);
-    	this.afterOpenModal = this.afterOpenModal.bind(this);
-    	this.closeModal = this.closeModal.bind(this);
     	this.onChange2 = (restaurantLoc) => this.setState({ restaurantLoc })
 	}
   
@@ -364,21 +360,6 @@ class findRestaurant extends Component {
     event.preventDefault()
 };
 
-	openModal = () => {
-    this.setState({modalIsOpen: true});
-    this.searchlogo();
-  	};
-
-  	afterOpenModal = () => {
-    // references are now sync'd and can be accessed.
-    this.subtitle.style.color = '#f00';
-  	};
-
-  	closeModal = () => {
-    this.setState({modalIsOpen: false});
-    this.setState({searchlogo: true})
-  	};
-
 	onClick = () => {
     		this.setState({ showsidenav: !this.state.showsidenav });
    	};
@@ -595,6 +576,7 @@ class findRestaurant extends Component {
 		if (ev.currentTarget.getAttribute('data-phone')) {
 			phone = ev.currentTarget.getAttribute('data-phone')
 			phone = Yelp.convertPhone(phone)
+			this.setState({fbAPIResults:false})
 		} else {
 			phone = null
 		}
@@ -835,22 +817,6 @@ class findRestaurant extends Component {
 			</CSSTransitionGroup>
 			) : null }
 			<div className="wrapper">	
-							{/*
-			        <Modal
-			          isOpen={this.state.modalIsOpen}
-			          onAfterOpen={this.afterOpenModal}
-			          onRequestClose={this.closeModal}
-			          contentLabel="Example Modal"
-			        >
-			          <h2 ref={subtitle => this.subtitle = subtitle}>Hello</h2>
-			          <button className="modalClosed" onClick={this.closeModal}>close</button>
-			          <div>SearchField</div>
-			          <form>
-			            <input />
-			            <input />
-			       		<button>Search</button>
-			          </form>
-			        </Modal> */}
 			{ this.state.searchlogo ? (
 				<CSSTransitionGroup
 								transitionName="example"
@@ -947,7 +913,9 @@ class findRestaurant extends Component {
 													</div>
 													</CSSTransitionGroup>
 												) : (
-													<h4>No results from Facebook API </h4>
+													<div className='blackPage'>
+														<h4>No results from Facebook API </h4>
+													</div>
 												)}
 											</div> 		    
 		      				</div>

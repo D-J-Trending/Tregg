@@ -1,5 +1,4 @@
 import React from 'react';
-import { Link } from "react-router-dom";
 import MaterialTitlePanel from './material_title_panel';
 import PropTypes from 'prop-types';
 
@@ -42,7 +41,6 @@ const SidebarContent = (props) => {
       <div style={styles.content}>
         <a href="/" style={styles.sidebarLink}>Home</a>
          <a href="/Ranking" style={styles.sidebarLink}>Ranking</a>
-        <a href="/Login" style={styles.sidebarLink}>Login</a>
         <div style={styles.divider} />
       </div>
     </MaterialTitlePanel>

@@ -1,7 +1,5 @@
 import React, {Component} from 'react';
 import './Details.css'
-import API from '../../utils/API';
-import Filter from '../../utils/Filter';
 
 export class Details extends Component {
 	constructor(props) {

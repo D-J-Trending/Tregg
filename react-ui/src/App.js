@@ -129,7 +129,6 @@ class App extends React.Component {
             	<div className='content' style={styles.content}>
                 <Route exact path="/" component={findRestaurant} />
                 <Route exact path="/Ranking" component={Home} />
-                <Route exact path="/Login" component={Login} />
                 <Footer />
               </div>           
   	        </MaterialTitlePanel>
