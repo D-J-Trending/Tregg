@@ -13,6 +13,7 @@
     "moment": "^2.20.1",
     "numjs": "^0.15.1",
     "react": "^15.4.2",
+    "react-addons-css-transition-group": "^15.6.2",
     "react-chartjs-2": "^2.6.4",
     "react-dom": "^15.4.2",
     "react-modal": "^3.1.10",

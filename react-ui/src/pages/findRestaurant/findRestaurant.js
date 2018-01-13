@@ -58,7 +58,7 @@ class findRestaurant extends Component {
 			onSearchClick: false,
 			detailsWeeklyStats: {},
 			showsidenav: true,
-			showline: true,
+			showline: false,
 			showbar: true,
 			address: "",
 			dropdown: '',
@@ -375,12 +375,14 @@ class findRestaurant extends Component {
    	};
  
 	onSearchClick = () => {
-		 	this.setState({ searchIcon: !this.state.searchIcon});
+		 	this.setState({ searchIcon: !this.state.searchIcon,
+		 					details: false			
+		 	});
 	};
 
-	// showline = () => {
-	// 		this.setState({ showline: !this.state.showline });
-	// };
+	showline = () => {
+			this.setState({ showline: !this.state.showline });
+	};
 
 	showbar = () => {
 			this.setState({ showbar: !this.state.showbar });
@@ -759,7 +761,7 @@ class findRestaurant extends Component {
 								transitionAppear={true}
 								transitionAppearTimeout={500}
 								transitionEnter={false}
-								transitionLeave={true}>
+								transitionLeave={false}>
 				<a onClick={this.onSearchClick}>
 					<div className="inPut-with-icon">
 						<i className="fa fa-search"></i>
@@ -778,9 +780,9 @@ class findRestaurant extends Component {
 														<CSSTransitionGroup
 															transitionName="example"
 															transitionAppear={true}
-															transitionAppearTimeout={1500}
+															transitionAppearTimeout={500}
 															transitionEnter={false}
-															transitionLeave={true}>
+															transitionLeave={false}>
 															<Searched>
 																{this.state.searchedRestaurant.map(restaurant => (
 																	<Searcheditems className='searcheditems' key={restaurant._id} showDetails={(ev) => this.showDetails(ev, this.callback)}
@@ -809,7 +811,7 @@ class findRestaurant extends Component {
 														transitionAppear={true}
 														transitionAppearTimeout={500}
 														transitionEnter={false}
-														transitionLeave={true}
+														transitionLeave={false}
 													>
 														<Searched>
 															{this.state.fbAPIResults.map(restaurant => (
@@ -837,6 +839,13 @@ class findRestaurant extends Component {
 										null
 									)}
 								{this.state.details ? (
+									<CSSTransitionGroup
+														transitionName="example"
+														transitionAppear={true}
+														transitionAppearTimeout={500}
+														transitionEnter={false}
+														transitionLeave={false}
+													>
 		      				<div className='restaurant-info'>	
 		      					<div className='columns restaurant-component'>	      				
 		      						<Restheader
@@ -909,6 +918,7 @@ class findRestaurant extends Component {
 											</div>
 										</div>
 									</div>
+									</CSSTransitionGroup>
 										) : (
 										null
 									)}
@@ -921,7 +931,7 @@ class findRestaurant extends Component {
 								transitionAppear={true}
 								transitionAppearTimeout={500}
 								transitionEnter={false}
-								transitionLeave={true}>
+								transitionLeave={false}>
 								<div className='searchIcon'>
 								<form onSubmit={this.searchSubmit}>
 				      		<input

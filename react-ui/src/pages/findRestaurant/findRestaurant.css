@@ -73,30 +73,35 @@ form {
 .searchBar {
 	position: relative;
     top: -160px;
-    right: -90px;
+    right: -90px;.
+    animation-name: bounceInLeft;
 }
 .example-enter {
   opacity: 0.01;
-  width: 0px;
 }
 
 .example-enter.example-enter-active {
   opacity: 1;
-  width: 100px;
-  transition: 700ms;
+  transition: 300ms;
 }
 
 .example-leave {
   opacity: 1;
-  width: 100px;
 }
 
 .example-leave.example-leave-active {
   opacity: 0.01;
-  width: 0px;
-  transition: 700ms;
+transition: 600ms;
+
+}
+.example-appear {
+  opacity: 0.01;
 }
 
+.example-appear.example-appear-active {
+  opacity: 1;
+  transition: opacity .5s ease-in;
+}
 
 /*!
  * animate.css -http://daneden.me/animate

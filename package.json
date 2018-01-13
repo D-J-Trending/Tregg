@@ -20,6 +20,7 @@
     "jshint": "^2.9.5",
     "mongoose": "^4.13.7",
     "numjs": "^0.15.1",
+    "react-addons-css-transition-group": "^15.6.2",
     "react-modal": "^3.1.10",
     "react-places-autocomplete": "^5.4.3",
     "react-router": "^4.2.0",
