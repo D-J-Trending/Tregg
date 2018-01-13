@@ -4,7 +4,7 @@ import "./Searched.css";
 export const Searched = ({children}) => (
   <div className="list-overflow-container-searched">
       <ul className="list-group">
-        {children}
+      	{children}
       </ul>
     </div>
 );
