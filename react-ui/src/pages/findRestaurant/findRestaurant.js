@@ -142,6 +142,7 @@ class findRestaurant extends Component {
 
 		API.returnDetails(id)
 			.then(res => {
+				console.log(res)
 				// passes in diff array, skips filterlabel, and passes in avg line data
 				// to create data set
 				let diff = Mathy.getDiffwithDate(res.data[0].checkins, 'checkins');
