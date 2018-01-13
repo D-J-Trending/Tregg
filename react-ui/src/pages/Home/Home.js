@@ -43,20 +43,16 @@ class Home extends Component {
 		};
 	}
 
-	showState = () => {
-		console.log(this.state)
-	}
-
    // gets top 5 sorted by score
 	render() {
 		return (
 		<div className='homepage'>
-			<button onClick={this.showState}>showState</button>
 			<div className="wrapper home">
+				<p className='homepage-header'>TOP 10 TRENDING RESTAURANTS</p>
 				<div className="main container-fluid">				
-					  <div className='centered restaurant-info'>	
-					  	<p>Top 10 Trending Restaurants</p>
-    					<div className='columns restaurant-component'>	      				
+					  <div className='centered restaurant-info restaurant-search'>
+    					<div className='columns restaurant-component'>
+    							      				
     						<div className="content-list">
 						      <ul className='centered'>
 						      	{this.state.showList ?

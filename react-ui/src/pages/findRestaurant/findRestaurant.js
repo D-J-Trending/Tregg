@@ -861,7 +861,7 @@ class findRestaurant extends Component {
 		      		<div className="column auto">
 		      		{this.state.hidesearch ? (
 		      			<div className='columns search-area'>
-		      				<div className="column is-12">										
+		      				<div className="column is-12">
 											<div id='search-restaurant'>
 													{this.state.searchedRestaurant.length ? (
 														<CSSTransitionGroup
@@ -872,6 +872,7 @@ class findRestaurant extends Component {
 															transitionLeave={true}>														
 															<div className='search-section'>
 																<div className="wrapper restaurant-search">
+																<p className='homepage-header'>Database Results</p>
 																	<div className="main container-fluid">				
 																	  <div className='centered restaurant-info'>																				  	
 												    					<div className='columns restaurant-component'>	      				
@@ -884,7 +885,7 @@ class findRestaurant extends Component {
 																	      				key={restaurant._id}
 																	      				onClick={(ev) => this.showDetails(ev, this.callback)}
 																	      				trendingScore={restaurant.trending_score['7day']['checkins']}
-																	      				mainColumnClass={'column is-12 top-trending'}
+																	      				mainColumnClass={'column is-12 top-trending find-restaurant-search-section'}
 																	      				columnClass={'column is-6'}
 																	      				rank={restaurant.new_rank}
 																	      				restaurantName={restaurant.name}
@@ -894,7 +895,9 @@ class findRestaurant extends Component {
 														      							yelpURL={restaurant.yelpURL}
 														      							fb_url={restaurant.fbURL}
 														      							fbRating={restaurant.star_rating[0].overall_star_rating}
-														      							yelpRating={restaurant.rating[0].rating}		      									      							
+														      							yelpRating={restaurant.rating[0].rating}
+														      							// restaurantDetails={restaurant.yelpImg}	
+
 																	      			/>	
 																	      		</li>																																							      	
 																		      </ul>  									      						      		
@@ -920,7 +923,7 @@ class findRestaurant extends Component {
 													>
 														<Searched>
 															{this.state.fbAPIResults.map(restaurant => (
-																<FbSearchedItems className='searcheditems' key={restaurant.id} getYelpAddToDb={(ev) => this.getYelpAddToDb(ev)}
+																<FbSearchedItems className='list-group-item searcheditems' key={restaurant.id} getYelpAddToDb={(ev) => this.getYelpAddToDb(ev)}
 																	value={restaurant.id}
 																	dataName={restaurant.name}
 																	dataAddress={restaurant.location.street}

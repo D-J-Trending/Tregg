@@ -8,7 +8,7 @@ export const ChartFilter = props => (
 
   <div className="chart-filter" {...props}>
     <div className="filter-header">
-      <p className="has-text-centered">Filter</p>
+      <p className="has-text-centered">Restaurant Filter</p>
     </div>
   	{props.children}
     <button className={props.green6} onClick={props.averageClick}>All Restaurants Avg</button>
