@@ -6,9 +6,12 @@ import Filter from '../../utils/Filter';
 export class Details extends Component {
 	constructor(props) {
 		super(props)
+		this.state = {
+			actualYelpReviews: false
+		}
 	};
-	componentDidMount() {
-		// this.props.getTotals();
+	componentWillMount() {
+		this.props.yelpReviews()
 	}
 
 	getLastElement = (arr, filter) => {
@@ -18,6 +21,15 @@ export class Details extends Component {
 		return lastItem[filter]
 	};
 
+	componentWillReceiveProps(nextProps) {
+		console.log(nextProps)
+		if (nextProps.actualYelpReviews) {
+			this.setState({
+				actualYelpReviews: nextProps.actualYelpReviews
+			})		
+		}
+
+	}
 	render() {
 		return (
 	
@@ -27,6 +39,13 @@ export class Details extends Component {
 				{this.props.restaurantDetails.name}
 				</h4>
 				<img alt="Firm" className="detailsImg"src={this.props.restaurantDetails.yelpImg} />
+				{this.state.actualYelpReviews ? 
+					this.state.actualYelpReviews.map(item => (
+						<h1> {item.text} </h1>
+					))
+				:
+				null
+				}
 				<select
 				onChange={this.props.loadFilter}
 				>
