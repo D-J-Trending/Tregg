@@ -148,11 +148,17 @@ class findRestaurant extends Component {
 				let diff = Mathy.getDiffwithDate(res.data[0].checkins, 'checkins');
 				const initialChartData = this.createInitialChartDataSet(diff, null, this.state.filteredRestaurants.checkins, res.data[0])
 
+				console.log(res);
+				// let res.trending_score['7day']['checkins']) = Round(item.trending_score['7day']['checkins'], -2) + "%"
+				let roundedTrending = Round(res.data[0].trending_score['7day']['checkins'] * 100, -2) + "%"
+				console.log(roundedTrending)
+
 				const obj = {
 					restaurantDetails: res.data[0],
 					details: true,
 					chartData: initialChartData,
-					restaurantName: ""					
+					restaurantName: "",
+					roundedTrending: roundedTrending					
 				}
 				this.setState(obj)
 				
@@ -664,10 +670,19 @@ class findRestaurant extends Component {
 				.then(res => {
 					// if no result found, start add new firm functions
 					// indexof, if data matches res.data, then take out
+
+					console.log(res.data);
+					let searchedRestaurantTrending = []
+					res.data.forEach(item => {
+						let roundedTrending = Round(item.trending_score['7day']['checkins'] * 100 , -2) + "%"
+						searchedRestaurantTrending.push(roundedTrending)
+					})
+					console.log(searchedRestaurantTrending)
+					// let roundedTrending = Round(res.data[0].trending_score['7day']['checkins'], -4)*100 + "%"
+
 					let fbResults = []
 					if (res.data[0]) {
-						data.forEach(item => {
-
+						data.forEach(item => {			
 							if (item.id !== res.data[0].fbId) {
 								fbResults.push(item)
 							}
@@ -678,8 +693,8 @@ class findRestaurant extends Component {
 					this.setState({
 						fbAPIResults: fbResults,
 						searchedRestaurant: res.data,
-
-					})
+						searchedRestaurantTrending: searchedRestaurantTrending
+					}, ()=> console.log(this.state))
 					// this.generateChartData(this.state.restaurantInfo)
 				})
 				.catch(err => console.log(err));
@@ -877,14 +892,14 @@ class findRestaurant extends Component {
 																	  <div className='centered restaurant-info'>																				  	
 												    					<div className='columns restaurant-component'>	      				
 												    						<div className="content-list">
-																				{this.state.searchedRestaurant.map(restaurant => (								      			
+																				{this.state.searchedRestaurant.map((restaurant,i) => (								      			
 																			    <ul className='centered'>																		      		      	
 																	      		<li>
 																	      			<Restheader
 																	      				value={restaurant._id}
 																	      				key={restaurant._id}
 																	      				onClick={(ev) => this.showDetails(ev, this.callback)}
-																	      				trendingScore={restaurant.trending_score['7day']['checkins']}
+																	      				trendingScore={this.state.searchedRestaurantTrending[i]}
 																	      				mainColumnClass={'column is-12 top-trending find-restaurant-search-section'}
 																	      				columnClass={'column is-6'}
 																	      				rank={restaurant.new_rank}
@@ -947,7 +962,7 @@ class findRestaurant extends Component {
 		      				<div className='restaurant-info'>	
 		      					<div className='columns restaurant-component'>	      				
 		      						<Restheader
-		      							trendingScore={this.state.restaurantDetails.trending_score['7day']['checkins']}
+		      							trendingScore={this.state.roundedTrending}
 		      							mainColumnClass={'column is-12'}
 		      							columnClass={'column is-3'}
 		      							rank={this.state.restaurantDetails.rank}		      							
