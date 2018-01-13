@@ -45,7 +45,8 @@ section {
 
 
 .wrapper{
-	margin-bottom: 50px;
+	margin-bottom: 20px;
+  padding: 20px;
 	background-color: #17181B;
 }
 
@@ -75,18 +76,9 @@ section {
 	right: 30px;
 	font-size: 50px;
 }
-/*.searchIcon {
-	position: fixed;
-	top: 350px;
-	right: 10px;
-	margin-right: 10px;
-	z-index: 2;
-	font-size: 50px;
-	width: 60%;
-	height: 10px;
-}*/
+
 .searchField {
-  animation: bounceInDown 3s linear;
+  animation: bounceInDown 1.5s linear;
   position: fixed;
   background-color: red;
   text-align: center;
@@ -130,6 +122,7 @@ section {
   width: 100%;
   margin: auto;
   margin-left: 40px;
+  animation: bounceIn 3s linear;
 }
 .HeaderSearch button{
   height: 70px;
@@ -137,50 +130,18 @@ section {
   border: 1px solid white;
 }
 
-
-.ReactModal__Content ReactModal__Content--after-open {
-	position: absolute;
-    top: 50%;
-    left: 50%;
-    right: auto;
-    bottom: auto;
-    border: 1px solid rgb(204, 204, 204);
-    background: rgb(255, 255, 255);
-    overflow: auto;
-    border-radius: 4px;
-    outline: none;
-    padding: 20px;
-    margin-right: -50%;
-    transform: translate(-50%, -50%)
-}
-
-.example-enter {
-  opacity: 0.01;
-}
-
-.example-enter.example-enter-active {
-  opacity: 1;
- animation-name: bounceInLeft 3s linear;
-}
-
-.example-leave {
-  opacity: 1;
-}
-
-.example-leave.example-leave-active {
-  opacity: 0.01;
-  animation: bounceInLRight 3s linear;
-}
-.example-appear {
-  opacity: 1;
-    animation: bounceInLeft 3s linear;
-}
-
-.example-appear.example-appear-active {
+.restaurant-info{
   animation: bounceInLeft 3s linear;
 }
-.restaurant-info{
+
+.search-section {
+  animation: bounceInDown 3s linear;
+}
+.searcheditems {
   animation: bounceInUp 3s linear;
+}
+.content-list {
+  animation: bounceIn 3s linear;
 }
 .blackPage {
   top:0px;

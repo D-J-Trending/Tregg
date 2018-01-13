@@ -38,15 +38,15 @@ export class Details extends Component {
 				<h4>
 				{this.props.restaurantDetails.name}
 				</h4>
-				<img alt="Firm" className="detailsImg"src={this.props.restaurantDetails.yelpImg} />
+				
 				<h6>Recent Reviews</h6>
 				{this.state.actualYelpReviews ? (
 					this.state.actualYelpReviews.reviews.map(item => (
-						<a className="bob" key={item.id} href={item.url} target="_blank">
+						<div className="bob" key={item.id} href={item.url} target="_blank">
 							<p> {item.text} </p>
 							<p> {item.user.name} </p>
 							<p> {item.time_created} </p>
-						</a>
+						</div>
 					))
 					): (
 					null)
