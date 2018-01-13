@@ -165,7 +165,7 @@ class findRestaurant extends Component {
 
 	createInitialChartDataSet = (diffDateArr, filterLabel, avgLineDataSet, firmDetails) => {
 		// creates average line's chart data set
-		const avgLineChartData = ChartDataSet.createDataSet(avgLineDataSet, 'Average', true)
+		const avgLineChartData = ChartDataSet.createDataSet(avgLineDataSet, 'All Restaurants Avg', true)
 		const diffDataChartData = ChartDataSet.createDataSet(diffDateArr, firmDetails.name)
 		let labels = avgLineDataSet.map(checkins => {
 			let queryDate = checkins.query_date.replace(/ .*/,'');
