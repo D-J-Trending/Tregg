@@ -5,14 +5,30 @@ section {
   color: white;
 }
 
-.home-search-section {
-  background-color: white;
+.searcheditems {
+  background-color: #15409a;
+  color: white;
+}
+
+.searcheditems button {
+  background-color: 
+}
+
+.searcheditems button:hover {
+  background-color: #bbd0fb;
+  
+}
+
+.find-restaurant-search-section:hover {
+  background-color: #292929;
 }
 
 .restaurant-search li {
   list-style-type: none;
   border: 1px white solid;
-  border-radius: 10px
+  border-radius: 10px;
+  overflow:hidden;
+  background-color: #1d1d1d;
 }
 
 .restaurant-search ul {

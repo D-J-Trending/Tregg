@@ -1,3 +1,12 @@
+.homepage-header {
+	font-weight: bold;
+	font-size: 24px;
+	text-align: center;
+	color: white;
+  margin-top: 20px;
+  line-height: 10px;
+}
+
 .home li {
   list-style-type: none;
   border: 1px white solid;
@@ -13,5 +22,6 @@
 }
 
 .content-list {
+	width:100%;
 	margin: auto;
 }

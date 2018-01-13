@@ -51,7 +51,7 @@ export class Details extends Component {
 					): (
 					null)
 				}
-				<select
+				{/*<select
 				onChange={this.props.loadFilter}
 				>
 					<option value="all">All</option>
@@ -69,7 +69,7 @@ export class Details extends Component {
 					<p>
 
 					</p>
-				</div>
+				</div>*/}
 			</div>
 		)
 	}	

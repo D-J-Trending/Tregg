@@ -72,6 +72,7 @@ class findRestaurant extends Component {
 			active4:'button',
 			active5:'button fullwidth',
 			active6:'button fullwidth is-success',
+			active7:'button fullwidth',
 			placeholder: 'Location',
 			actualYelpReviews: false
 		};
@@ -146,11 +147,17 @@ class findRestaurant extends Component {
 				let diff = Mathy.getDiffwithDate(res.data[0].checkins, 'checkins');
 				const initialChartData = this.createInitialChartDataSet(diff, null, this.state.filteredRestaurants.checkins, res.data[0])
 
+				console.log(res);
+				// let res.trending_score['7day']['checkins']) = Round(item.trending_score['7day']['checkins'], -2) + "%"
+				let roundedTrending = Round(res.data[0].trending_score['7day']['checkins'] * 100, -2) + "%"
+				console.log(roundedTrending)
+
 				const obj = {
 					restaurantDetails: res.data[0],
 					details: true,
 					chartData: initialChartData,
-					restaurantName: ""					
+					restaurantName: "",
+					roundedTrending: roundedTrending					
 				}
 				this.setState(obj)
 				
@@ -405,7 +412,8 @@ class findRestaurant extends Component {
 			active3:'button',
 			active4:'button',
 			active5:'button fullWidth',
-			active6:'button fullWidth'
+			active6:'button fullWidth',
+			active7:'button fullWidth'
 		})
 		this.setState({active1: 'button is-success'});
 		this.priceFilteredRestaurants(ev)
@@ -418,7 +426,8 @@ class findRestaurant extends Component {
 			active3:'button',
 			active4:'button',
 			active5:'button fullWidth',
-			active6:'button fullWidth'
+			active6:'button fullWidth',
+			active7:'button fullWidth'
 		})
 		this.setState({active2: 'button is-success'});
 		this.priceFilteredRestaurants(ev)
@@ -431,7 +440,8 @@ class findRestaurant extends Component {
 			active3:'button',
 			active4:'button',
 			active5:'button fullWidth',
-			active6:'button fullWidth'
+			active6:'button fullWidth',
+			active7:'button fullWidth'
 		})
 		this.setState({active3: 'button is-success'});
 		this.priceFilteredRestaurants(ev)
@@ -444,7 +454,8 @@ class findRestaurant extends Component {
 			active3:'button',
 			active4:'button',
 			active5:'button fullWidth',
-			active6:'button fullWidth'
+			active6:'button fullWidth',
+			active7:'button fullWidth'
 		})
 		this.setState({active4: 'button is-success'});
 		this.priceFilteredRestaurants(ev)
@@ -457,7 +468,8 @@ class findRestaurant extends Component {
 			active3:'button',
 			active4:'button',
 			active5:'button fullWidth',
-			active6:'button fullWidth'
+			active6:'button fullWidth',
+			active7:'button fullWidth'
 		})
 		this.setState({active5: 'button fullwidth is-success'});
 		this.categoryFilteredRestaurants(ev)
@@ -470,10 +482,25 @@ class findRestaurant extends Component {
 			active3:'button',
 			active4:'button',
 			active5:'button fullWidth',
-			active6:'button fullWidth'
+			active6:'button fullWidth',
+			active7:'button fullWidth'
 		})
 		this.setState({active6: 'button fullwidth is-success'});
 		this.averageFilteredRestaurants(ev)
+	};
+
+	filterClick7 = (ev) => {
+		this.setState({
+			active1:'button',
+			active2:'button',
+			active3:'button',
+			active4:'button',
+			active5:'button fullWidth',
+			active6:'button fullWidth',
+			active7:'button fullWidth'
+		})
+		this.setState({active7: 'button fullwidth is-success'});
+		this.removeSecondLine(ev)
 	};
 
 	removeSecondLine = ev => {
@@ -624,18 +651,29 @@ class findRestaurant extends Component {
 		})
 		let location = address
 		if (boolean) {
-			let location = address.lat.toString() + "," + address.lng.toString();
+			console.log('boolean works')
+			location = address.lat.toString() + "," + address.lng.toString();
 		}
+		console.log(location)
 		if (this.state.restaurantName) {
 			const nameQue = (data) => {
 				API.nameQuery(this.state.restaurantName)
 				.then(res => {
 					// if no result found, start add new firm functions
 					// indexof, if data matches res.data, then take out
+
+					console.log(res.data);
+					let searchedRestaurantTrending = []
+					res.data.forEach(item => {
+						let roundedTrending = Round(item.trending_score['7day']['checkins'] * 100 , -2) + "%"
+						searchedRestaurantTrending.push(roundedTrending)
+					})
+					console.log(searchedRestaurantTrending)
+					// let roundedTrending = Round(res.data[0].trending_score['7day']['checkins'], -4)*100 + "%"
+
 					let fbResults = []
 					if (res.data[0]) {
-						data.forEach(item => {
-
+						data.forEach(item => {			
 							if (item.id !== res.data[0].fbId) {
 								fbResults.push(item)
 							}
@@ -646,13 +684,13 @@ class findRestaurant extends Component {
 					this.setState({
 						fbAPIResults: fbResults,
 						searchedRestaurant: res.data,
-
-					})
+						searchedRestaurantTrending: searchedRestaurantTrending
+					}, ()=> console.log(this.state))
 					// this.generateChartData(this.state.restaurantInfo)
 				})
 				.catch(err => console.log(err));
 			}
-
+			console.log(location)
 			// searches through fb api before sending it through db api
 			const access = 'EAAG0XCqokvMBAPYkq18AYZCRVI1QaWb9HU9ti4PpFL5lZAL32p53Ql1zREzbBi9ikoXwdwgsyZB6Cjv9YjghpfQmWPZCBBtWMnGaqknAecNhQzpBNWKCZCFYM36P0IRP8QSnOlzHdxod6y8mZA3cOpdxlu7XZAtqIv9AhZBXdPyPsAZDZD'
 			let url = 'https://graph.facebook.com/v2.7/search'
@@ -832,7 +870,7 @@ class findRestaurant extends Component {
 		      		<div className="column auto">
 		      		{this.state.hidesearch ? (
 		      			<div className='columns search-area'>
-		      				<div className="column is-12">										
+		      				<div className="column is-12">
 											<div id='search-restaurant'>
 													{this.state.searchedRestaurant.length ? (
 														<CSSTransitionGroup
@@ -844,19 +882,20 @@ class findRestaurant extends Component {
 															>														
 															<div className='search-section'>
 																<div className="wrapper restaurant-search">
+																<p className='homepage-header'>Database Results</p>
 																	<div className="main container-fluid">				
 																	  <div className='centered restaurant-info'>																				  	
 												    					<div className='columns restaurant-component'>	      				
 												    						<div className="content-list">
-																				{this.state.searchedRestaurant.map(restaurant => (								      			
+																				{this.state.searchedRestaurant.map((restaurant,i) => (								      			
 																			    <ul className='centered'>																		      		      	
 																	      		<li>
 																	      			<Restheader
 																	      				value={restaurant._id}
 																	      				key={restaurant._id}
 																	      				onClick={(ev) => this.showDetails(ev, this.callback)}
-																	      				trendingScore={restaurant.trending_score['7day']['checkins']}
-																	      				mainColumnClass={'column is-12 top-trending'}
+																	      				trendingScore={this.state.searchedRestaurantTrending[i]}
+																	      				mainColumnClass={'column is-12 top-trending find-restaurant-search-section'}
 																	      				columnClass={'column is-6'}
 																	      				rank={restaurant.new_rank}
 																	      				restaurantName={restaurant.name}
@@ -866,7 +905,9 @@ class findRestaurant extends Component {
 														      							yelpURL={restaurant.yelpURL}
 														      							fb_url={restaurant.fbURL}
 														      							fbRating={restaurant.star_rating[0].overall_star_rating}
-														      							yelpRating={restaurant.rating[0].rating}		      									      							
+														      							yelpRating={restaurant.rating[0].rating}
+														      							// restaurantDetails={restaurant.yelpImg}	
+
 																	      			/>	
 																	      		</li>																																							      	
 																		      </ul>  									      						      		
@@ -893,17 +934,14 @@ class findRestaurant extends Component {
 													<div className='blackPage'>
 														<Searched>
 															{this.state.fbAPIResults.map(restaurant => (
-																<FbSearchedItems className='searcheditems' key={restaurant.id} getYelpAddToDb={(ev) => this.getYelpAddToDb(ev)}
+																<FbSearchedItems className='list-group-item searcheditems' key={restaurant.id} getYelpAddToDb={(ev) => this.getYelpAddToDb(ev)}
 																	value={restaurant.id}
 																	dataName={restaurant.name}
 																	dataAddress={restaurant.location.street}
 																	dataCity={restaurant.location.city}
 																	dataPhone={restaurant.phone}
-																>
-																	<p> Name of Restaurant: {restaurant.name} </p>
-																	<p> Address: {restaurant.single_line_address} </p>
-																	<p> Phone: {restaurant.phone} </p>
-																</FbSearchedItems>
+																	restaurantData={restaurant}
+																/>
 															))}
 														</Searched>
 													</div>
@@ -921,6 +959,7 @@ class findRestaurant extends Component {
 		      				<div className='restaurant-info'>	
 		      					<div className='columns restaurant-component'>	      				
 		      						<Restheader
+		      							trendingScore={this.state.roundedTrending}
 		      							mainColumnClass={'column is-12'}
 		      							columnClass={'column is-3'}
 		      							rank={this.state.restaurantDetails.rank}		      							
@@ -949,13 +988,15 @@ class findRestaurant extends Component {
 						      					green4={this.state.active4}
 						      					green5={this.state.active5}
 						      					green6={this.state.active6}
+						      					green7={this.state.active7}
 						      					checkClick1={this.filterClick1}
 						      					checkClick2={this.filterClick2}
 						      					checkClick3={this.filterClick3}
-						      					checkClick4={this.filterClick4}						      				
+						      					checkClick4={this.filterClick4}
+						      					checkClick7={this.filterClick7}						      				
 						      					averageArr={this.state.filteredRestaurants}
 						      					averageClick={this.filterClick6}
-						      					removeSecondLine={this.removeSecondLine}
+						      					removeSecondLine={this.filterClick7}
 						      				/>				      					
 						      			</div>					      											
 											</div>
