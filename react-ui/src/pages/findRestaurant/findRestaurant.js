@@ -905,11 +905,8 @@ class findRestaurant extends Component {
 																	dataAddress={restaurant.location.street}
 																	dataCity={restaurant.location.city}
 																	dataPhone={restaurant.phone}
-																>
-																	<p> Name of Restaurant: {restaurant.name} </p>
-																	<p> Address: {restaurant.single_line_address} </p>
-																	<p> Phone: {restaurant.phone} </p>
-																</FbSearchedItems>
+																	restaurantData={restaurant}
+																/>
 															))}
 														</Searched>
 													</CSSTransitionGroup>
