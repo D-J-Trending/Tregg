@@ -71,7 +71,8 @@ class findRestaurant extends Component {
 			active4:'button',
 			active5:'button fullwidth',
 			active6:'button fullwidth is-success',
-			placeholder: 'Location'
+			placeholder: 'Location',
+			actualYelpReviews: false
 		};
 		this.onChange = (restaurantName) => this.setState({ restaurantName })
 		this.openModal = this.openModal.bind(this);
@@ -721,7 +722,20 @@ class findRestaurant extends Component {
 		return dailyAvg
 	};
 
-
+	yelpReviews = () => {
+		const id = this.state.restaurantDetails.yelpId
+		const url = "https://cors-anywhere.herokuapp.com/https://api.yelp.com/v3/businesses/" + id + '/reviews';
+		const headers = {
+			Authorization: "Bearer Dt0X2kf0ef_hQ5Jc_5FNnxheSlXdFX1-svTZE6AJP0J4lBoVuMFRl66QgPFblxpMN-_AHN9OL3mek81qVap7DEtTMK2MrXxXpTxV31SVTbe-qajxmCEGj_nHwuEuWnYx"
+		}
+		API.APIsearch(url, null, headers)
+			.then(res=> {
+				console.log(res)
+				this.setState({
+					actualYelpReviews: res.data
+				})
+			})
+	}
 	
 	render() {
 
@@ -926,7 +940,8 @@ class findRestaurant extends Component {
 													// getMean={(arr) => Mathy.getMean(arr)}
 													// totalVelocityAvg={this.state.totalVelocityAvg}
 													// totalAvgStatement={this.state.totalAvgStatement}
-													// yelpReviews={this.state.yelpReviews}
+													actualYelpReviews={this.state.actualYelpReviews}
+													yelpReviews={this.yelpReviews}
 													/>
 												</section>
 											</div>
