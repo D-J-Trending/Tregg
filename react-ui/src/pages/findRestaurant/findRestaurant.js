@@ -947,6 +947,7 @@ class findRestaurant extends Component {
 		      				<div className='restaurant-info'>	
 		      					<div className='columns restaurant-component'>	      				
 		      						<Restheader
+		      							trendingScore={this.state.restaurantDetails.trending_score['7day']['checkins']}
 		      							mainColumnClass={'column is-12'}
 		      							columnClass={'column is-3'}
 		      							rank={this.state.restaurantDetails.rank}		      							
