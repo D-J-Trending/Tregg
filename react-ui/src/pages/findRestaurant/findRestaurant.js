@@ -1004,19 +1004,19 @@ class findRestaurant extends Component {
 										</div>
 										<div className='columns restaurant-component margin-top'>
 											<div className='column is-12'>
-												<section className='stats-section section'>
+												<div className='stats-section section'>
 													<Statsection
 													restaurantInfo={this.state.restaurantInfo}
 													restaurantDetails={this.state.restaurantDetails}
 													allTotals={this.state.totalAvg}
 													/>
 													
-												</section>
+												</div>
 											</div>
 										</div>
 										<div className='columns restaurant-component'>
 											<div className='column is-12'>
-												<section className='section'>
+												<div className='section'>
 													<Details
 													restaurantDetails={this.state.restaurantDetails}
 													// getTotals={() => this.getTotals()}
@@ -1029,7 +1029,7 @@ class findRestaurant extends Component {
 													actualYelpReviews={this.state.actualYelpReviews}
 													yelpReviews={this.yelpReviews}
 													/>
-												</section>
+												</div>
 											</div>
 										</div>
 									</div>
