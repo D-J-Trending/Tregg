@@ -23,7 +23,7 @@ class Home extends Component {
 				console.log(data)
 				const top10Arr = Filter.getTop10ByScore(data)
 				top10Arr.forEach(item=>{
-					(item.trending_score['7day']['checkins']) = Round(item.trending_score['7day']['checkins'], -2) + "%"
+					(item.trending_score['7day']['checkins']) = Round(item.trending_score['7day']['checkins'] * 100, -2) + "%"
 				})
 				this.setState({
 					top10: top10Arr,
