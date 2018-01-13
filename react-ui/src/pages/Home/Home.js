@@ -22,6 +22,7 @@ class Home extends Component {
   	API.AllReviews()
 			.then(res => {
 				const data = res.data
+				console.log(data)
 				const top10Arr = Filter.getTop10ByScore(data)
 				top10Arr.forEach(item=>{
 					(item.trending_score['7day']['checkins']) = Round(item.trending_score['7day']['checkins'], -2) + "%"
