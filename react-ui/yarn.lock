@@ -4865,6 +4865,12 @@ react-scripts@0.9.5:
   optionalDependencies:
     fsevents "1.0.17"
 
+react-scrolling-carousel@^1.0.2:
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/react-scrolling-carousel/-/react-scrolling-carousel-1.0.2.tgz#8139cf83b45583fbee0431dc582af479ac2131d7"
+  dependencies:
+    react "^15.1.0"
+
 react-tooltip@^3.4.0:
   version "3.4.0"
   resolved "https://registry.yarnpkg.com/react-tooltip/-/react-tooltip-3.4.0.tgz#037f38f797c3e6b1b58d2534ccc8c2c76af4f52d"
@@ -4889,7 +4895,7 @@ react-waypoint@^8.0.0:
     consolidated-events "^1.1.0"
     prop-types "^15.0.0"
 
-react@^15.4.2:
+react@^15.1.0, react@^15.4.2:
   version "15.6.2"
   resolved "https://registry.yarnpkg.com/react/-/react-15.6.2.tgz#dba0434ab439cfe82f108f0f511663908179aa72"
   dependencies:

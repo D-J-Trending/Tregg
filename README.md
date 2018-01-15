@@ -1,14 +1,19 @@
-# Trending Restaurants
+# Tregg
+>[Site](https://tregg.herokuapp.com)
 
-## Things To Do:
+## Description
+An unbiased view on what restaurants are trending in your area. Utilizes python scripts to collect data and Javascript/React.js to display the data to the user. Inspired by the frustrations of ad driven popularity of restaurants, we want to give users and restaurant owners the opportunity to find previously unknown locations.
+>[Python Repo](https://github.com/jtung23/python-data-collector)
+
+
+### Things To Do:
 1. Add a comparison function between firms. Button to add restaurant to bank to compare then to display on graph on comparison
-2. Details component: current rank, min and max for each category (raw), lifetime avg diff, lowest % change, highest % change
-data dump san francisco, san jose, los angeles
-filter function can do difference or percent change
-geolocate on search, not on start
+2. Set up worker dynos to handle a larger database
+3. filter function can show difference or percent change
+4. Geolocation on start
 
-3. To fix deploying to heroku:
-	heroku
+
+
 
 4. To deploy to Heroku:
 	yarn build
