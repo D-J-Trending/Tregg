@@ -119,13 +119,12 @@ section {
   font-size: 20px;
 }
 
-.HeaderTitle h1{
- font-family: 'Bungee Shade', cursive;
-      text-align: center;
-    font-size: 200px;
-    margin-top: 20px;
-    color: aqua;
-
+.HeaderTitle h1 {
+ /*font-family: 'Bungee Shade', cursive;*/
+  text-align: center;
+  font-size: 200px;
+  margin-top: 20px;
+  color: aqua;
 }
 .HeaderSearch {
   margin-top: 40px;
