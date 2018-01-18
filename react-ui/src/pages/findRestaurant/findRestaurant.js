@@ -776,45 +776,44 @@ class findRestaurant extends Component {
 		<div>
 		{ this.state.searchHeader ? (
 				<CSSTransitionGroup
-								transitionName="example"
-								transitionAppear={true}
-								transitionAppearTimeout={500}
-								transitionEnter={false}
-								transitionLeave={false}>
-									<div id="animate-area">
-			<section>
-			<div className="HeaderTitle"> 
-				<h1>TREGG</h1>
-			}
-			</div>
-			<form onSubmit={this.searchSubmit}>
-									<div className="HeaderSearch">
-										<div className='columns'>
-											<div className="column is-5">
-							      				<input
-							      					className="searchBar"
-													inputProps={inputProps}
-													value={this.state.restaurantName}
-													onChange={this.handleInputChange}
-													name="restaurantName"
-													placeholder="Restaurant Name"
-													// onKeyDown={(ev) => this.handleSearchForm(ev)}
-												/>
-											</div>
-											<div className="column is-5">
-												<PlacesAutocomplete 
-													inputProps={inputProps2}
-												/>
-											</div>
-											<div className="column is-2">
-												<button type='submit'>Submit</button>
-											</div>
+					transitionName="example"
+					transitionAppear={true}
+					transitionAppearTimeout={500}
+					transitionEnter={false}
+					transitionLeave={false}>
+					<div id="animate-area">
+						<section>
+							<div className="HeaderTitle"> 
+								<h1>TREGG</h1>								
+							</div>
+								<p className="HeaderTagline">An unbiased visualization of restaurants trending in your area.</p>
+							<form onSubmit={this.searchSubmit}>
+								<div className="HeaderSearch">
+									<div className='columns'>
+										<div className="column is-5">
+				      				<input
+				      					className="searchBar"
+												inputProps={inputProps}
+												value={this.state.restaurantName}
+												onChange={this.handleInputChange}
+												name="restaurantName"
+												placeholder="Restaurant Name"
+												// onKeyDown={(ev) => this.handleSearchForm(ev)}
+											/>
+										</div>
+										<div className="column is-5">
+											<PlacesAutocomplete 
+												inputProps={inputProps2}
+											/>
+										</div>
+										<div className="column is-2">
+											<button type='submit'>Submit</button>
 										</div>
 									</div>
-								</form>
+								</div>
+							</form>
 						</section>
-						</div>
-
+					</div>
 			</CSSTransitionGroup>
 			) : null }
 			<div className="wrapper">	
