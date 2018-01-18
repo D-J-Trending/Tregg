@@ -786,7 +786,7 @@ class findRestaurant extends Component {
 							<div className="HeaderTitle"> 
 								<h1>TREGG</h1>								
 							</div>
-								<p className="HeaderTagline">An unbiased visualization of restaurants trending in your area.</p>
+							<p className="HeaderTagline">An unbiased visualization of restaurants trending in your area.</p>
 							<form onSubmit={this.searchSubmit}>
 								<div className="HeaderSearch">
 									<div className='columns'>
@@ -819,11 +819,11 @@ class findRestaurant extends Component {
 			<div className="wrapper">	
 			{ this.state.searchlogo ? (
 				<CSSTransitionGroup
-								transitionName="example"
-								transitionAppear={true}
-								transitionAppearTimeout={500}
-								transitionEnter={false}
-								transitionLeave={false}>
+					transitionName="example"
+					transitionAppear={true}
+					transitionAppearTimeout={500}
+					transitionEnter={false}
+					transitionLeave={false}>
 				<a onClick={this.onSearchClick}>
 					<div className="inPut-with-icon">
 						<i className="fa fa-search"></i>
@@ -831,60 +831,58 @@ class findRestaurant extends Component {
 				</a>
 				</CSSTransitionGroup>
 			) : null }
-			
 		      	<div className="data-section columns">
 		      		<div className="column auto">
 		      		{this.state.hidesearch ? (
 		      			<div className='columns search-area'>
 		      				<div className="column is-12">
-											<div id='search-restaurant'>
-													{this.state.searchedRestaurant.length ? (
-														<CSSTransitionGroup
-															transitionName="example"
-															transitionAppear={true}
-															transitionAppearTimeout={500}
-															transitionEnter={false}
-															transitionLeave={false}
-															>														
-															<div className='search-section'>
-																<div className="wrapper restaurant-search">
-																<p className='homepage-header'>Database Results</p>
-																	<div className="main container-fluid">				
-																	  <div className='centered restaurant-info'>																				  	
-												    					<div className='columns restaurant-component'>	      				
-												    						<div className="content-list">
-																				{this.state.searchedRestaurant.map((restaurant,i) => (								      			
-																			    <ul className='centered'>																		      		      	
-																	      		<li>
-																	      			<Restheader
-																	      				value={restaurant._id}
-																	      				key={restaurant._id}
-																	      				onClick={(ev) => this.showDetails(ev, this.callback)}
-																	      				trendingScore={this.state.searchedRestaurantTrending[i]}
-																	      				mainColumnClass={'column is-12 top-trending find-restaurant-search-section'}
-																	      				columnClass={'column is-6'}
-																	      				rank={restaurant.new_rank}
-																	      				restaurantName={restaurant.name}
-														      							address={restaurant.location.address}
-														      							city={restaurant.location.city}
-														      							state={restaurant.location.state}
-														      							yelpURL={restaurant.yelpURL}
-														      							fb_url={restaurant.fbURL}
-														      							fbRating={restaurant.star_rating[0].overall_star_rating}
-														      							yelpRating={restaurant.rating[0].rating}
-														      							// restaurantDetails={restaurant.yelpImg}	
-
-																	      			/>	
-																	      		</li>																																							      	
-																		      </ul>  									      						      		
-																				))}
-																				</div>
-																	    </div>
-														      	</div>		
-																	</div>
-																</div>
-															</div>															
-														</CSSTransitionGroup>
+										<div id='search-restaurant'>
+											{this.state.searchedRestaurant.length ? (
+												<CSSTransitionGroup
+													transitionName="example"
+													transitionAppear={true}
+													transitionAppearTimeout={500}
+													transitionEnter={false}
+													transitionLeave={false}
+													>														
+													<div className='search-section'>
+														<div className="wrapper restaurant-search">
+															<p className='homepage-header'>Database Results</p>
+															<div className="main container-fluid">				
+															  <div className='centered restaurant-info'>																				  	
+										    					<div className='columns restaurant-component'>	      				
+										    						<div className="content-list">
+																		{this.state.searchedRestaurant.map((restaurant,i) => (								      			
+																	    <ul className='centered'>																		      		      	
+															      		<li>
+															      			<Restheader
+															      				value={restaurant._id}
+															      				key={restaurant._id}
+															      				onClick={(ev) => this.showDetails(ev, this.callback)}
+															      				trendingScore={this.state.searchedRestaurantTrending[i]}
+															      				mainColumnClass={'column is-12 top-trending find-restaurant-search-section'}
+															      				columnClass={'column is-6'}
+															      				rank={restaurant.new_rank}
+															      				restaurantName={restaurant.name}
+												      							address={restaurant.location.address}
+												      							city={restaurant.location.city}
+												      							state={restaurant.location.state}
+												      							yelpURL={restaurant.yelpURL}
+												      							fb_url={restaurant.fbURL}
+												      							fbRating={restaurant.star_rating[0].overall_star_rating}
+												      							yelpRating={restaurant.rating[0].rating}
+												      							// restaurantDetails={restaurant.yelpImg}
+															      			/>	
+															      		</li>																																							      	
+																      </ul>  									      						      		
+																		))}
+																		</div>
+															    </div>
+												      	</div>		
+															</div>
+														</div>
+													</div>															
+												</CSSTransitionGroup>
 												) : (
 												<h3>No Results to Display</h3>
 												)}
@@ -976,8 +974,7 @@ class findRestaurant extends Component {
 													restaurantInfo={this.state.restaurantInfo}
 													restaurantDetails={this.state.restaurantDetails}
 													allTotals={this.state.totalAvg}
-													/>
-													
+													/>													
 												</div>
 											</div>
 										</div>
@@ -1000,50 +997,49 @@ class findRestaurant extends Component {
 											</div>
 										</div>
 									</div>
-										) : (
-										null
-									)}
+								) : (
+								null
+								)}
 			    		</div>
 			    	</div>
 			    	{ this.state.searchIcon ? 
-		      			<div className="side-nav column is-12">
-			      			<CSSTransitionGroup
-								transitionName="example"
-								transitionAppear={true}
-								transitionAppearTimeout={500}
-								transitionEnter={false}
-								transitionLeave={false}>
-								<div className='searchIcon'>
-								<form onSubmit={this.searchSubmit}>
-									<div className="searchField">
-										<div className='columns'>
-											<div className="column is-5">
-							      				<input
-							      					className="searchBar"
-													inputProps={inputProps}
-													value={this.state.restaurantName}
-													onChange={this.handleInputChange}
-													name="restaurantName"
-													placeholder="Restaurant Name"
-													// onKeyDown={(ev) => this.handleSearchForm(ev)}
-												/>
-											</div>
-											<div className="column is-5">
-												<PlacesAutocomplete 
-													inputProps={inputProps2}
-												/>
-											</div>
-											<div className="column is-2">
-												<button type='submit'>Submit</button>
-											</div>
+	      			<div className="side-nav column is-12">
+		      			<CSSTransitionGroup
+							transitionName="example"
+							transitionAppear={true}
+							transitionAppearTimeout={500}
+							transitionEnter={false}
+							transitionLeave={false}>
+							<div className='searchIcon'>
+							<form onSubmit={this.searchSubmit}>
+								<div className="searchField">
+									<div className='columns'>
+										<div className="column is-5">
+						      				<input
+						      					className="searchBar"
+												inputProps={inputProps}
+												value={this.state.restaurantName}
+												onChange={this.handleInputChange}
+												name="restaurantName"
+												placeholder="Restaurant Name"
+												// onKeyDown={(ev) => this.handleSearchForm(ev)}
+											/>
+										</div>
+										<div className="column is-5">
+											<PlacesAutocomplete 
+												inputProps={inputProps2}
+											/>
+										</div>
+										<div className="column is-2">
+											<button type='submit'>Submit</button>
 										</div>
 									</div>
-								</form>							
 								</div>
-				      		</CSSTransitionGroup>
-			      		</div>  		
-		      		: null }
-
+							</form>							
+							</div>
+			      		</CSSTransitionGroup>
+		      		</div>  		
+	      		: null }
 				</div>			
 		</div>
 	)
