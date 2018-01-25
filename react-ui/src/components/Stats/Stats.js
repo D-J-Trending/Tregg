@@ -19,11 +19,10 @@ class Stats extends Component {
 		})
 	}
 	render() {
-		console.log(this.props)
 		return (
 			<div className="stats">
 		    <div className='columns'>
-		      <div className='column auto'><img src='img/FB-f-Logo__blue_29.png'/> Checkins</div>
+		      <div className='column auto'><img alt='fb-logo' src='img/FB-f-Logo__blue_29.png'/> Checkins</div>
 	          <div className='column auto has-text-centered'>{this.props.weeklyStats.checkins.thisWeekSum} </div>
 	          <div className='column auto has-text-centered'>{this.state.velocity.checkins}{this.props.arrows(this.state.velocity.checkins)}</div>
 	          <div className='column auto has-text-centered'>{this.props.weeklyStats.checkins.lastWeekSum}</div>
@@ -31,7 +30,7 @@ class Stats extends Component {
 	          <div className='column auto has-text-centered'>{this.props.getLastElement(this.props.restaurantDetails.checkins, 'checkins')}</div>		                                      
 		    </div>
 		    <div className='columns'>
-		      <div className='column auto'><img src='img/FB-f-Logo__blue_29.png'/> Ratings</div>
+		      <div className='column auto'><img alt='fb-logo' src='img/FB-f-Logo__blue_29.png'/> Ratings</div>
 	          <div className='column auto has-text-centered'>{this.props.weeklyStats.ratings.thisWeekSum}</div>
 	          <div className='column auto has-text-centered'>{this.state.velocity.rating_count}{this.props.arrows(this.state.velocity.rating_count)}</div>
 	          <div className='column auto has-text-centered'>{this.props.weeklyStats.ratings.lastWeekSum}</div>
@@ -39,7 +38,7 @@ class Stats extends Component {
 	          <div className='column auto has-text-centered'>{this.props.getLastElement(this.props.restaurantDetails.rating_count, 'rating_count')}</div>               
 		    </div>   
 		    <div className='columns'>
-		      <div className='column auto'><i className="fa fa-yelp"></i> Reviews</div>
+		      <div className='column auto'><i alt='yelp-logo' className="fa fa-yelp"></i> Reviews</div>
 	        <div className='column auto has-text-centered'>{this.props.weeklyStats.reviews.thisWeekSum}</div>
 	        <div className='column auto has-text-centered'>{this.state.velocity.review_count}{this.props.arrows(this.state.velocity.review_count)}</div>
 	        <div className='column auto has-text-centered'>{this.props.weeklyStats.reviews.lastWeekSum}</div>
@@ -51,8 +50,8 @@ class Stats extends Component {
 		      <div className='column auto has-text-centered stat-header'>All Restaurant Daily Averages</div>
 		    </div>
 		    <div className='columns'>
-		      <div className='column auto has-text-centered'><img src='img/FB-f-Logo__blue_29.png'/> <span className="stat-title">Checkins</span></div>
-		      <div className='column auto has-text-centered'><img src='img/FB-f-Logo__blue_29.png'/> <span className="stat-title">Ratings</span></div>
+		      <div className='column auto has-text-centered'><img alt='fb-logo' src='img/FB-f-Logo__blue_29.png'/> <span className="stat-title">Checkins</span></div>
+		      <div className='column auto has-text-centered'><img alt='fb-logo' src='img/FB-f-Logo__blue_29.png'/> <span className="stat-title">Ratings</span></div>
 		      <div className='column auto has-text-centered'><i className="fa fa-yelp"></i> <span className="stat-title">Reviews</span></div>             
 		    </div>
 		    <div className='columns'>

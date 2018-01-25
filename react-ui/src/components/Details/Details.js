@@ -20,7 +20,6 @@ export class Details extends Component {
 	};
 
 	componentWillReceiveProps(nextProps) {
-		console.log(nextProps)
 		if (nextProps.actualYelpReviews) {
 			this.setState({
 				actualYelpReviews: nextProps.actualYelpReviews

@@ -21,7 +21,7 @@ export default {
 
 		if(dotted) {
 
-			console.log(data);
+			// console.log(data);
 
 			return{
 				label: name,

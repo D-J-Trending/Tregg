@@ -1,10 +1,9 @@
 import React, {Component} from 'react';
 import Modal from "react-modal";
-import { Input, Form, Searchbtn } from "../../components/Form";
+// import { Input, Form, Searchbtn } from "../../components/Form";
 import { Searched, Searcheditems, FbSearchedItems } from "../../components/Searched";
+import Ranking from "../../components/Ranking";
 import Chart from "../../components/Chart";
-import Sidenav from "../../components/Sidenav";
-import Dropdown from "../../components/Dropdown";
 import API from "../../utils/API.js";
 import { Details } from "../../components/Details";
 import { Restheader } from "../../components/Restdetails";
@@ -15,7 +14,6 @@ import "./findRestaurant.css";
 import Mathy from "../../utils/Mathy.js";
 import Yelp from "../../utils/Yelp.js";
 import { CSSTransitionGroup } from 'react-transition-group'; // ES6
-import moment from 'moment';
 import geolib from 'geolib';
 import PlacesAutocomplete, { geocodeByAddress, getLatLng } from 'react-places-autocomplete';
 import Map from "../../utils/Map.js";
@@ -138,16 +136,14 @@ class findRestaurant extends Component {
 
 		API.returnDetails(id)
 			.then(res => {
-				console.log(res)
 				// passes in diff array, skips filterlabel, and passes in avg line data
 				// to create data set
 				let diff = Mathy.getDiffwithDate(res.data[0].checkins, 'checkins');
 				const initialChartData = this.createInitialChartDataSet(diff, null, this.state.filteredRestaurants.checkins, res.data[0])
 
-				console.log(res);
 				// let res.trending_score['7day']['checkins']) = Round(item.trending_score['7day']['checkins'], -2) + "%"
 				let roundedTrending = Round(res.data[0].trending_score['7day']['checkins'] * 100, -2) + "%"
-				console.log(roundedTrending)
+				// console.log(roundedTrending)
 
 				const obj = {
 					restaurantDetails: res.data[0],
@@ -634,10 +630,10 @@ class findRestaurant extends Component {
 		})
 		let location = address
 		if (boolean) {
-			console.log('boolean works')
+			// console.log('boolean works')
 			location = address.lat.toString() + "," + address.lng.toString();
 		}
-		console.log(location)
+		// console.log(location)
 		if (this.state.restaurantName) {
 			const nameQue = (data) => {
 				API.nameQuery(this.state.restaurantName)
@@ -645,13 +641,13 @@ class findRestaurant extends Component {
 					// if no result found, start add new firm functions
 					// indexof, if data matches res.data, then take out
 
-					console.log(res.data);
+					// console.log(res.data);
 					let searchedRestaurantTrending = []
 					res.data.forEach(item => {
 						let roundedTrending = Round(item.trending_score['7day']['checkins'] * 100 , -2) + "%"
 						searchedRestaurantTrending.push(roundedTrending)
 					})
-					console.log(searchedRestaurantTrending)
+					// console.log(searchedRestaurantTrending)
 					// let roundedTrending = Round(res.data[0].trending_score['7day']['checkins'], -4)*100 + "%"
 
 					let fbResults = []
@@ -668,12 +664,12 @@ class findRestaurant extends Component {
 						fbAPIResults: fbResults,
 						searchedRestaurant: res.data,
 						searchedRestaurantTrending: searchedRestaurantTrending
-					}, ()=> console.log(this.state))
+					})
 					// this.generateChartData(this.state.restaurantInfo)
 				})
 				.catch(err => console.log(err));
 			}
-			console.log(location)
+			// console.log(location)
 			// searches through fb api before sending it through db api
 			const access = 'EAAG0XCqokvMBAPYkq18AYZCRVI1QaWb9HU9ti4PpFL5lZAL32p53Ql1zREzbBi9ikoXwdwgsyZB6Cjv9YjghpfQmWPZCBBtWMnGaqknAecNhQzpBNWKCZCFYM36P0IRP8QSnOlzHdxod6y8mZA3cOpdxlu7XZAtqIv9AhZBXdPyPsAZDZD'
 			let url = 'https://graph.facebook.com/v2.7/search'
@@ -754,7 +750,6 @@ class findRestaurant extends Component {
 		}
 		API.APIsearch(url, null, headers)
 			.then(res=> {
-				console.log(res)
 				this.setState({
 					actualYelpReviews: res.data
 				})
@@ -793,7 +788,7 @@ class findRestaurant extends Component {
 										<div className="column is-5">
 				      				<input
 				      					className="searchBar"
-												inputProps={inputProps}
+												// inputProps={inputProps}
 												value={this.state.restaurantName}
 												onChange={this.handleInputChange}
 												name="restaurantName"
@@ -852,30 +847,30 @@ class findRestaurant extends Component {
 															  <div className='centered restaurant-info'>																				  	
 										    					<div className='columns restaurant-component'>	      				
 										    						<div className="content-list">
-																		{this.state.searchedRestaurant.map((restaurant,i) => (								      			
-																	    <ul className='centered'>																		      		      	
-															      		<li>
-															      			<Restheader
-															      				value={restaurant._id}
-															      				key={restaurant._id}
-															      				onClick={(ev) => this.showDetails(ev, this.callback)}
-															      				trendingScore={this.state.searchedRestaurantTrending[i]}
-															      				mainColumnClass={'column is-12 top-trending find-restaurant-search-section'}
-															      				columnClass={'column is-6'}
-															      				rank={restaurant.new_rank}
-															      				restaurantName={restaurant.name}
-												      							address={restaurant.location.address}
-												      							city={restaurant.location.city}
-												      							state={restaurant.location.state}
-												      							yelpURL={restaurant.yelpURL}
-												      							fb_url={restaurant.fbURL}
-												      							fbRating={restaurant.star_rating[0].overall_star_rating}
-												      							yelpRating={restaurant.rating[0].rating}
-												      							// restaurantDetails={restaurant.yelpImg}
-															      			/>	
-															      		</li>																																							      	
-																      </ul>  									      						      		
-																		))}
+											    						<ul className='centered'>
+																				{this.state.searchedRestaurant.map((restaurant,i) => (								      																				    																		      		      	
+																      		<li key={i}>
+																      			<Restheader
+																      				value={restaurant._id}
+																      				key={restaurant._id}
+																      				onClick={(ev) => this.showDetails(ev, this.callback)}
+																      				trendingScore={this.state.searchedRestaurantTrending[i]}
+																      				mainColumnClass={'column is-12 top-trending find-restaurant-search-section'}
+																      				columnClass={'column is-6'}
+																      				rank={restaurant.new_rank}
+																      				restaurantName={restaurant.name}
+													      							address={restaurant.location.address}
+													      							city={restaurant.location.city}
+													      							state={restaurant.location.state}
+													      							yelpURL={restaurant.yelpURL}
+													      							fb_url={restaurant.fbURL}
+													      							fbRating={restaurant.star_rating[0].overall_star_rating}
+													      							yelpRating={restaurant.rating[0].rating}
+													      							// restaurantDetails={restaurant.yelpImg}
+																      			/>	
+																      		</li>																																							      	       									      						      		
+																				))}
+																			</ul> 
 																		</div>
 															    </div>
 												      	</div>		
@@ -993,6 +988,7 @@ class findRestaurant extends Component {
 													actualYelpReviews={this.state.actualYelpReviews}
 													yelpReviews={this.yelpReviews}
 													/>
+
 												</div>
 											</div>
 										</div>

@@ -7,9 +7,6 @@ import { Restheader } from "../../components/Restdetails";
 import Round from '../../utils/Round'
 
 class Home extends Component {
-	constructor(props) {
-		super(props)
-	}
 	state = {
 		restaurantArr: [],
 		restaurantName: "Homeroom",
@@ -41,44 +38,43 @@ class Home extends Component {
 		};
 	}
 
-   // gets top 5 sorted by score
+   // gets top 10 sorted by score
 	render() {
 		return (
 		<div className='homepage'>
 			<div className="wrapper home">
 				<p className='homepage-header'>TOP 10 TRENDING RESTAURANTS</p>
 				<div className="main container-fluid">				
-					  <div className='centered restaurant-info restaurant-search'>
-    					<div className='columns restaurant-component'>
-    							      				
-    						<div className="content-list">
-						      <ul className='centered'>
-						      	{this.state.showList ?
-						      		this.state.top10.map((item,i) => (
-						      		<li>
-						      			<Restheader
-						      				trendingScore={item.trending_score['7day']['checkins']}
-						      				mainColumnClass={'column is-12 top-trending'}
-						      				columnClass={'column is-6'}
-						      				rank={item.new_rank}
-						      				restaurantName={item.name}
-			      							address={item.location.address}
-			      							city={item.location.city}
-			      							state={item.location.state}
-			      							yelpURL={item.yelpURL}
-			      							fb_url={item.fbURL}
-			      							fbRating={item.star_rating[0].overall_star_rating}
-			      							yelpRating={item.rating[0].rating}		      									      							
-						      			/>	
-						      		</li>	      			
-						      		))
-						      		:
-						      		null
-						      	}
-							      </ul>
-						    </div>
+				  <div className='centered restaurant-info restaurant-search'>
+  					<div className='columns restaurant-component'>						      				
+  						<div className="content-list">
+					      <ul className='centered'>
+					      	{this.state.showList ?
+					      		this.state.top10.map((item,i) => (
+					      		<li>
+					      			<Restheader
+					      				trendingScore={item.trending_score['7day']['checkins']}
+					      				mainColumnClass={'column is-12 top-trending'}
+					      				columnClass={'column is-6'}
+					      				rank={item.new_rank}
+					      				restaurantName={item.name}
+		      							address={item.location.address}
+		      							city={item.location.city}
+		      							state={item.location.state}
+		      							yelpURL={item.yelpURL}
+		      							fb_url={item.fbURL}
+		      							fbRating={item.star_rating[0].overall_star_rating}
+		      							yelpRating={item.rating[0].rating}		      									      							
+					      			/>	
+					      		</li>	      			
+					      		))
+					      		:
+					      		null
+					      	}
+						      </ul>
 					    </div>
-		      	</div>		
+				    </div>
+	      	</div>		
 				</div>
 			</div>	
 		</div>

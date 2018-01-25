@@ -33,9 +33,6 @@ const styles = {
 const SidebarContent = (props) => {
   const style = props.style ? {...styles.sidebar, ...props.style} : styles.sidebar;
 
- 
-  
-
   return (
     <MaterialTitlePanel title="Menu" style={style}>
       <div style={styles.content}>

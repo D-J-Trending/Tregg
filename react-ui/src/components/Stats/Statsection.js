@@ -23,9 +23,6 @@ export class Statsection extends Component {
 	};
 
   componentDidMount() {
-    // const getTotals = this.props.getTotals;
-    // getTotals()
-
     const checkinsAvg = Mathy.findRoundedDiffMean(this.props.restaurantDetails.checkins, 'checkins')
     const reviewsAvg = Mathy.findRoundedDiffMean(this.props.restaurantDetails.reviews, 'review_count')
     const ratingsAvg = Mathy.findRoundedDiffMean(this.props.restaurantDetails.rating_count, 'rating_count')
@@ -48,9 +45,7 @@ export class Statsection extends Component {
       totalVelocityAvg: totalVelocityAvg,
       restaurantDetails: this.props.restaurantDetails
     })
-
   }
-
   componentWillReceiveProps(nextProps) {
     const checkinsAvg = Mathy.findRoundedDiffMean(nextProps.restaurantDetails.checkins, 'checkins')
     const reviewsAvg = Mathy.findRoundedDiffMean(nextProps.restaurantDetails.reviews, 'review_count')
@@ -93,8 +88,6 @@ export class Statsection extends Component {
 
   arrows = (value) => {
     const numberWithoutPercent = value.slice(0, -1)
-    
-
     if(numberWithoutPercent > 0) {
       return <i className="fa fa-sort-asc"></i>
     } else if(numberWithoutPercent < 0) {
@@ -105,7 +98,6 @@ export class Statsection extends Component {
   }
 
 	render() {
-    console.log(this.props)
 		return (
 			<div className="stats">
         <p className="stat-header has-text-centered">{this.props.restaurantDetails.name} Statistics</p>	
@@ -130,8 +122,7 @@ export class Statsection extends Component {
             <div data-tip="React-tooltip" data-for='All-Time' className='column auto has-text-centered stat-title'>All-Time</div>
               <ReactTooltip id='All-Time' aria-haspopup='true' role='example'>
                 <span>Current Total Count</span>
-              </ReactTooltip>    
-      				
+              </ReactTooltip>          				
   			</div>
         {this.state.show ? 
           <Stats
