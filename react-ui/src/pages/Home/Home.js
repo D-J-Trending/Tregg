@@ -2,7 +2,6 @@ import React, {Component} from 'react';
 import API from "../../utils/API.js";
 import "./Home.css";
 import Filter from '../../utils/Filter';
-import Trending from '../../components/Trending';
 import { Restheader } from "../../components/Restdetails";
 import Round from '../../utils/Round'
 

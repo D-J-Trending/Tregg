@@ -1,7 +1,6 @@
 import React, {Component} from 'react';
-import Modal from "react-modal";
 // import { Input, Form, Searchbtn } from "../../components/Form";
-import { Searched, Searcheditems, FbSearchedItems } from "../../components/Searched";
+import { Searched, FbSearchedItems } from "../../components/Searched";
 import Ranking from "../../components/Ranking";
 import Chart from "../../components/Chart";
 import API from "../../utils/API.js";
@@ -16,17 +15,13 @@ import Yelp from "../../utils/Yelp.js";
 import { CSSTransitionGroup } from 'react-transition-group'; // ES6
 import geolib from 'geolib';
 import PlacesAutocomplete, { geocodeByAddress, getLatLng } from 'react-places-autocomplete';
-import Map from "../../utils/Map.js";
+// import Map from "../../utils/Map.js";
 import Round from '../../utils/Round'
 import ChartDataSet from '../../utils/ChartDataSet';
 //Need to pass value from input field
 //Style chart and info into one element
 //Allow to click on element to view stats
 //Create separate chart components/arrays for rating, rating count, checkins, review count, star_rating
-
-const style = {
-	backgroundColor: 'green',
-}
 
 class findRestaurant extends Component {
 

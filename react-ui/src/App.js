@@ -1,15 +1,14 @@
 import React from 'react';
 import { BrowserRouter as Router, Route } from "react-router-dom";
 import "./App.css";
-import logo from "./logo.png"
 import Home from "./pages/Home";
 import findRestaurant from "./pages/findRestaurant";
-import Login from "./pages/Login";
+// import Login from "./pages/Login";
 import Sidebar from "./components/Sidebar";
 import MaterialTitlePanel from './material_title_panel';
 import SidebarContent from './sidebar_content';
 import Footer from "./components/Footer";
-import Trending from './components/Trending';
+// import Trending from './components/Trending';
 
 const styles = {
   contentHeaderMenuLink: {
