@@ -4,7 +4,7 @@
 
 ## Description
 An unbiased view on what restaurants are trending in your area. Utilizes python scripts to collect data and Javascript/React.js to display the data to the user. Inspired by the frustrations of ad driven popularity of restaurants, we want to give users and restaurant owners the opportunity to find previously unknown locations.
->[Python Git](https://github.com/jtung23/python-data-collector)
+>[Python](https://github.com/jtung23/python-data-collector)
 
 
 ### Things To Do:
@@ -15,7 +15,8 @@ An unbiased view on what restaurants are trending in your area. Utilizes python 
 
 
 
-Notes:
+### Notes
+
 To deploy to Heroku:
 ```
 	yarn build
