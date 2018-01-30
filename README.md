@@ -12,6 +12,8 @@ An unbiased view on what restaurants are trending in your area. Utilizes python 
 		- Without Flux to handle data flow, it was necessary to use React's lifecycle methods to handle asynchronous functions returning data from the database or APIs.
 		e.g.
 		```javascript
+			// When calculations/api returns data, then the state is changed in the higher level component which reload the component and sends down new props. componentWillReceiveProps receives and sets state based on new data.
+
 		  componentWillReceiveProps(nextProps) {
 		    const checkinsAvg = Mathy.findRoundedDiffMean(nextProps.restaurantDetails.checkins, 'checkins')
 				...
@@ -26,6 +28,8 @@ An unbiased view on what restaurants are trending in your area. Utilizes python 
 		e.g.
 		```javascript
 		export default {
+			// returns the difference between values in array of days and returns with the date and difference
+
 		  findDifference: function(arr, name, days) {
 		    const values = []
 		    for (var i = 0; i < arr.length; i++) {
@@ -39,7 +43,7 @@ An unbiased view on what restaurants are trending in your area. Utilizes python 
 
 		    return diff
 		  },
-
+			// returns the sum from array of objects with key as the parameter to target
 		  findSum: function(arr, key) {
 		    var total = 0
 		    if (key) {
@@ -53,7 +57,7 @@ An unbiased view on what restaurants are trending in your area. Utilizes python 
 		    }
 		    return total
 		  },
-
+			// returns the mean from array of values
 		  getMean: function(arr) {
 		    var total = 0;
 		    if (arr.length > 0) {
