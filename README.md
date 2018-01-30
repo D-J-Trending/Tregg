@@ -80,7 +80,7 @@ export default {
 }
 ```
 
--Found in `react-ui/src/utils/ChartDataSet.js`...Creates a dataset that is necessary for building the chart. Written in order to modify the chart dynamically.
+- Found in `react-ui/src/utils/ChartDataSet.js`...Creates a dataset that is necessary for building the chart. Written in order to modify the chart dynamically.
 
 ```javascript
 // Returns dataset for chart.js when run
