@@ -50,7 +50,9 @@ export class Statsection extends Component {
     })
 
   }
-
+// When calculations/api returns data, then the state is changed in the higher level
+// component which reload the component and sends down new props. componentWillReceiveProps
+// receives and sets state based on new data.
   componentWillReceiveProps(nextProps) {
     const checkinsAvg = Mathy.findRoundedDiffMean(nextProps.restaurantDetails.checkins, 'checkins')
     const reviewsAvg = Mathy.findRoundedDiffMean(nextProps.restaurantDetails.reviews, 'review_count')

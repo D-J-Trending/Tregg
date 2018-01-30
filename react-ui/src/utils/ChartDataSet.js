@@ -1,5 +1,7 @@
 
+// Returns dataset for chart.js when run
 export default {
+
 	createDataSet: function(dataSet, name, dotted) {
 		// console.log(dataSet)
 		let data = dataSet.map(each => {
@@ -41,7 +43,5 @@ export default {
 			}
 		}	
 	}
-
-
 }
 
