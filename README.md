@@ -9,73 +9,76 @@ An unbiased view on what restaurants are trending in your area. Utilizes python 
 
 ## Code
 - Jonathan
-		- Without Flux to handle data flow, it was necessary to use React's lifecycle methods to handle asynchronous functions returning data from the database or APIs.
-		e.g.
-		```javascript
-			// When calculations/api returns data, then the state is changed in the higher level component which reload the component and sends down new props. componentWillReceiveProps receives and sets state based on new data.
+	- Without Flux to handle data flow, it was necessary to use React's lifecycle methods to handle asynchronous functions returning data from the database or APIs.
+	e.g.
+	```javascript
 
-		  componentWillReceiveProps(nextProps) {
-		    const checkinsAvg = Mathy.findRoundedDiffMean(nextProps.restaurantDetails.checkins, 'checkins')
-				...
+	// When calculations/api returns data, then the state is changed in the higher level component which reload the component and sends down new props. componentWillReceiveProps receives and sets state based on new data.
 
-		    this.setState({
-		      checkinsAvg: checkinsAvg
-		      ...
-		    })
-		  }
-		```
-		- Identifying and moving repeating code into seperate utility files which are then used across multiple components. Using `return` to use the end value.
-		e.g.
-		```javascript
-		export default {
-			// returns the difference between values in array of days and returns with the date and difference
+	  componentWillReceiveProps(nextProps) {
+	    const checkinsAvg = Mathy.findRoundedDiffMean(nextProps.restaurantDetails.checkins, 'checkins')
+			...
 
-		  findDifference: function(arr, name, days) {
-		    const values = []
-		    for (var i = 0; i < arr.length; i++) {
-		      values.push(arr[i][name])
-		    }
-		    const diff = []
-		    for (var i = 0; i < values.length - 1; i++) {
-		      let difference = values[i+1] - values[i]
-		      diff.push(difference)
-		    }
+	    this.setState({
+	      checkinsAvg: checkinsAvg
+	      ...
+	    })
+	  }
+	```
 
-		    return diff
-		  },
-			// returns the sum from array of objects with key as the parameter to target
-		  findSum: function(arr, key) {
-		    var total = 0
-		    if (key) {
-		      for(var i = 0; i < arr.length; i++) {
-		            total += arr[i][key];
-		      }
-		    } else {
-		      for(var i = 0; i < arr.length; i++) {
-		            total += arr[i];
-		      }  
-		    }
-		    return total
-		  },
-			// returns the mean from array of values
-		  getMean: function(arr) {
-		    var total = 0;
-		    if (arr.length > 0) {
-		      for(var i = 0; i < arr.length; i++) {
-		          total += arr[i];
-		      }
-		      var avg = total / arr.length;
-		      return avg
+	- Identifying and moving repeating code into seperate utility files which are then used across multiple components. Using `return` to use the end value.
+	e.g.
 
-		    } else {
-		      var avg = 0
-		      return avg
+	```javascript
+	export default {
+	// returns the difference between values in array of days and returns with the date and difference
 
-		    }
-		    
-		  }
-		}
-		```
+	  findDifference: function(arr, name, days) {
+	    const values = []
+	    for (var i = 0; i < arr.length; i++) {
+	      values.push(arr[i][name])
+	    }
+	    const diff = []
+	    for (var i = 0; i < values.length - 1; i++) {
+	      let difference = values[i+1] - values[i]
+	      diff.push(difference)
+	    }
+
+	    return diff
+	  },
+	// returns the sum from array of objects with key as the parameter to target
+	  findSum: function(arr, key) {
+	    var total = 0
+	    if (key) {
+	      for(var i = 0; i < arr.length; i++) {
+	            total += arr[i][key];
+	      }
+	    } else {
+	      for(var i = 0; i < arr.length; i++) {
+	            total += arr[i];
+	      }  
+	    }
+	    return total
+	  },
+	// returns the mean from array of values
+	  getMean: function(arr) {
+	    var total = 0;
+	    if (arr.length > 0) {
+	      for(var i = 0; i < arr.length; i++) {
+	          total += arr[i];
+	      }
+	      var avg = total / arr.length;
+	      return avg
+
+	    } else {
+	      var avg = 0
+	      return avg
+
+	    }
+	    
+	  }
+	}
+	```
 
 
 ### Things To Do:
