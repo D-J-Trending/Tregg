@@ -8,7 +8,6 @@
 An unbiased view on what restaurants are trending in your area. Utilizes python scripts to collect data and Javascript/React.js to display the data to the user. Inspired by the frustrations of ad driven popularity of restaurants, we want to give users and restaurant owners the opportunity to find previously unknown locations.
 
 ## Code
-- Jonathan
 	- Without Flux to handle data flow, it was necessary to use React's lifecycle methods to handle asynchronous functions returning data from the database or APIs.
 	e.g.
 	```javascript
