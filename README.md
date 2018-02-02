@@ -1,5 +1,5 @@
 # Tregg
-![Giphy of Site](https://media.giphy.com/media/3oEdTQP7lUwKSlqaQ0/giphy.gif)
+![Giphy of Site](https://imgur.com/pE7MwBu)
 >[Site](https://tregg.herokuapp.com)
 >[Python Repository](https://github.com/jtung23/python-data-collector)
 
