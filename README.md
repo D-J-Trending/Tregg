@@ -1,5 +1,5 @@
 # Tregg
-![Imgur](https://i.imgur.com/pE7MwBu.gifv)
+![Imgur](https://i.imgur.com/pE7MwBu.gif)
 >[Site](https://tregg.herokuapp.com)
 >[Python Repository](https://github.com/jtung23/python-data-collector)
 
